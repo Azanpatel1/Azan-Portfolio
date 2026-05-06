@@ -3,67 +3,90 @@
 @tailwind utilities;
 
 @layer base {
-  body {
-    @apply bg-dark text-white min-h-screen;
-    background-image: 
-      radial-gradient(circle at 25% 25%, rgba(62, 146, 204, 0.05) 0%, transparent 50%),
-      radial-gradient(circle at 75% 75%, rgba(0, 180, 216, 0.05) 0%, transparent 50%),
-      linear-gradient(to right, rgba(10, 36, 99, 0.03) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(10, 36, 99, 0.03) 1px, transparent 1px);
-    background-size: 100% 100%, 100% 100%, 20px 20px, 20px 20px;
-  }
-  
-  ::selection {
-    @apply bg-primary bg-opacity-50 text-white;
-  }
-  
   html {
     scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-ink text-text min-h-screen font-sans antialiased;
+  }
+
+  ::selection {
+    @apply bg-accent text-ink;
+  }
+
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-ink;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-ink-line;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-ink-edge;
   }
 }
 
 @layer components {
-  .nav-link {
-    @apply px-4 py-2 text-gray-300 hover:text-white transition-colors relative;
-  }
-  
-  .nav-link::after {
-    @apply content-[''] absolute bottom-0 left-1/2 w-0 h-0.5 bg-accent -translate-x-1/2 transition-all duration-300;
-  }
-  
-  .nav-link:hover::after {
-    @apply w-1/2;
-  }
-  
-  .nav-link.active {
-    @apply text-white;
-  }
-  
-  .nav-link.active::after {
-    @apply w-1/2;
-  }
-  
-  .btn {
-    @apply px-6 py-2 rounded-md transition-all duration-300 inline-flex items-center gap-2 font-medium;
-  }
-  
-  .btn-primary {
-    @apply bg-primary hover:bg-primary-dark text-white;
-  }
-  
-  .btn-accent {
-    @apply bg-accent hover:bg-accent/90 text-white;
-  }
-  
-  .section {
-    @apply py-20;
-  }
-  
   .container {
-    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+    @apply max-w-6xl mx-auto px-6 sm:px-8 lg:px-12;
   }
-  
+
+  .section {
+    @apply py-24 sm:py-28;
+  }
+
+  .nav-link {
+    @apply font-mono text-xs uppercase tracking-[0.2em] text-text-muted hover:text-text transition-colors;
+  }
+
+  .nav-link.active {
+    @apply text-text;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 font-mono text-xs uppercase tracking-[0.2em] border transition-colors;
+  }
+
+  .btn-primary {
+    @apply border-text text-text hover:bg-text hover:text-ink;
+  }
+
+  .btn-accent {
+    @apply border-accent text-accent hover:bg-accent hover:text-ink;
+  }
+
+  .btn-ghost {
+    @apply border-ink-line text-text-muted hover:border-text-muted hover:text-text;
+  }
+
   .card {
-    @apply bg-dark-light rounded-lg p-6 border border-dark-lighter hover:border-primary/30 transition-all duration-300;
+    @apply bg-ink-surface border border-ink-line p-6 transition-colors;
+  }
+
+  .card-interactive {
+    @apply hover:border-ink-edge;
+  }
+
+  .label {
+    @apply font-mono text-xs uppercase tracking-[0.25em] text-text-subtle;
+  }
+
+  .rule {
+    @apply h-px w-full bg-ink-line;
+  }
+
+  .section-header {
+    @apply flex items-baseline gap-4 mb-12;
+  }
+
+  .section-header-rule {
+    @apply flex-1 h-px bg-ink-line;
   }
 }

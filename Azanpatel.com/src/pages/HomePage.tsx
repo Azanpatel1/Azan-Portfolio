@@ -1,62 +1,43 @@
-import React from 'react';
+import { Link } from 'react-router-dom';
 import Layout from '../components/layout/Layout';
 import Hero from '../components/home/Hero';
 import About from '../components/home/About';
 import Skills from '../components/home/Skills';
 import Contact from '../components/home/Contact';
 import ProjectsGrid from '../components/projects/ProjectsGrid';
+import SectionHeader from '../components/ui/SectionHeader';
 
 const HomePage = () => {
   return (
     <Layout>
       <Hero />
-      
       <About />
-      
-      <section id="projects" className="section">
+
+      <section id="projects" className="section border-b border-ink-line">
         <div className="container">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">
-              <span className="bg-gradient-to-r from-primary to-accent text-transparent bg-clip-text">
-                Featured Projects
-              </span>
-            </h2>
-            <div className="w-24 h-1 bg-gradient-to-r from-primary to-accent mx-auto rounded-full"></div>
-            <p className="mt-6 text-gray-400 max-w-3xl mx-auto">
-              Explore some of my most significant engineering projects that showcase my skills, creativity and problem-solving approach.
-            </p>
-          </div>
-          
+          <SectionHeader
+            index="02"
+            label="Selected work"
+            title="Projects spanning aerospace, medical devices, and product design."
+          />
+
           <ProjectsGrid limit={3} />
-          
-          <div className="mt-12 text-center">
-            <a 
-              href="/projects" 
-              className="btn btn-primary inline-flex items-center"
-            >
+
+          <div className="mt-12 flex justify-start">
+            <Link to="/projects" className="btn btn-ghost">
               View All Projects
-              <svg 
-                className="w-5 h-5 ml-2" 
-                xmlns="http://www.w3.org/2000/svg" 
-                viewBox="0 0 20 20" 
-                fill="currentColor"
-              >
-                <path 
-                  fillRule="evenodd" 
-                  d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" 
-                  clipRule="evenodd" 
-                />
+              <svg className="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
               </svg>
-            </a>
+            </Link>
           </div>
         </div>
       </section>
-      
+
       <Skills />
-      
       <Contact />
     </Layout>
   );
 };
 
-export default HomePage; 
+export default HomePage;

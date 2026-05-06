@@ -7,35 +7,28 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        primary: {
-          DEFAULT: '#0a2463', // deep blue for academic feel
-          light: '#3e92cc', // lighter blue
-          dark: '#061539', // darker blue
+        ink: {
+          DEFAULT: '#050505',
+          surface: '#0d0d0d',
+          raised: '#141414',
+          line: '#262626',
+          edge: '#3f3f3f',
         },
-        secondary: {
-          DEFAULT: '#3e92cc', // bright blue for accents
+        text: {
+          DEFAULT: '#fafafa',
+          muted: '#a1a1aa',
+          subtle: '#71717a',
         },
         accent: {
-          DEFAULT: '#00b4d8', // cyan for modern feel
-        },
-        dark: {
-          DEFAULT: '#121212',
-          light: '#1e1e1e',
-          lighter: '#2d2d2d',
+          DEFAULT: '#f59e0b',
+          hover: '#fbbf24',
         },
       },
       fontFamily: {
         sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
         mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
       },
-      backgroundImage: {
-        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'grid-pattern': 'linear-gradient(to right, #3e92cc10 1px, transparent 1px), linear-gradient(to bottom, #3e92cc10 1px, transparent 1px)',
-      },
-      animation: {
-        'pulse-slow': 'pulse 4s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-      },
     },
   },
   plugins: [],
-} 
+}
