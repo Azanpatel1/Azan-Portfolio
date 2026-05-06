@@ -2,6 +2,10 @@
   "name": "azan-portfolio",
   "private": true,
   "scripts": {
-    "build": "npm ci --prefix Azanpatel.com && npm run build --prefix Azanpatel.com"
+    "build": "npm ci --prefix Azanpatel.com && npm run build --prefix Azanpatel.com",
+    "deploy": "npm run build && wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^4.88.0"
   }
 }
