@@ -2,7 +2,6 @@ import { Link } from 'react-router-dom';
 import Layout from '../components/layout/Layout';
 import Hero from '../components/home/Hero';
 import About from '../components/home/About';
-import Skills from '../components/home/Skills';
 import Contact from '../components/home/Contact';
 import ProjectsGrid from '../components/projects/ProjectsGrid';
 import SectionHeader from '../components/ui/SectionHeader';
@@ -34,7 +33,6 @@ const HomePage = () => {
         </div>
       </section>
 
-      <Skills />
       <Contact />
     </Layout>
   );
