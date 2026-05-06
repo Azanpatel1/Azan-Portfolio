@@ -4,3 +4,10 @@
 
 # Nested clone / duplicate workspace — do not commit as submodule
 Azanpatel.com/Portfolio/
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example
