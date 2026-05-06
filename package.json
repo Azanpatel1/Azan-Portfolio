@@ -1,0 +1,7 @@
+{
+  "name": "azan-portfolio",
+  "private": true,
+  "scripts": {
+    "build": "npm ci --prefix Azanpatel.com && npm run build --prefix Azanpatel.com"
+  }
+}

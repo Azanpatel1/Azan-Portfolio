@@ -1,5 +1,6 @@
 .DS_Store
 *.zip
+/node_modules
 
 # Nested clone / duplicate workspace — do not commit as submodule
 Azanpatel.com/Portfolio/
