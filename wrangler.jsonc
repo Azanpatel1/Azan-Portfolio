@@ -1,0 +1,14 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "azanportfolio",
+  "compatibility_date": "2026-05-06",
+  "observability": {
+    "enabled": true
+  },
+  "assets": {
+    "directory": "Azanpatel.com"
+  },
+  "compatibility_flags": [
+    "nodejs_compat"
+  ]
+}
