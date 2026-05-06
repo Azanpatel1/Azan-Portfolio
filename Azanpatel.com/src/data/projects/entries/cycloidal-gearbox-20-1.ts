@@ -14,10 +14,10 @@ const project: ProjectData = {
     '3D Printing',
     'Manufacturing',
   ],
-  image: '/images/cycloidal-gearbox-assembly.png',
+  image: '/images/cycloidal-gearbox-cross-section.png',
   gallery: [
     '/images/cycloidal-gearbox-exploded.png',
-    '/images/cycloidal-gearbox-cross-section.png',
+    '/images/cycloidal-gearbox-assembly.png',
     '/images/cycloidal-gearbox-equations.png',
     '/images/cycloidal-gearbox-desmos.png',
     '/images/cycloidal-gearbox-solidworks.png',

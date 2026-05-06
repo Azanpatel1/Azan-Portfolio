@@ -11,12 +11,12 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
 
   return (
     <Link to={`/projects/${project.id}`} className="group block border border-ink-line hover:border-ink-edge transition-colors">
-      <div className="relative aspect-[4/3] overflow-hidden bg-ink-surface border-b border-ink-line">
+      <div className="relative aspect-[4/3] flex items-center justify-center overflow-hidden bg-ink border-b border-ink-line p-2 sm:p-3">
         <img
           src={project.image}
           alt={project.title}
           loading="lazy"
-          className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
+          className="max-h-full max-w-full object-contain grayscale group-hover:grayscale-0 transition-all duration-500"
         />
         {project.featured && (
           <span className="absolute top-3 right-3 bg-accent text-ink font-mono text-[10px] uppercase tracking-[0.2em] px-2 py-1">

@@ -61,9 +61,13 @@ const ProjectDetailPage = () => {
             ))}
           </div>
 
-          <div className="mt-12 border border-ink-line bg-ink-surface">
-            <div className="aspect-[16/10] overflow-hidden">
-              <img src={project.image} alt={project.title} className="w-full h-full object-cover" />
+          <div className="mt-12 border border-ink-line bg-ink">
+            <div className="aspect-[16/10] w-full flex items-center justify-center p-4 sm:p-8">
+              <img
+                src={project.image}
+                alt={project.title}
+                className="max-h-full max-w-full object-contain"
+              />
             </div>
           </div>
 
@@ -72,11 +76,14 @@ const ProjectDetailPage = () => {
               <p className="label mb-4">Gallery</p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 {project.gallery.map((src, i) => (
-                  <div key={src} className="border border-ink-line bg-ink-surface overflow-hidden">
+                  <div
+                    key={src}
+                    className="border border-ink-line bg-ink aspect-[4/3] flex items-center justify-center p-3 sm:p-4"
+                  >
                     <img
                       src={src}
                       alt={`${project.title} — figure ${i + 1}`}
-                      className="w-full h-full object-cover"
+                      className="max-h-full max-w-full object-contain"
                       loading="lazy"
                     />
                   </div>
