@@ -15,6 +15,7 @@ const project: ProjectData = {
   longDescription: 'Optional longer story, design process, results — shown on the detail page only.',
   tags: ['Tag One', 'Tag Two'],
   image: '/images/your-photo.jpg',
+  // gallery: ['/images/extra-1.png', '/images/extra-2.png'],
   year: '2026',
   role: 'Your role',
   featured: false,

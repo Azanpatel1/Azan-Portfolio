@@ -9,6 +9,8 @@ export interface ProjectData {
   tags: string[];
   /** Path under `public/` (e.g. `/images/photo.jpg`). */
   image: string;
+  /** Extra images on the project detail page (e.g. process shots, CAD). */
+  gallery?: string[];
   year?: string;
   role?: string;
   /** Shown first on home when using `limit`; optional badge on cards. */

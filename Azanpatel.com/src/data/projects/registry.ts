@@ -9,6 +9,7 @@
  */
 import type { ProjectData } from './types';
 import bloodDrawArmBhours from './entries/blood-draw-arm-bhours';
+import cycloidalGearbox20to1 from './entries/cycloidal-gearbox-20-1';
 import microfluidicCentrifugeNextfuge from './entries/microfluidic-centrifuge-nextfuge';
 import pillCutterMakeathon from './entries/pill-cutter-makeathon';
 import tvcRocketArpl from './entries/tvc-rocket-arpl';
@@ -16,6 +17,7 @@ import tvcRocketArpl from './entries/tvc-rocket-arpl';
 export const PROJECTS: ProjectData[] = [
   tvcRocketArpl,
   microfluidicCentrifugeNextfuge,
+  cycloidalGearbox20to1,
   pillCutterMakeathon,
   bloodDrawArmBhours,
 ];

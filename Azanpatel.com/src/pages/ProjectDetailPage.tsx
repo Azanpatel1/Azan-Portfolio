@@ -67,6 +67,24 @@ const ProjectDetailPage = () => {
             </div>
           </div>
 
+          {project.gallery && project.gallery.length > 0 && (
+            <div className="mt-6">
+              <p className="label mb-4">Gallery</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {project.gallery.map((src, i) => (
+                  <div key={src} className="border border-ink-line bg-ink-surface overflow-hidden">
+                    <img
+                      src={src}
+                      alt={`${project.title} — figure ${i + 1}`}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           <div className="mt-16 grid lg:grid-cols-12 gap-12">
             <div className="lg:col-span-8 space-y-5 text-text-muted leading-relaxed">
               <p>{project.longDescription ?? project.description}</p>
