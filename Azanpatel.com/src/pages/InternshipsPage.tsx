@@ -16,8 +16,8 @@ const InternshipsPage = () => {
           />
 
           <div className="space-y-10">
-            <UCDavisHealthInternship />
             <TeslaInternship />
+            <UCDavisHealthInternship />
           </div>
         </div>
       </section>
