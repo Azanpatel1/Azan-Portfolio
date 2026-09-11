@@ -17,8 +17,9 @@ const Footer = () => {
 
         <nav className="flex items-center gap-6">
           <Link to="/" className="nav-link">Home</Link>
-          <Link to="/projects" className="nav-link">Projects</Link>
+          <Link to="/vision" className="nav-link">Vision</Link>
           <Link to="/internships" className="nav-link">Internships</Link>
+          <Link to="/projects" className="nav-link">Projects</Link>
         </nav>
 
         <div className="flex items-center gap-4">

@@ -3,8 +3,9 @@ import { Link, useLocation } from 'react-router-dom';
 
 const NAV = [
   { to: '/', label: 'Home', exact: true },
-  { to: '/projects', label: 'Projects' },
+  { to: '/vision', label: 'Vision' },
   { to: '/internships', label: 'Internships' },
+  { to: '/projects', label: 'Projects' },
 ];
 
 const Header = () => {
