@@ -12,7 +12,7 @@ const Contact = () => {
     <section id="contact" className="section">
       <div className="container">
         <SectionHeader
-          index="02"
+          index="04"
           label="Contact"
           title="Have a project or opportunity? Let's talk."
         />

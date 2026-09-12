@@ -1,6 +1,8 @@
 import { Link } from 'react-router-dom';
 import Layout from '../components/layout/Layout';
 import Hero from '../components/home/Hero';
+import GoalPreview from '../components/home/GoalPreview';
+import ResearchPreview from '../components/home/ResearchPreview';
 import Contact from '../components/home/Contact';
 import ProjectsGrid from '../components/projects/ProjectsGrid';
 import SectionHeader from '../components/ui/SectionHeader';
@@ -9,11 +11,13 @@ const HomePage = () => {
   return (
     <Layout>
       <Hero />
+      <GoalPreview />
+      <ResearchPreview />
 
       <section id="projects" className="section border-b border-ink-line">
         <div className="container">
           <SectionHeader
-            index="01"
+            index="03"
             label="Selected work"
             title="Projects spanning aerospace, medical devices, and product design."
           />
