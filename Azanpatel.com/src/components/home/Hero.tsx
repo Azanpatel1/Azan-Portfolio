@@ -18,7 +18,7 @@ const Hero = () => {
             </h1>
 
             <p className="mt-6 text-text-muted/90 text-base sm:text-lg italic max-w-xl leading-relaxed">
-              I&rsquo;m obsessed with the brain, neuroplasticity, and enhancing human experience.
+              I&rsquo;m obsessed with brain-machine interfaces, neuroplasticity, and enhancing human experience.
             </p>
 
             <p className="mt-6 text-text-muted text-lg max-w-xl leading-relaxed">
