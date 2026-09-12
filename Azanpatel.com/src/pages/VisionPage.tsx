@@ -1,9 +1,28 @@
+import { useEffect, useState } from 'react';
 import Layout from '../components/layout/Layout';
 import SectionHeader from '../components/ui/SectionHeader';
 import { VISION_META, VISION_SECTIONS } from '../data/vision';
 import type { VisionBlock, VisionSection } from '../data/vision';
 
 const VisionPage = () => {
+  const [open, setOpen] = useState<Set<string>>(() => new Set());
+
+  // Deep links (#vision-07) open that section on load.
+  useEffect(() => {
+    const hash = window.location.hash.replace('#vision-', '');
+    if (hash && VISION_SECTIONS.some((s) => s.index === hash)) {
+      setOpen(new Set([hash]));
+    }
+  }, []);
+
+  const toggle = (index: string) =>
+    setOpen((prev) => {
+      const next = new Set(prev);
+      if (next.has(index)) next.delete(index);
+      else next.add(index);
+      return next;
+    });
+
   return (
     <Layout>
       <section className="pt-32 pb-24 sm:pt-40 sm:pb-28">
@@ -15,54 +34,44 @@ const VisionPage = () => {
             description={VISION_META.dateline}
           />
 
-          <div className="grid lg:grid-cols-12 gap-12 lg:gap-16">
-            <aside className="lg:col-span-4 lg:sticky lg:top-24 lg:self-start space-y-8">
-              <div className="border border-ink-line">
-                <div className="px-5 py-3 border-b border-ink-line flex items-center justify-between">
-                  <span className="label">How to read this</span>
-                  <span className="font-mono text-[10px] text-text-subtle">DRAFT</span>
-                </div>
-                <div className="px-5 py-4 space-y-3 text-sm text-text-muted leading-relaxed">
-                  <p>{VISION_META.source}</p>
-                  <ul className="space-y-2">
-                    {VISION_META.readingNotes.map((note) => (
-                      <li key={note} className="flex gap-3">
-                        <span className="mt-2 w-1.5 h-1.5 shrink-0 bg-accent" />
-                        <span>{note}</span>
-                      </li>
-                    ))}
-                  </ul>
-                  <p className="text-text-subtle">{VISION_META.placement}</p>
-                </div>
-              </div>
+          <div className="border border-ink-line">
+            <div className="px-5 py-3 border-b border-ink-line flex items-center justify-between">
+              <span className="label">Contents</span>
+              <span className="font-mono text-[10px] text-text-subtle">DRAFT</span>
+            </div>
 
-              <nav className="border border-ink-line">
-                <div className="px-5 py-3 border-b border-ink-line">
-                  <span className="label">Contents</span>
-                </div>
-                <ol className="divide-y divide-ink-line">
-                  {VISION_SECTIONS.map((section) => (
-                    <li key={section.index}>
-                      <a
-                        href={`#vision-${section.index}`}
-                        className="flex gap-4 px-5 py-3 text-sm text-text-muted hover:text-accent transition-colors"
-                      >
-                        <span className="font-mono text-[11px] text-text-subtle pt-0.5">
-                          {section.index}
-                        </span>
-                        <span>{section.title}</span>
-                      </a>
+            <Row
+              index="—"
+              title="How to read this"
+              isOpen={open.has('meta')}
+              onToggle={() => toggle('meta')}
+            >
+              <div className="space-y-3 text-text-muted leading-relaxed">
+                <p>{VISION_META.source}</p>
+                <ul className="space-y-2">
+                  {VISION_META.readingNotes.map((note) => (
+                    <li key={note} className="flex gap-3">
+                      <span className="mt-2.5 w-1.5 h-1.5 shrink-0 bg-accent" />
+                      <span>{note}</span>
                     </li>
                   ))}
-                </ol>
-              </nav>
-            </aside>
+                </ul>
+                <p className="text-text-subtle">{VISION_META.placement}</p>
+              </div>
+            </Row>
 
-            <div className="lg:col-span-8 space-y-16">
-              {VISION_SECTIONS.map((section) => (
-                <Section key={section.index} section={section} />
-              ))}
-            </div>
+            {VISION_SECTIONS.map((section) => (
+              <Row
+                key={section.index}
+                id={`vision-${section.index}`}
+                index={section.index}
+                title={section.title}
+                isOpen={open.has(section.index)}
+                onToggle={() => toggle(section.index)}
+              >
+                <SectionBody section={section} />
+              </Row>
+            ))}
           </div>
         </div>
       </section>
@@ -70,21 +79,56 @@ const VisionPage = () => {
   );
 };
 
-const Section = ({ section }: { section: VisionSection }) => (
-  <article id={`vision-${section.index}`} className="scroll-mt-24">
-    <div className="flex items-center gap-4 mb-6">
-      <span className="font-mono text-xs text-accent tracking-[0.2em]">{section.index}</span>
-      <span className="flex-1 h-px bg-ink-line" />
-    </div>
-    <h2 className="text-2xl sm:text-3xl font-medium text-text leading-tight mb-6">
-      {section.title}
-    </h2>
-    <div className="space-y-5">
-      {section.blocks.map((block, i) => (
-        <Block key={i} block={block} />
-      ))}
-    </div>
-  </article>
+interface RowProps {
+  id?: string;
+  index: string;
+  title: string;
+  isOpen: boolean;
+  onToggle: () => void;
+  children: React.ReactNode;
+}
+
+const Row = ({ id, index, title, isOpen, onToggle, children }: RowProps) => (
+  <div id={id} className="border-b border-ink-line last:border-b-0 scroll-mt-24">
+    <button
+      type="button"
+      onClick={onToggle}
+      aria-expanded={isOpen}
+      className="w-full flex items-center gap-5 px-5 py-4 text-left group hover:bg-ink-surface transition-colors"
+    >
+      <span className="font-mono text-xs text-accent tracking-[0.2em] w-8 shrink-0">{index}</span>
+      <span
+        className={`flex-1 text-base sm:text-lg leading-snug transition-colors ${
+          isOpen ? 'text-text' : 'text-text-muted group-hover:text-text'
+        }`}
+      >
+        {title}
+      </span>
+      <svg
+        className={`w-4 h-4 shrink-0 text-text-subtle group-hover:text-text transition-transform ${
+          isOpen ? 'rotate-180' : ''
+        }`}
+        viewBox="0 0 20 20"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={1.5}
+      >
+        <path strokeLinecap="round" strokeLinejoin="round" d="M5 8l5 5 5-5" />
+      </svg>
+    </button>
+
+    {isOpen && (
+      <div className="px-5 pb-8 pt-2 sm:pl-[4.25rem] sm:pr-12 space-y-5">{children}</div>
+    )}
+  </div>
+);
+
+const SectionBody = ({ section }: { section: VisionSection }) => (
+  <>
+    {section.blocks.map((block, i) => (
+      <Block key={i} block={block} />
+    ))}
+  </>
 );
 
 const Block = ({ block }: { block: VisionBlock }) => {
