@@ -1,16 +1,16 @@
-export type VisionBlock =
+export type GoalBlock =
   | { kind: 'p'; text: string }
   | { kind: 'question'; text: string }
   | { kind: 'note'; text: string }
   | { kind: 'list'; ordered?: boolean; items: string[] };
 
-export interface VisionSection {
+export interface GoalSection {
   index: string;
   title: string;
-  blocks: VisionBlock[];
+  blocks: GoalBlock[];
 }
 
-export const VISION_META = {
+export const GOAL_META = {
   title: 'Neuroengineering deserves its own footing',
   dateline: 'Journal entry — Friday, 11 September 2026',
   source:
@@ -24,7 +24,7 @@ export const VISION_META = {
     'Where this sits: under the healthcare-system manifesto, as the "why the field" layer beneath roadmap step 1 — stroke speech rehabilitation via closed-loop stimulation.',
 };
 
-export const VISION_SECTIONS: VisionSection[] = [
+export const GOAL_SECTIONS: GoalSection[] = [
   {
     index: '00',
     title: 'The premise, in one paragraph',
