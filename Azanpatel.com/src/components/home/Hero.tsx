@@ -17,7 +17,11 @@ const Hero = () => {
               Neuroengineering.
             </h1>
 
-            <p className="mt-8 text-text-muted text-lg max-w-xl leading-relaxed">
+            <p className="mt-6 text-text-muted/90 text-base sm:text-lg italic max-w-xl leading-relaxed">
+              I&rsquo;m obsessed with the brain, neuroplasticity, and augmenting human experience.
+            </p>
+
+            <p className="mt-6 text-text-muted text-lg max-w-xl leading-relaxed">
               I'm Azan Patel &mdash; Engineer, Entrepreneur, and Researcher solving real clinical
               problems focused on the brain, leveraging closed-loop neuromodulation, computational
               neuroscience, and hardware engineering to tackle Stroke, Alzheimer's, and
