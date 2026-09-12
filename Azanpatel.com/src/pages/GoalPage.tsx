@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react';
 import Layout from '../components/layout/Layout';
 import SectionHeader from '../components/ui/SectionHeader';
-import { VISION_META, VISION_SECTIONS } from '../data/vision';
-import type { VisionBlock, VisionSection } from '../data/vision';
+import { GOAL_META, GOAL_SECTIONS } from '../data/goal';
+import type { GoalBlock, GoalSection } from '../data/goal';
 
-const VisionPage = () => {
+const GoalPage = () => {
   const [open, setOpen] = useState<Set<string>>(() => new Set());
 
-  // Deep links (#vision-07) open that section on load.
+  // Deep links (#goal-07) open that section on load.
   useEffect(() => {
-    const hash = window.location.hash.replace('#vision-', '');
-    if (hash && VISION_SECTIONS.some((s) => s.index === hash)) {
+    const hash = window.location.hash.replace('#goal-', '');
+    if (hash && GOAL_SECTIONS.some((s) => s.index === hash)) {
       setOpen(new Set([hash]));
     }
   }, []);
@@ -29,9 +29,9 @@ const VisionPage = () => {
         <div className="container">
           <SectionHeader
             index="—"
-            label="Vision"
-            title={VISION_META.title}
-            description={VISION_META.dateline}
+            label="Goal"
+            title={GOAL_META.title}
+            description={GOAL_META.dateline}
           />
 
           <div className="border border-ink-line">
@@ -47,23 +47,23 @@ const VisionPage = () => {
               onToggle={() => toggle('meta')}
             >
               <div className="space-y-3 text-text-muted leading-relaxed">
-                <p>{VISION_META.source}</p>
+                <p>{GOAL_META.source}</p>
                 <ul className="space-y-2">
-                  {VISION_META.readingNotes.map((note) => (
+                  {GOAL_META.readingNotes.map((note) => (
                     <li key={note} className="flex gap-3">
                       <span className="mt-2.5 w-1.5 h-1.5 shrink-0 bg-accent" />
                       <span>{note}</span>
                     </li>
                   ))}
                 </ul>
-                <p className="text-text-subtle">{VISION_META.placement}</p>
+                <p className="text-text-subtle">{GOAL_META.placement}</p>
               </div>
             </Row>
 
-            {VISION_SECTIONS.map((section) => (
+            {GOAL_SECTIONS.map((section) => (
               <Row
                 key={section.index}
-                id={`vision-${section.index}`}
+                id={`goal-${section.index}`}
                 index={section.index}
                 title={section.title}
                 isOpen={open.has(section.index)}
@@ -123,7 +123,7 @@ const Row = ({ id, index, title, isOpen, onToggle, children }: RowProps) => (
   </div>
 );
 
-const SectionBody = ({ section }: { section: VisionSection }) => (
+const SectionBody = ({ section }: { section: GoalSection }) => (
   <>
     {section.blocks.map((block, i) => (
       <Block key={i} block={block} />
@@ -131,7 +131,7 @@ const SectionBody = ({ section }: { section: VisionSection }) => (
   </>
 );
 
-const Block = ({ block }: { block: VisionBlock }) => {
+const Block = ({ block }: { block: GoalBlock }) => {
   switch (block.kind) {
     case 'p':
       return <p className="text-text-muted leading-relaxed">{block.text}</p>;
@@ -177,4 +177,4 @@ const Block = ({ block }: { block: VisionBlock }) => {
   }
 };
 
-export default VisionPage;
+export default GoalPage;
