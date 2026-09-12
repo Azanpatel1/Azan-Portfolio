@@ -12,9 +12,7 @@ const Hero = () => {
             </div>
 
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-medium leading-[1.05] tracking-tight text-text">
-              Translational
-              <br />
-              Neuroengineering.
+              Neuroengineering
             </h1>
 
             <p className="mt-6 text-text-muted/90 text-base sm:text-lg italic max-w-xl leading-relaxed">
