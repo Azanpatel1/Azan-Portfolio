@@ -7,6 +7,7 @@ const NAV = [
   { to: '/research', label: 'Research' },
   { to: '/projects', label: 'Projects' },
   { to: '/internships', label: 'Internships' },
+  { to: '/media', label: 'Media' },
 ];
 
 const Header = () => {
