@@ -22,13 +22,13 @@ const GraphEmbed = ({ item, index }: GraphEmbedProps) => {
       </div>
 
       <div className="p-4 flex-1">
-        <div className="aspect-square w-full bg-ink-raised">
+        <div className="aspect-[16/10] min-h-[420px] w-full bg-white border border-ink-line">
           <iframe
             src={item.embedUrl}
             title={item.title}
             width="100%"
             height="100%"
-            style={{ border: 0 }}
+            style={{ border: 0, backgroundColor: '#ffffff' }}
             loading="lazy"
             allowFullScreen
           />
@@ -40,7 +40,7 @@ const GraphEmbed = ({ item, index }: GraphEmbedProps) => {
           href={item.externalUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-text-subtle hover:text-accent transition-colors"
+          className="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-text-muted hover:text-accent transition-colors"
         >
           Open in Desmos
           <svg className="w-3 h-3" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth={1.5}>
