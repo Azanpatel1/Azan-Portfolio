@@ -22,7 +22,7 @@ const ProjectsPage = () => {
               <span className="label">Graphs</span>
               <span className="section-header-rule" />
             </div>
-            <div className="grid lg:grid-cols-2 gap-6">
+            <div className="grid gap-6 max-w-4xl">
               {GRAPHS.map((item, index) => (
                 <GraphEmbed key={item.id} item={item} index={index} />
               ))}
