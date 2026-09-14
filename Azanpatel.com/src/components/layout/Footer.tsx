@@ -21,6 +21,7 @@ const Footer = () => {
           <Link to="/research" className="nav-link">Research</Link>
           <Link to="/projects" className="nav-link">Projects</Link>
           <Link to="/internships" className="nav-link">Internships</Link>
+          <Link to="/media" className="nav-link">Media</Link>
         </nav>
 
         <div className="flex items-center gap-4">
