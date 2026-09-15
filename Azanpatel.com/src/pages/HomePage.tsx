@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import Layout from '../components/layout/Layout';
 import Hero from '../components/home/Hero';
+import Aims from '../components/home/Aims';
 import GoalPreview from '../components/home/GoalPreview';
 import ResearchPreview from '../components/home/ResearchPreview';
 import Contact from '../components/home/Contact';
@@ -11,13 +12,14 @@ const HomePage = () => {
   return (
     <Layout>
       <Hero />
+      <Aims />
       <GoalPreview />
       <ResearchPreview />
 
       <section id="projects" className="section border-b border-ink-line">
         <div className="container">
           <SectionHeader
-            index="03"
+            index="04"
             label="Selected work"
             title="Projects spanning aerospace, medical devices, and product design."
           />

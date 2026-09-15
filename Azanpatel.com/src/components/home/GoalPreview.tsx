@@ -11,7 +11,7 @@ const GoalPreview = () => {
   return (
     <section id="goal" className="section border-b border-ink-line">
       <div className="container">
-        <SectionHeader index="01" label="Goal" title={GOAL_META.title} />
+        <SectionHeader index="02" label="Goal" title={GOAL_META.title} />
 
         <div className="grid lg:grid-cols-12 gap-12">
           <div className="lg:col-span-7 space-y-6">

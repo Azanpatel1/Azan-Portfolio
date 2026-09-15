@@ -8,7 +8,7 @@ const ResearchPreview = () => {
     <section id="research" className="section border-b border-ink-line">
       <div className="container">
         <SectionHeader
-          index="02"
+          index="03"
           label="Research"
           title="Proposals, reports, and presentations in neurotechnology and medical devices."
         />
