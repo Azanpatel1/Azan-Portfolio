@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import SectionHeader from '../ui/SectionHeader';
-import { GOAL_META, GOAL_SECTIONS } from '../../data/goal';
+import { GOAL_AIMS, GOAL_AIMS_META, GOAL_META, GOAL_SECTIONS } from '../../data/goal';
 
 const PREVIEW_COUNT = 5;
 
@@ -21,6 +21,30 @@ const GoalPreview = () => {
             <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-text-subtle">
               {GOAL_META.dateline}
             </p>
+
+            <div className="border-t border-ink-line pt-6">
+              <p className="label mb-4">{GOAL_AIMS_META.label}</p>
+              <ol className="space-y-3">
+                {GOAL_AIMS.map((aim) => (
+                  <li key={aim.index}>
+                    <Link
+                      to="/goal"
+                      className="group flex items-baseline gap-4 text-text-muted hover:text-text transition-colors"
+                    >
+                      <span className="font-mono text-xs text-text-subtle group-hover:text-accent transition-colors w-6 shrink-0">
+                        {aim.numeral}
+                      </span>
+                      <span>{aim.title}</span>
+                      <span className="hidden sm:block flex-1 h-px bg-ink-line self-center" />
+                      <span className="hidden sm:block font-mono text-[10px] uppercase tracking-[0.2em] text-text-subtle shrink-0">
+                        {aim.discipline}
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ol>
+            </div>
+
             <Link to="/goal" className="btn btn-ghost">
               Read the full goal
               <svg className="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor">

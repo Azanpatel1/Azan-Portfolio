@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import Layout from '../components/layout/Layout';
 import SectionHeader from '../components/ui/SectionHeader';
+import AimPillars from '../components/goal/AimPillars';
 import { GOAL_META, GOAL_SECTIONS } from '../data/goal';
 import type { GoalBlock, GoalSection } from '../data/goal';
 
@@ -23,6 +24,14 @@ const GoalPage = () => {
       return next;
     });
 
+  // Aims cite the journal sections they came from; the citation opens the row.
+  const openSection = (index: string) => {
+    setOpen((prev) => new Set(prev).add(index));
+    requestAnimationFrame(() => {
+      document.getElementById(`goal-${index}`)?.scrollIntoView({ block: 'start' });
+    });
+  };
+
   return (
     <Layout>
       <section className="pt-32 pb-24 sm:pt-40 sm:pb-28">
@@ -33,6 +42,14 @@ const GoalPage = () => {
             title={GOAL_META.title}
             description={GOAL_META.dateline}
           />
+
+          <AimPillars onOpenSection={openSection} />
+
+          <div className="flex items-center gap-4 mb-8">
+            <span className="font-mono text-xs text-accent tracking-[0.2em]">00–15</span>
+            <span className="label">The journal</span>
+            <span className="flex-1 h-px bg-ink-line" />
+          </div>
 
           <div className="border border-ink-line">
             <div className="px-5 py-3 border-b border-ink-line flex items-center justify-between">
