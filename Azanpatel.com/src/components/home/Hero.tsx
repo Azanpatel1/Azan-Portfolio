@@ -72,7 +72,7 @@ const Hero = () => {
                 />
               </div>
 
-              <figcaption className="border-t border-ink-line px-4 py-3 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.2em] text-text-subtle">
+              <figcaption className="border-t border-ink-line px-4 py-3 flex items-center justify-between meta">
                 <span className="transition-colors duration-300 group-hover:text-accent">AP—001</span>
                 <span>UC Davis · 2027</span>
               </figcaption>
@@ -88,12 +88,13 @@ const Hero = () => {
 
 /* ---- Figure: a simulated EEG trace on a blueprint grid ------------------- */
 
+/** The plate in user units. It is bottom-anchored, so its height sets where the time axis lands above the scroll cue. */
 const FIG_W = 640;
-const FIG_H = 660;
+const FIG_H = 628;
 const CELL = 32;
 
 /** Where the strip chart sits on the plate. */
-const TRACE = { x0: 16, x1: 612, y: 636, samples: 224 };
+const TRACE = { x0: 16, x1: 612, y: FIG_H - 24, samples: 224 };
 
 /** Two epileptiform spikes: a sharp deflection and the slow wave that follows it. */
 const SPIKES = [
@@ -151,17 +152,17 @@ const REGISTRATION = [
   [FIG_W - 12, FIG_H - 12],
 ] as const;
 
-const DRAW_EASE = 'cubic-bezier(0.4, 0, 0.2, 1)';
+/** The registration square: the same 12px mark Tick sets at every other plate's corners. */
+const MARK = 12;
 
 /**
  * Sits behind the hero copy on wide screens: a blueprint grid with one strip
  * of simulated EEG that draws itself in on load. Purely decorative, so it is
  * hidden from assistive tech and from phones, where it would crowd the text.
  *
- * The draw is driven by inline styles rather than the shared `[data-draw]`
- * rules: Chrome does not re-style descendants for the `[pathLength]` attribute
- * selector when the ancestor's attribute flips, so those rules only take once
- * something else happens to recalc the subtree.
+ * Every stroke carries pathLength=1 and class "draw"; the shared `[data-draw]`
+ * rules dash it in once the plate is in view, staggered per element by
+ * --draw-delay, and stand down under reduced motion.
  */
 const TracePlate = () => {
   const uid = useId().replace(/[^A-Za-z0-9_-]/g, '');
@@ -169,30 +170,26 @@ const TracePlate = () => {
   const majorId = `grid-major-${uid}`;
   const maskId = `fade-${uid}`;
   const [ref, inView] = useInView<SVGSVGElement>({ threshold: 0.1 });
-  const reduced = useReducedMotion();
   const { x0, x1, y } = TRACE;
   const [a, b] = APEXES;
 
-  const labelStyle: CSSProperties = {
-    opacity: inView ? 1 : 0,
-    transition: reduced ? 'none' : 'opacity 0.6s ease 1.1s',
-  };
+  /** Stagger for a drawn stroke, in ms after the plate enters view. */
+  const after = (ms: number) => ({ '--draw-delay': `${ms}ms` }) as CSSProperties;
 
-  /** Every stroke carries pathLength=1, so a dash of 1 offset by 1 hides it until it is drawn. */
-  const draw = (delay: number): CSSProperties => ({
-    strokeDasharray: 1,
-    strokeDashoffset: inView ? 0 : 1,
-    transition: reduced ? 'none' : `stroke-dashoffset 1.6s ${DRAW_EASE} ${delay}ms`,
-  });
+  /** Labels and markers cannot draw, so they fade in once the trace is mostly down. */
+  const fade = `transition-opacity duration-[600ms] ease-house delay-[1100ms] motion-reduce:transition-none ${
+    inView ? 'opacity-100' : 'opacity-0'
+  }`;
 
   return (
     <Reveal
       fadeOnly
       aria-hidden="true"
-      className="hidden lg:block absolute -inset-x-10 -top-16 -bottom-16 pointer-events-none select-none"
+      className="hidden lg:block absolute -inset-x-10 -top-16 -bottom-8 pointer-events-none select-none"
     >
       <svg
         ref={ref}
+        data-draw={inView ? 'in' : 'pending'}
         viewBox={`0 0 ${FIG_W} ${FIG_H}`}
         preserveAspectRatio="xMidYMax meet"
         className="w-full h-full text-text-subtle"
@@ -227,26 +224,27 @@ const TracePlate = () => {
         {/* Registration marks at the plate corners */}
         <g strokeOpacity={0.45}>
           {REGISTRATION.map(([cx, cy]) => (
-            <path pathLength={1} key={`${cx}-${cy}`} style={draw(0)} d={`M ${cx - 5} ${cy} H ${cx + 5} M ${cx} ${cy - 5} V ${cy + 5}`} />
+            <rect pathLength={1} className="draw" key={`${cx}-${cy}`} x={cx - MARK / 2} y={cy - MARK / 2} width={MARK} height={MARK} />
           ))}
         </g>
 
         {/* Axes: time along the bottom, amplitude up the left */}
         <g strokeOpacity={0.4}>
-          <line pathLength={1} style={draw(120)} x1={x0} y1={y} x2={x1} y2={y} />
-          <line pathLength={1} style={draw(120)} x1={x0} y1={y - 72} x2={x0} y2={y + 14} />
+          <line pathLength={1} className="draw" style={after(120)} x1={x0} y1={y} x2={x1} y2={y} />
+          <line pathLength={1} className="draw" style={after(120)} x1={x0} y1={y - 72} x2={x0} y2={y + 14} />
           {[-60, -40, -20].map((dy) => (
-            <line pathLength={1} style={draw(400)} key={dy} x1={x0 - 4} y1={y + dy} x2={x0} y2={y + dy} />
+            <line pathLength={1} className="draw" style={after(400)} key={dy} x1={x0 - 4} y1={y + dy} x2={x0} y2={y + dy} />
           ))}
           {Array.from({ length: 8 }, (_, i) => x0 + ((i + 1) * (x1 - x0)) / 8).map((tx) => (
-            <line pathLength={1} style={draw(400)} key={tx} x1={tx} y1={y} x2={tx} y2={y + 4} />
+            <line pathLength={1} className="draw" style={after(400)} key={tx} x1={tx} y1={y} x2={tx} y2={y + 4} />
           ))}
         </g>
 
         {/* The trace itself */}
         <path
           pathLength={1}
-          style={draw(320)}
+          className="draw"
+          style={after(320)}
           d={TRACE_D}
           strokeOpacity={0.45}
           strokeWidth={1.25}
@@ -257,33 +255,26 @@ const TracePlate = () => {
         {/* Dimension bracket between the two spikes, with extension lines to each apex */}
         <g strokeOpacity={0.4}>
           {/* Dashed extension lines fade in with the labels; a dash pattern cannot also draw. */}
-          <line style={labelStyle} x1={a.x} y1={a.y - 6} x2={a.x} y2={BRACKET_Y - 6} strokeDasharray="2 3" />
-          <line style={labelStyle} x1={b.x} y1={b.y - 6} x2={b.x} y2={BRACKET_Y - 6} strokeDasharray="2 3" />
-          <line pathLength={1} style={draw(1400)} x1={a.x} y1={BRACKET_Y} x2={b.x} y2={BRACKET_Y} />
-          <line pathLength={1} style={draw(1500)} x1={a.x} y1={BRACKET_Y - 4} x2={a.x} y2={BRACKET_Y + 4} />
-          <line pathLength={1} style={draw(1500)} x1={b.x} y1={BRACKET_Y - 4} x2={b.x} y2={BRACKET_Y + 4} />
+          <line className={fade} x1={a.x} y1={a.y - 6} x2={a.x} y2={BRACKET_Y - 6} strokeDasharray="2 3" />
+          <line className={fade} x1={b.x} y1={b.y - 6} x2={b.x} y2={BRACKET_Y - 6} strokeDasharray="2 3" />
+          <line pathLength={1} className="draw" style={after(1400)} x1={a.x} y1={BRACKET_Y} x2={b.x} y2={BRACKET_Y} />
+          <line pathLength={1} className="draw" style={after(1500)} x1={a.x} y1={BRACKET_Y - 4} x2={a.x} y2={BRACKET_Y + 4} />
+          <line pathLength={1} className="draw" style={after(1500)} x1={b.x} y1={BRACKET_Y - 4} x2={b.x} y2={BRACKET_Y + 4} />
         </g>
 
         {/* Spike apexes, picked out in the accent */}
-        <g className="text-accent" fill="currentColor" stroke="none" style={labelStyle}>
+        <g className={`text-accent ${fade}`} fill="currentColor" stroke="none">
           <rect x={a.x - 1.5} y={a.y - 1.5} width={3} height={3} fillOpacity={0.9} />
           <rect x={b.x - 1.5} y={b.y - 1.5} width={3} height={3} fillOpacity={0.9} />
         </g>
 
         {/* Labels */}
-        <g
-          className="font-mono"
-          fill="currentColor"
-          fillOpacity={0.6}
-          stroke="none"
-          fontSize={9}
-          letterSpacing="0.16em"
-          style={labelStyle}
-        >
+        <g className={`font-mono ${fade}`} fill="currentColor" fillOpacity={0.6} stroke="none" fontSize={9} letterSpacing="0.16em">
           <text x={x0} y={y - 80} textAnchor="middle">µV</text>
           <text x={x1 + 10} y={y + 3}>t</text>
           <text x={(a.x + b.x) / 2} y={BRACKET_Y - 7} textAnchor="middle">Δt</text>
-          <text x={FIG_W - 26} y={17} textAnchor="end" fontSize={8}>
+          {/* The plate's caption, in the same register as every other figure caption. */}
+          <text x={FIG_W - 26} y={17} textAnchor="end" fontSize={10} letterSpacing="0.2em" fillOpacity={0.8}>
             FIG. 01 — SIMULATED TRACE
           </text>
         </g>
@@ -311,7 +302,7 @@ const ScrollCue = () => {
         aria-label="Scroll to the first section"
         className="group inline-flex flex-col items-start gap-2 text-text-subtle hover:text-text transition-colors"
       >
-        <span className="font-mono text-[10px] uppercase tracking-[0.3em]">Scroll</span>
+        <span className="meta group-hover:text-text transition-colors">Scroll</span>
         <svg width="1" height="24" viewBox="0 0 1 24" aria-hidden="true" className="overflow-visible">
           <line x1="0.5" y1="0" x2="0.5" y2="24" stroke="rgb(var(--ink-edge))" />
           <line

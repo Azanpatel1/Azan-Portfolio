@@ -2,11 +2,10 @@ import SectionHeader from '../ui/SectionHeader';
 import Reveal from '../motion/Reveal';
 import ResearchCard from '../research/ResearchCard';
 import { RESEARCH } from '../../data/research';
+import { pad } from '../../lib/format';
 import { SectionLink, SectionLinkMobile } from './SectionLink';
 
 const SHOWN = 3;
-
-const pad = (n: number) => String(n).padStart(2, '0');
 
 const ResearchPreview = () => {
   const count = `${pad(Math.min(SHOWN, RESEARCH.length))} / ${pad(RESEARCH.length)}`;

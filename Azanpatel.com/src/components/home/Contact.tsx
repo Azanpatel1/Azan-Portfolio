@@ -2,13 +2,12 @@ import { useEffect, useRef, useState } from 'react';
 import SectionHeader from '../ui/SectionHeader';
 import Reveal from '../motion/Reveal';
 import { ArrowUpRight, Check, Copy } from '../ui/Icon';
-
-const EMAIL = 'azpatel@ucdavis.edu';
+import { CONTACT } from '../../data/contact';
 
 const DETAILS = [
-  { label: 'Location', value: 'San Francisco, CA' },
-  { label: 'LinkedIn', value: 'linkedin.com/in/azanpatel', href: 'https://www.linkedin.com/in/azanpatel' },
-  { label: 'GitHub', value: 'github.com/azanpatel', href: 'https://github.com/azanpatel' },
+  { label: 'Location', value: CONTACT.location },
+  { label: 'LinkedIn', value: CONTACT.linkedin.label, href: CONTACT.linkedin.href },
+  { label: 'GitHub', value: CONTACT.github.label, href: CONTACT.github.href },
 ];
 
 /** How long the copy button reads "Copied" before it resets. */
@@ -44,7 +43,7 @@ const Contact = () => {
                   key={row.label}
                   className="grid grid-cols-[5.5rem_1fr] sm:grid-cols-[6.5rem_1fr] items-baseline gap-4 py-4 border-b border-ink-line"
                 >
-                  <dt className="font-mono text-[10px] uppercase tracking-[0.22em] text-text-subtle">
+                  <dt className="meta">
                     {row.label}
                   </dt>
                   <dd className="min-w-0 text-text">
@@ -85,7 +84,7 @@ const EmailRow = () => {
 
   const copy = async () => {
     try {
-      await navigator.clipboard.writeText(EMAIL);
+      await navigator.clipboard.writeText(CONTACT.email);
       setCopied(true);
     } catch {
       // No clipboard access (insecure context, old browser): select the address instead.
@@ -102,18 +101,18 @@ const EmailRow = () => {
 
   return (
     <div className="mt-8 border border-ink-line bg-ink-surface/50">
-      <div className="px-4 py-2.5 border-b border-ink-line flex items-center justify-between gap-4">
+      <div className="px-5 py-3 border-b border-ink-line flex items-center justify-between gap-4">
         <span className="label">Email</span>
-        <span className="font-mono text-[10px] tracking-[0.2em] text-text-subtle">PRIMARY</span>
+        <span className="meta">Primary</span>
       </div>
 
       <div className="flex flex-col sm:flex-row sm:items-stretch">
-        <div className="flex-1 min-w-0 px-4 sm:px-5 py-5 flex items-center">
+        <div className="flex-1 min-w-0 px-5 py-5 flex items-center">
           <span
             ref={addressRef}
             className="font-mono text-lg sm:text-xl lg:text-2xl tracking-tight text-text break-all"
           >
-            {EMAIL}
+            {CONTACT.email}
           </span>
         </div>
 
@@ -129,7 +128,7 @@ const EmailRow = () => {
             <span className="w-[8ch] text-left">{copied ? 'Copied' : 'Copy'}</span>
           </button>
           <a
-            href={`mailto:${EMAIL}`}
+            href={`mailto:${CONTACT.email}`}
             className="arrow-nudge-up flex-1 sm:flex-none inline-flex items-center justify-center gap-2 px-5 py-4 font-mono text-[11px] uppercase tracking-[0.2em] text-text-muted hover:text-text hover:bg-ink-surface transition-colors"
           >
             Mail

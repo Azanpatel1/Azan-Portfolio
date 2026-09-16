@@ -1,6 +1,8 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import ThemeToggle from './ThemeToggle';
+import { CONTACT } from '../../data/contact';
+import { pad } from '../../lib/format';
 import useReducedMotion from '../../hooks/useReducedMotion';
 
 export interface NavItem {
@@ -21,6 +23,7 @@ export const NAV: NavItem[] = [
   { to: '/media', label: 'Media', index: '06' },
 ];
 
+/** The house curve, needed only where a transition string is composed by hand (the desktop indicator). Everything else uses the ease-house class. */
 const EASE = 'cubic-bezier(0.2, 0.65, 0.2, 1)';
 const DRAWER_MS = 450;
 const DRAWER_ID = 'site-drawer';
@@ -32,6 +35,7 @@ const Header = () => {
   const location = useLocation();
   const [isScrolled, setIsScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
   const progressRef = useRef<HTMLSpanElement>(null);
   const toggleRef = useRef<HTMLButtonElement>(null);
 
@@ -69,6 +73,12 @@ const Header = () => {
     setIsOpen(false);
   }, [location.pathname]);
 
+  // Every way out of the drawer hands focus back to the button that opened it.
+  const close = useCallback(() => {
+    setIsOpen(false);
+    toggleRef.current?.focus();
+  }, []);
+
   // Contact lives on the home page. Client-side navigation never scrolls to a
   // hash on its own, so land the visitor on the section from any page.
   useEffect(() => {
@@ -79,38 +89,46 @@ const Header = () => {
     return () => cancelAnimationFrame(raf);
   }, [location.key, location.pathname, location.hash]);
 
-  // While the drawer is open: Esc closes it and hands focus back, the page
-  // behind it stops scrolling, and growing past the breakpoint dismisses it.
+  // While the drawer is open: Esc closes it, the page behind it stops
+  // scrolling and goes inert (so Tab stays in the bar and the drawer, and
+  // nothing behind the backdrop reads), and growing past the breakpoint
+  // dismisses it.
   useEffect(() => {
     if (!isOpen) return;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key !== 'Escape') return;
-      setIsOpen(false);
-      toggleRef.current?.focus();
+      if (e.key === 'Escape') close();
     };
     const onResize = () => {
       if (window.innerWidth >= 1024) setIsOpen(false);
     };
+    // Everything beside the bar: the skip link, the page and the site footer.
+    const bar = headerRef.current;
+    const behind = Array.from(bar?.parentElement?.children ?? []).filter(
+      (el): el is HTMLElement => el !== bar && el instanceof HTMLElement,
+    );
+    behind.forEach((el) => {
+      el.inert = true;
+    });
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     window.addEventListener('keydown', onKey);
     window.addEventListener('resize', onResize);
     return () => {
+      behind.forEach((el) => {
+        el.inert = false;
+      });
       document.body.style.overflow = previousOverflow;
       window.removeEventListener('keydown', onKey);
       window.removeEventListener('resize', onResize);
     };
-  }, [isOpen]);
-
-  const close = useCallback(() => setIsOpen(false), []);
+  }, [isOpen, close]);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50">
+    <header ref={headerRef} className="fixed top-0 left-0 right-0 z-50">
       <div
-        className={`relative bg-ink/90 backdrop-blur-sm border-b transition-colors duration-500 ${
+        className={`relative bg-ink/90 backdrop-blur-sm border-b transition-colors duration-500 ease-house ${
           isScrolled ? 'border-ink-line' : 'border-transparent'
         }`}
-        style={{ transitionTimingFunction: EASE }}
       >
         {/* Reading progress: a hairline along the top edge, scaled by scroll fraction. */}
         <span
@@ -121,12 +139,10 @@ const Header = () => {
 
         <div className="container flex items-center justify-between h-16">
           <Link to="/" className="flex items-center gap-3 group" aria-label="Azan Patel — home">
-            <span className="w-8 h-8 border border-text flex items-center justify-center font-mono text-xs tracking-widest group-hover:border-accent group-hover:text-accent transition-colors">
+            <span className="w-8 h-8 border border-text flex items-center justify-center font-mono text-xs tracking-[0.2em] indent-[0.2em] group-hover:border-accent group-hover:text-accent transition-colors">
               AP
             </span>
-            <span className="font-mono text-xs uppercase tracking-[0.25em] text-text-muted group-hover:text-text transition-colors">
-              Azan Patel
-            </span>
+            <span className="label text-text-muted group-hover:text-text transition-colors">Azan Patel</span>
           </Link>
 
           <DesktopNav pathname={location.pathname} />
@@ -138,30 +154,29 @@ const Header = () => {
             </Link>
           </div>
 
-          <div className="lg:hidden flex items-center gap-2">
+          <div className="lg:hidden flex items-center gap-3">
             <ThemeToggle />
+            {/* aria-expanded carries the state, so the label stays put. The ::before is a 44px hit area around the 32px square. */}
             <button
               ref={toggleRef}
               type="button"
               onClick={() => setIsOpen((v) => !v)}
-              aria-label={isOpen ? 'Close navigation' : 'Open navigation'}
+              aria-label="Navigation"
               aria-expanded={isOpen}
               aria-controls={DRAWER_ID}
-              className="w-8 h-8 inline-flex items-center justify-center border border-ink-line text-text-muted hover:border-accent hover:text-accent transition-colors"
+              className="relative w-8 h-8 inline-flex items-center justify-center border border-ink-line text-text-muted hover:border-accent hover:text-accent transition-colors before:absolute before:-inset-1.5 before:content-['']"
             >
               {/* Two bars that fold into a cross. */}
               <span aria-hidden="true" className="relative block w-4 h-[11px]">
                 <span
-                  className={`absolute left-0 top-0 h-px w-full bg-current transition-transform duration-300 motion-reduce:transition-none ${
+                  className={`absolute left-0 top-0 h-px w-full bg-current transition-transform duration-300 ease-house motion-reduce:transition-none ${
                     isOpen ? 'translate-y-[5px] rotate-45' : ''
                   }`}
-                  style={{ transitionTimingFunction: EASE }}
                 />
                 <span
-                  className={`absolute left-0 bottom-0 h-px w-full bg-current transition-transform duration-300 motion-reduce:transition-none ${
+                  className={`absolute left-0 bottom-0 h-px w-full bg-current transition-transform duration-300 ease-house motion-reduce:transition-none ${
                     isOpen ? '-translate-y-[5px] -rotate-45' : ''
                   }`}
-                  style={{ transitionTimingFunction: EASE }}
                 />
               </span>
             </button>
@@ -244,7 +259,7 @@ const DesktopNav = ({ pathname }: { pathname: string }) => {
   }, [measure]);
 
   return (
-    <nav ref={navRef} aria-label="Site" className="hidden lg:flex relative h-16 items-stretch gap-8">
+    <nav ref={navRef} aria-label="Site" className="hidden lg:flex relative h-16 items-center gap-8">
       {NAV.map((item) => {
         const active = item.to === activeTo;
         return (
@@ -260,7 +275,7 @@ const DesktopNav = ({ pathname }: { pathname: string }) => {
             onMouseLeave={() => setHovered((cur) => (cur === item.to ? null : cur))}
             onFocus={() => setHovered(item.to)}
             onBlur={() => setHovered((cur) => (cur === item.to ? null : cur))}
-            className={`nav-link inline-flex items-center ${active ? 'active' : ''}`}
+            className={`nav-link py-1.5 ${active ? 'active' : ''}`}
           >
             {item.label}
           </Link>
@@ -308,25 +323,23 @@ const Drawer = ({ isOpen, pathname, onClose }: DrawerProps) => (
       tabIndex={-1}
       aria-label="Close navigation"
       onClick={onClose}
-      className={`absolute inset-0 w-full bg-ink/70 backdrop-blur-[2px] transition-opacity motion-reduce:transition-none ${
+      className={`absolute inset-0 w-full bg-ink/70 backdrop-blur-[2px] transition-opacity ease-house motion-reduce:transition-none ${
         isOpen ? 'opacity-100' : 'opacity-0'
       }`}
-      style={{ transitionDuration: `${DRAWER_MS}ms`, transitionTimingFunction: EASE }}
+      style={{ transitionDuration: `${DRAWER_MS}ms` }}
     />
 
     <nav
       aria-label="Site"
-      className={`absolute top-0 right-0 bottom-0 w-[min(22rem,88vw)] flex flex-col bg-ink border-l border-ink-line transition-transform motion-reduce:transition-none ${
+      className={`absolute top-0 right-0 bottom-0 w-[min(22rem,88vw)] flex flex-col bg-ink border-l border-ink-line transition-transform ease-house motion-reduce:transition-none ${
         isOpen ? 'translate-x-0' : 'translate-x-full'
       }`}
-      style={{ transitionDuration: `${DRAWER_MS}ms`, transitionTimingFunction: EASE }}
+      style={{ transitionDuration: `${DRAWER_MS}ms` }}
     >
       <div className="flex items-center gap-3 px-6 h-12 border-b border-ink-line">
         <span className="label">Navigation</span>
         <span className="flex-1 h-px bg-ink-line" aria-hidden="true" />
-        <span className="font-mono text-[10px] tracking-[0.2em] text-text-subtle">
-          {String(NAV.length).padStart(2, '0')}
-        </span>
+        <span className="meta">{pad(NAV.length)}</span>
       </div>
 
       <ol className="flex-1 overflow-y-auto">
@@ -335,13 +348,10 @@ const Drawer = ({ isOpen, pathname, onClose }: DrawerProps) => (
           return (
             <li
               key={item.to}
-              className={`transition-[opacity,transform] duration-500 motion-reduce:transition-none ${
+              className={`transition-[opacity,transform] duration-500 ease-house motion-reduce:transition-none ${
                 isOpen ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4'
               }`}
-              style={{
-                transitionTimingFunction: EASE,
-                transitionDelay: isOpen ? `${90 + i * 45}ms` : '0ms',
-              }}
+              style={{ transitionDelay: isOpen ? `${90 + i * 45}ms` : '0ms' }}
             >
               <Link
                 to={item.to}
@@ -354,13 +364,7 @@ const Drawer = ({ isOpen, pathname, onClose }: DrawerProps) => (
                 {active && (
                   <span aria-hidden="true" className="absolute left-0 top-0 bottom-0 w-px bg-accent" />
                 )}
-                <span
-                  className={`font-mono text-[10px] tracking-[0.2em] ${
-                    active ? 'text-accent' : 'text-text-subtle'
-                  }`}
-                >
-                  {item.index}
-                </span>
+                <span className={`meta ${active ? 'text-accent' : ''}`}>{item.index}</span>
                 <span className="font-mono text-sm uppercase tracking-[0.2em]">{item.label}</span>
               </Link>
             </li>
@@ -369,22 +373,19 @@ const Drawer = ({ isOpen, pathname, onClose }: DrawerProps) => (
       </ol>
 
       <div
-        className={`px-6 py-6 border-t border-ink-line flex flex-col gap-4 transition-[opacity,transform] duration-500 motion-reduce:transition-none ${
+        className={`px-6 py-6 border-t border-ink-line flex flex-col gap-4 transition-[opacity,transform] duration-500 ease-house motion-reduce:transition-none ${
           isOpen ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
         }`}
-        style={{
-          transitionTimingFunction: EASE,
-          transitionDelay: isOpen ? `${90 + NAV.length * 45}ms` : '0ms',
-        }}
+        style={{ transitionDelay: isOpen ? `${90 + NAV.length * 45}ms` : '0ms' }}
       >
         <Link to="/#contact" onClick={onClose} className="btn btn-accent w-full text-[11px] py-3">
           Contact
         </Link>
         <a
-          href="mailto:azpatel@ucdavis.edu"
-          className="font-mono text-[11px] tracking-[0.12em] text-text-subtle hover:text-text transition-colors self-start"
+          href={`mailto:${CONTACT.email}`}
+          className="font-mono text-xs text-text-subtle hover:text-text transition-colors self-start"
         >
-          azpatel@ucdavis.edu
+          {CONTACT.email}
         </a>
       </div>
     </nav>

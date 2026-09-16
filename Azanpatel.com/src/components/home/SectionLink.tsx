@@ -17,7 +17,7 @@ interface SectionLinkProps {
 export const SectionLink = ({ to, children, count, className = '' }: SectionLinkProps) => (
   <span className={`hidden md:inline-flex items-center gap-5 ${className}`.trim()}>
     {count && (
-      <span className="font-mono text-[10px] tracking-[0.2em] text-text-subtle" title={`Showing ${count}`}>
+      <span className="meta" title={`Showing ${count}`}>
         {count}
       </span>
     )}

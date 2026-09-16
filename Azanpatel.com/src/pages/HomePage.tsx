@@ -8,10 +8,9 @@ import ProjectCard from '../components/projects/ProjectCard';
 import SectionHeader from '../components/ui/SectionHeader';
 import { SectionLink, SectionLinkMobile } from '../components/home/SectionLink';
 import { PROJECTS } from '../data/projects';
+import { pad } from '../lib/format';
 
 const PROJECTS_SHOWN = 3;
-
-const pad = (n: number) => String(n).padStart(2, '0');
 
 const HomePage = () => {
   const shown = PROJECTS.slice(0, PROJECTS_SHOWN);
