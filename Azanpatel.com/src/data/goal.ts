@@ -1,3 +1,17 @@
+/** The three classical orders, one per theme — see ThemePillars. */
+export type ColumnOrder = 'doric' | 'ionic' | 'corinthian';
+
+export interface GoalTheme {
+  index: string;
+  numeral: string;
+  order: ColumnOrder;
+  title: string;
+  vision: string;
+  approach: string;
+  /** Journal sections the theme leans on — rendered as deep links. */
+  sections: string[];
+}
+
 export type GoalBlock =
   | { kind: 'p'; text: string }
   | { kind: 'question'; text: string }
@@ -23,6 +37,41 @@ export const GOAL_META = {
   placement:
     'Where this sits: under the healthcare-system manifesto, as the "why the field" layer beneath roadmap step 1 — stroke speech rehabilitation via closed-loop stimulation.',
 };
+
+export const GOAL_THEMES: GoalTheme[] = [
+  {
+    index: '1',
+    numeral: 'I',
+    order: 'doric',
+    title: 'Neuromodulatory Control of Cognition',
+    vision:
+      'Mapping how targeted brain stimulations alter the neural mechanisms underlying human behavior, memory, and attention.',
+    approach:
+      'We investigate how systemic or localized neuromodulatory perturbations switch the brain between distinct cognitive states and shape latent human experiences.',
+    sections: ['04', '11'],
+  },
+  {
+    index: '2',
+    numeral: 'II',
+    order: 'ionic',
+    title: 'Multi-Scale Computational Modeling',
+    vision: 'Developing the next generation of theoretical, cognitive neurodynamical models.',
+    approach:
+      'Our models bridge the "lowest abstraction" mechanisms — such as Spike-Timing-Dependent Plasticity (STDP) — to predict macroscale network transformations and emergent behavior.',
+    sections: ['03', '05'],
+  },
+  {
+    index: '3',
+    numeral: 'III',
+    order: 'corinthian',
+    title: 'Network-Level Translational Neuroengineering',
+    vision:
+      'Designing optimized, closed-loop stimulation protocols to rescue damaged or dysregulated neural networks.',
+    approach:
+      'We use computational frameworks to predict how specific stimulation configurations can reverse the network-level degradation seen in stroke, Alzheimer’s, and neuropsychiatric disorders.',
+    sections: ['09', '10', '12'],
+  },
+];
 
 export const GOAL_SECTIONS: GoalSection[] = [
   {

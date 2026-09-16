@@ -1,6 +1,6 @@
 /**
  * All projects shown on the site. Order here = order on /projects and the home “featured” grid
- * (home still uses `ProjectsGrid` `limit` for the first N items only).
+ * (home shows the first three).
  *
  * Add a project:
  * 1. Add `public/images/<name>.jpg` (or png)

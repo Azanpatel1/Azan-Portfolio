@@ -1,19 +1,38 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useLayoutEffect, useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import Layout from '../components/layout/Layout';
 import SectionHeader from '../components/ui/SectionHeader';
+import ThemePillars from '../components/goal/ThemePillars';
+import { Plus } from '../components/ui/Icon';
+import usePageTitle from '../hooks/usePageTitle';
+import { pad } from '../lib/format';
 import { GOAL_META, GOAL_SECTIONS } from '../data/goal';
 import type { GoalBlock, GoalSection } from '../data/goal';
 
 const GoalPage = () => {
+  usePageTitle('Goal');
+  const { hash, key } = useLocation();
   const [open, setOpen] = useState<Set<string>>(() => new Set());
+  // A row that should be scrolled to once it has rendered open.
+  const [pending, setPending] = useState<string | null>(null);
 
-  // Deep links (#goal-07) open that section on load.
+  // Deep links (#goal-07) open that section and scroll to it — on load, and
+  // again on a same-document hash change (key changes on every navigation).
   useEffect(() => {
-    const hash = window.location.hash.replace('#goal-', '');
-    if (hash && GOAL_SECTIONS.some((s) => s.index === hash)) {
-      setOpen(new Set([hash]));
+    const index = hash.replace('#goal-', '');
+    if (index && GOAL_SECTIONS.some((s) => s.index === index)) {
+      setOpen((prev) => new Set(prev).add(index));
+      setPending(index);
     }
-  }, []);
+  }, [hash, key]);
+
+  // Runs in the commit that opens the row, so the scroll measures its expanded
+  // height; a rAF is not ordered after that commit and clamped short for low rows.
+  useLayoutEffect(() => {
+    if (!pending) return;
+    document.getElementById(`goal-${pending}`)?.scrollIntoView({ block: 'start' });
+    setPending(null);
+  }, [pending]);
 
   const toggle = (index: string) =>
     setOpen((prev) => {
@@ -23,21 +42,33 @@ const GoalPage = () => {
       return next;
     });
 
+  // Themes cite the journal sections they lean on; the citation opens the row.
+  const openSection = (index: string) => {
+    setOpen((prev) => new Set(prev).add(index));
+    setPending(index);
+  };
+
   return (
     <Layout>
       <section className="pt-32 pb-24 sm:pt-40 sm:pb-28">
         <div className="container">
-          <SectionHeader
-            index="—"
-            label="Goal"
-            title={GOAL_META.title}
-            description={GOAL_META.dateline}
-          />
+          {/* The plate renders above the journal's own header, so the page heading sits first for the outline. */}
+          <h1 className="sr-only">Goal</h1>
+          <ThemePillars onOpenSection={openSection} />
+
+          <div className="mt-24 sm:mt-28">
+            <SectionHeader
+              index="—"
+              label="Goal"
+              title={GOAL_META.title}
+              description={GOAL_META.dateline}
+            />
+          </div>
 
           <div className="border border-ink-line">
             <div className="px-5 py-3 border-b border-ink-line flex items-center justify-between">
               <span className="label">Contents</span>
-              <span className="font-mono text-[10px] text-text-subtle">DRAFT</span>
+              <span className="meta">Draft</span>
             </div>
 
             <Row
@@ -104,17 +135,12 @@ const Row = ({ id, index, title, isOpen, onToggle, children }: RowProps) => (
       >
         {title}
       </span>
-      <svg
-        className={`w-4 h-4 shrink-0 text-text-subtle group-hover:text-text transition-transform ${
-          isOpen ? 'rotate-180' : ''
+      {/* The site's open affordance: a plus that turns into a cross once the row is open. */}
+      <Plus
+        className={`w-3.5 h-3.5 shrink-0 text-text-subtle group-hover:text-text transition-transform duration-300 ease-house ${
+          isOpen ? 'rotate-45' : ''
         }`}
-        viewBox="0 0 20 20"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={1.5}
-      >
-        <path strokeLinecap="round" strokeLinejoin="round" d="M5 8l5 5 5-5" />
-      </svg>
+      />
     </button>
 
     {isOpen && (
@@ -157,9 +183,7 @@ const Block = ({ block }: { block: GoalBlock }) => {
         <ol className="space-y-3">
           {block.items.map((item, i) => (
             <li key={item} className="flex gap-4 text-text-muted leading-relaxed">
-              <span className="font-mono text-xs text-accent pt-1.5">
-                {String(i + 1).padStart(2, '0')}
-              </span>
+              <span className="font-mono text-xs text-accent pt-1.5">{pad(i + 1)}</span>
               <span>{item}</span>
             </li>
           ))}
