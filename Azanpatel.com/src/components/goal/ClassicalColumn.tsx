@@ -21,7 +21,7 @@ const LIGHT = -0.6;
 const shade = (theta: number) => 0.5 + 0.5 * Math.cos(theta - LIGHT);
 
 /** Masses are filled so that leaves and mouldings occlude what sits behind them. */
-const MASS = '#0a0a0c';
+const MASS = 'var(--plate-mass)';
 
 interface ShaftSpec {
   top: number;
@@ -285,10 +285,10 @@ const ClassicalColumn = ({ order, x = 0 }: ClassicalColumnProps) => {
       <defs>
         {/* A cylinder lit from the left: the highlight sits off-centre. */}
         <linearGradient id={fillId} x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stopColor="#0a0a0b" />
-          <stop offset="26%" stopColor="#1d1d21" />
-          <stop offset="60%" stopColor="#101013" />
-          <stop offset="100%" stopColor="#070708" />
+          <stop offset="0%" style={{ stopColor: 'var(--plate-shaft-dark)' }} />
+          <stop offset="26%" style={{ stopColor: 'var(--plate-shaft-lit)' }} />
+          <stop offset="60%" style={{ stopColor: 'var(--plate-shaft-mid)' }} />
+          <stop offset="100%" style={{ stopColor: 'var(--plate-shaft-edge)' }} />
         </linearGradient>
         {/* The shaft runs off the bottom of the plate rather than being cut. */}
         <linearGradient id={`${maskId}-g`} x1="0" y1="0" x2="0" y2="1">

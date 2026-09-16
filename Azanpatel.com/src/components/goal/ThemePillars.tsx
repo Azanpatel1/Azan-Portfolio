@@ -42,7 +42,7 @@ const ThemePillars = ({ onOpenSection }: ThemePillarsProps) => {
       <div className="px-4 sm:px-8 pt-7 pb-3">
         {/* Cornice — projecting past the frieze, hatched the way the moulding is cut */}
         <div
-          className="-mx-2 sm:-mx-3 h-3.5 border border-ink-edge bg-ink-raised [background-image:repeating-linear-gradient(90deg,rgba(255,255,255,0.09)_0_1px,transparent_1px_5px)]"
+          className="-mx-2 sm:-mx-3 h-3.5 border border-ink-edge bg-ink-raised [background-image:repeating-linear-gradient(90deg,var(--plate-hatch)_0_1px,transparent_1px_5px)]"
           aria-hidden="true"
         />
 
@@ -81,10 +81,10 @@ const ThemePillars = ({ onOpenSection }: ThemePillarsProps) => {
               key={theme.index}
               className={`transition-colors duration-500 ${
                 active === null
-                  ? 'text-zinc-500'
+                  ? 'text-[rgb(var(--plate-stroke))]'
                   : active === theme.index
                     ? 'text-accent'
-                    : 'text-zinc-700'
+                    : 'text-[rgb(var(--plate-stroke-dim))]'
               }`}
             >
               <ClassicalColumn order={theme.order} x={i * BAY + (BAY - COLUMN_W) / 2} />

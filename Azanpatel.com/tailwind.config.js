@@ -6,22 +6,23 @@ module.exports = {
   ],
   theme: {
     extend: {
+      // Palette lives in index.css as RGB triplets so a theme can swap it.
       colors: {
         ink: {
-          DEFAULT: '#050505',
-          surface: '#0d0d0d',
-          raised: '#141414',
-          line: '#262626',
-          edge: '#3f3f3f',
+          DEFAULT: 'rgb(var(--ink) / <alpha-value>)',
+          surface: 'rgb(var(--ink-surface) / <alpha-value>)',
+          raised: 'rgb(var(--ink-raised) / <alpha-value>)',
+          line: 'rgb(var(--ink-line) / <alpha-value>)',
+          edge: 'rgb(var(--ink-edge) / <alpha-value>)',
         },
         text: {
-          DEFAULT: '#fafafa',
-          muted: '#a1a1aa',
-          subtle: '#71717a',
+          DEFAULT: 'rgb(var(--text) / <alpha-value>)',
+          muted: 'rgb(var(--text-muted) / <alpha-value>)',
+          subtle: 'rgb(var(--text-subtle) / <alpha-value>)',
         },
         accent: {
-          DEFAULT: '#f59e0b',
-          hover: '#fbbf24',
+          DEFAULT: 'rgb(var(--accent) / <alpha-value>)',
+          hover: 'rgb(var(--accent-hover) / <alpha-value>)',
         },
       },
       fontFamily: {
