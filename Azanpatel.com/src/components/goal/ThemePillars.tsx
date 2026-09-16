@@ -118,12 +118,9 @@ const ThemePillars = ({ onOpenSection }: ThemePillarsProps) => {
                 active === theme.index ? 'text-accent' : 'text-text-subtle'
               }`}
             >
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em]">
-                {ORDER_NAMES[theme.order]}
-              </p>
-              <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.2em]">
-                Theme {theme.index}
-              </p>
+              {/* The caption token, in the colour the bay is currently drawn in. */}
+              <p className="meta text-inherit">{ORDER_NAMES[theme.order]}</p>
+              <p className="mt-1 meta text-inherit">Theme {theme.index}</p>
             </div>
           ))}
         </div>
@@ -182,8 +179,7 @@ const ThemeCard = ({ theme, delay, isActive, onEnter, onLeave, onOpenSection }: 
       {theme.sections.map((index) => {
         const section = GOAL_SECTIONS.find((s) => s.index === index);
         const label = section ? `Open section ${index}: ${section.title}` : `Open section ${index}`;
-        const className =
-          'font-mono text-[10px] px-2 py-1 border border-ink-line text-text-subtle hover:border-accent hover:text-accent transition-colors';
+        const className = 'tag hover:border-accent hover:text-accent';
         return onOpenSection ? (
           <button
             key={index}

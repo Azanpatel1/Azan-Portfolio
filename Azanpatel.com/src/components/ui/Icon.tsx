@@ -50,12 +50,6 @@ export const ChevronRight = (props: IconProps) => (
   </svg>
 );
 
-export const ChevronDown = (props: IconProps) => (
-  <svg {...base(props)}>
-    <path d="M5 8l5 5 5-5" />
-  </svg>
-);
-
 export const Close = (props: IconProps) => (
   <svg {...base(props)}>
     <path d="M5 5l10 10M15 5L5 15" />

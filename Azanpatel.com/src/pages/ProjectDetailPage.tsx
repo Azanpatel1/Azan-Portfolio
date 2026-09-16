@@ -67,7 +67,7 @@ const ProjectArticle = ({ project }: { project: ProjectData }) => {
                   className="group inline-flex items-center gap-2 hover:text-text transition-colors"
                 >
                   <ArrowLeft
-                    className={`w-3.5 h-3.5 transition-transform duration-300 ease-house motion-safe:group-hover:-translate-x-0.5`}
+                    className="w-3.5 h-3.5 transition-transform duration-300 ease-house motion-safe:group-hover:-translate-x-0.5"
                   />
                   Projects
                 </Link>
@@ -160,7 +160,7 @@ const ProjectArticle = ({ project }: { project: ProjectData }) => {
                         src={src}
                         alt=""
                         loading="lazy"
-                        className={`w-full h-full object-contain transition-transform duration-500 ease-house motion-safe:group-hover:scale-[1.03]`}
+                        className="w-full h-full object-contain transition-transform duration-500 ease-house motion-safe:group-hover:scale-[1.03]"
                       />
                       {/* Corner plates, so the label and the affordance never sit on the drawing itself. */}
                       <span className="absolute top-0 left-0 border-r border-b border-ink-line bg-ink px-2 py-1 meta leading-none transition-colors duration-300 group-hover:border-ink-edge group-hover:text-text-muted">
@@ -291,11 +291,11 @@ const NeighbourLink = ({ project, index, direction }: NeighbourLinkProps) => {
     >
       <span className="inline-flex items-center gap-2 meta">
         {!isNext && (
-          <ArrowLeft className={`w-3.5 h-3.5 transition-transform duration-300 ease-house motion-safe:group-hover:-translate-x-0.5`} />
+          <ArrowLeft className="w-3.5 h-3.5 transition-transform duration-300 ease-house motion-safe:group-hover:-translate-x-0.5" />
         )}
         {isNext ? 'Next project' : 'Previous project'}
         {isNext && (
-          <ArrowRight className={`w-3.5 h-3.5 transition-transform duration-300 ease-house motion-safe:group-hover:translate-x-0.5`} />
+          <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 ease-house motion-safe:group-hover:translate-x-0.5" />
         )}
       </span>
       <span className={`flex items-baseline gap-3 ${isNext ? 'sm:flex-row-reverse' : ''}`}>
@@ -325,9 +325,9 @@ const NotFound = ({ slug }: { slug: string }) => (
         action={
           <Link
             to="/projects"
-            className="group hidden md:inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em] text-text-muted hover:text-text transition-colors"
+            className="group hidden md:inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.2em] text-text-muted hover:text-text transition-colors"
           >
-            <ArrowLeft className={`w-3.5 h-3.5 transition-transform duration-300 ease-house motion-safe:group-hover:-translate-x-0.5`} />
+            <ArrowLeft className="w-3.5 h-3.5 transition-transform duration-300 ease-house motion-safe:group-hover:-translate-x-0.5" />
             All projects
           </Link>
         }
@@ -361,7 +361,7 @@ const NotFound = ({ slug }: { slug: string }) => (
 
       <div className="mt-8 md:hidden">
         <Link to="/projects" className="btn btn-ghost w-full group">
-          <ArrowLeft className={`w-3.5 h-3.5 transition-transform duration-300 ease-house motion-safe:group-hover:-translate-x-0.5`} />
+          <ArrowLeft className="w-3.5 h-3.5 transition-transform duration-300 ease-house motion-safe:group-hover:-translate-x-0.5" />
           All projects
         </Link>
       </div>
