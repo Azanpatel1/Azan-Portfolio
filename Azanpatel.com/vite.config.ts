@@ -6,7 +6,10 @@ import react from '@vitejs/plugin-react'
 
 /** Production-only HTML tweaks for static hosts (Cloudflare Pages, caching CDNs). */
 function productionHtml(): Plugin {
-  const bootSnippet = `<style>html,body{background:#050505;color:#fafafa;margin:0}</style>
+  // Paints the page before the stylesheet arrives. The head script in index.html
+  // has already set data-theme, so this must honour it — keep both colours in
+  // step with --ink / --text in src/index.css.
+  const bootSnippet = `<style>html{background:#050505;color:#fafafa}html[data-theme=light]{background:#fafaf9;color:#111110}</style>
 <script>
 (function(){
   function show(title, detail) {
