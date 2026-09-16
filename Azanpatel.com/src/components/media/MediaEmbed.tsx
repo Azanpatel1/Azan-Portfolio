@@ -1,9 +1,11 @@
 import { useEffect, useState } from 'react';
+import type { ReactNode } from 'react';
 import type { MediaItem } from '../../data/media';
 import useInView from '../../hooks/useInView';
 import useReducedMotion from '../../hooks/useReducedMotion';
 import { ArrowUpRight } from '../ui/Icon';
 import Tick from '../ui/Tick';
+import { pad } from '../../lib/format';
 
 interface MediaEmbedProps {
   item: MediaItem;
@@ -15,9 +17,9 @@ type PlayerState = 'loading' | 'ready' | 'stalled';
 /** How long the player gets before the frame says it has not arrived. */
 const STALL_MS = 8000;
 
-/** Spotify embeds are episodes or shows; the caption names which. */
+/** Spotify embeds are episodes or shows; the caption and details name which. */
 const kindOf = (embedUrl: string) =>
-  embedUrl.includes('/episode/') ? 'EP' : embedUrl.includes('/show/') ? 'SHOW' : 'MEDIA';
+  embedUrl.includes('/episode/') ? 'Episode' : embedUrl.includes('/show/') ? 'Show' : 'Media';
 
 /**
  * A Spotify player mounted as a plate: the embed sits inside a ticked frame
@@ -27,7 +29,7 @@ const kindOf = (embedUrl: string) =>
 const MediaEmbed = ({ item, index }: MediaEmbedProps) => {
   const [state, setState] = useState<PlayerState>('loading');
   const [frameRef, nearView] = useInView<HTMLDivElement>({ threshold: 0, rootMargin: '200px 0px' });
-  const number = String(index + 1).padStart(2, '0');
+  const number = pad(index + 1);
   const height = item.height ?? 352;
   const caption = [kindOf(item.embedUrl), item.outlet, item.year].filter(Boolean).join(' · ');
 
@@ -43,8 +45,7 @@ const MediaEmbed = ({ item, index }: MediaEmbedProps) => {
       <header className="border-b border-ink-line px-5 py-4 flex items-start justify-between gap-4">
         <div>
           <div className="flex items-center gap-3 mb-2">
-            {/* On lg the page numbers the plate in the margin instead. */}
-            <span className="lg:hidden font-mono text-[10px] text-accent tracking-[0.2em]">{number}</span>
+            <span className="meta text-accent">{number}</span>
             {item.outlet && <span className="label">{item.outlet}</span>}
           </div>
           <h2 className="text-lg font-medium text-text leading-tight">{item.title}</h2>
@@ -52,14 +53,10 @@ const MediaEmbed = ({ item, index }: MediaEmbedProps) => {
             <p className="mt-2 text-sm text-text-muted leading-relaxed max-w-xl">{item.description}</p>
           )}
         </div>
-        {item.year && (
-          <span className="font-mono text-[10px] text-text-subtle tracking-[0.2em] shrink-0 pt-1">
-            {item.year}
-          </span>
-        )}
+        {item.year && <span className="meta shrink-0 pt-1">{item.year}</span>}
       </header>
 
-      <div className="p-4 sm:p-5">
+      <div className="p-5">
         <div ref={frameRef} className="relative">
           <Tick className="-top-1.5 -left-1.5" />
           <Tick className="-top-1.5 -right-1.5" />
@@ -84,13 +81,14 @@ const MediaEmbed = ({ item, index }: MediaEmbedProps) => {
         </div>
       </div>
 
-      <footer className="border-t border-ink-line px-5 py-3 flex items-center justify-between gap-4 font-mono text-[10px] uppercase tracking-[0.2em] text-text-subtle">
+      <footer className="border-t border-ink-line px-5 py-3 flex items-center justify-between gap-4 meta">
         <span>{caption}</span>
+        {/* Padded to the bar's full height, then pulled back in, so the tap target is the bar, not the line. */}
         <a
           href={item.externalUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="arrow-nudge arrow-nudge-up shrink-0 inline-flex items-center gap-1.5 text-text-muted hover:text-accent transition-colors"
+          className="arrow-nudge arrow-nudge-up shrink-0 inline-flex items-center gap-1.5 py-3 -my-3 text-text-muted hover:text-accent transition-colors"
         >
           Open on Spotify
           <ArrowUpRight className="w-3.5 h-3.5" />
@@ -99,6 +97,36 @@ const MediaEmbed = ({ item, index }: MediaEmbedProps) => {
     </article>
   );
 };
+
+interface MediaDetailsProps {
+  item: MediaItem;
+  index: number;
+  total: number;
+}
+
+/** The facts beside the player, in the same Details plate a project page uses. */
+export const MediaDetails = ({ item, index, total }: MediaDetailsProps) => (
+  <div className="lg:sticky lg:top-24 border border-ink-line">
+    <div className="px-5 py-3 border-b border-ink-line flex items-center justify-between gap-4">
+      <span className="label">Details</span>
+      <span className="meta">
+        {pad(index + 1)} / {pad(total)}
+      </span>
+    </div>
+    <dl className="divide-y divide-ink-line">
+      <DetailRow label="Outlet">{item.outlet ?? '—'}</DetailRow>
+      <DetailRow label="Year">{item.year ?? '—'}</DetailRow>
+      <DetailRow label="Kind">{kindOf(item.embedUrl)}</DetailRow>
+    </dl>
+  </div>
+);
+
+const DetailRow = ({ label, children }: { label: string; children: ReactNode }) => (
+  <div className="grid grid-cols-3 gap-4 px-5 py-3 text-sm">
+    <dt className="meta self-center">{label}</dt>
+    <dd className="text-text col-span-2">{children}</dd>
+  </div>
+);
 
 /**
  * "LOADING PLAYER" over a hairline whose fill runs left to right. The sweep is
@@ -112,9 +140,7 @@ const LoadingState = ({ stalled }: { stalled: boolean }) => {
       role="status"
       className="absolute inset-0 flex flex-col items-center justify-center gap-4 text-text-subtle"
     >
-      <span className="font-mono text-[10px] uppercase tracking-[0.3em]">
-        {stalled ? 'Player did not load' : 'Loading player'}
-      </span>
+      <span className="meta">{stalled ? 'Player did not load' : 'Loading player'}</span>
       <svg width="120" height="1" viewBox="0 0 120 1" aria-hidden="true" className="overflow-visible text-accent">
         <line x1="0" y1="0.5" x2="120" y2="0.5" stroke="rgb(var(--ink-edge))" />
         {!stalled && (
@@ -143,11 +169,7 @@ const LoadingState = ({ stalled }: { stalled: boolean }) => {
           </line>
         )}
       </svg>
-      {stalled && (
-        <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-text-subtle/80">
-          Use the link below
-        </span>
-      )}
+      {stalled && <span className="meta">Use the link below</span>}
     </div>
   );
 };

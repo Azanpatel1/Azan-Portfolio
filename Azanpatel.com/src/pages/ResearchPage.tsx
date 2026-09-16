@@ -7,6 +7,7 @@ import SectionHeader from '../components/ui/SectionHeader';
 import usePageTitle from '../hooks/usePageTitle';
 import { RESEARCH } from '../data/research';
 import type { ResearchType } from '../data/research';
+import { pad } from '../lib/format';
 
 type Filter = 'all' | ResearchType;
 
@@ -24,8 +25,6 @@ const countOf = (filter: Filter) =>
   filter === 'all' ? RESEARCH.length : RESEARCH.filter((item) => item.type === filter).length;
 
 const COUNTS = Object.fromEntries(FILTERS.map(({ id }) => [id, countOf(id)])) as Record<Filter, number>;
-
-const pad = (n: number) => String(n).padStart(2, '0');
 
 const ResearchPage = () => {
   usePageTitle('Research');
@@ -60,11 +59,11 @@ const ResearchPage = () => {
           >
             {shown.map(({ item, index }, i) => (
               <Reveal key={item.id} delay={(i % 3) * 80} className="h-full">
-                <ResearchCard item={item} index={index} />
+                <ResearchCard item={item} index={index} headingLevel={2} />
               </Reveal>
             ))}
             {shown.length === 0 && (
-              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-text-subtle py-8">
+              <p className="meta py-8">
                 No documents in this category.
               </p>
             )}
@@ -155,8 +154,8 @@ const TypeTabs = ({ value, shown, onChange }: TypeTabsProps) => {
                 tabRefs.current[id] = el ?? undefined;
               }}
               onClick={() => onChange(id)}
-              className={`text-left py-3 pr-6 sm:pt-1 sm:pr-10 border-b border-ink-line font-mono text-[10px] lg:text-xs uppercase tracking-[0.2em] transition-colors duration-300 ${
-                selected ? 'text-text' : 'text-text-subtle hover:text-text-muted'
+              className={`text-left py-3 pr-6 sm:pt-1 sm:pr-10 border-b border-ink-line meta lg:text-xs transition-colors duration-300 ${
+                selected ? 'text-text' : 'hover:text-text-muted'
               }`}
             >
               <span className="inline-flex items-baseline gap-2">
@@ -175,8 +174,8 @@ const TypeTabs = ({ value, shown, onChange }: TypeTabsProps) => {
 
         {/* The rest of the rule, carrying the running count. */}
         <div className="hidden md:flex flex-1 items-end justify-end pb-3 border-b border-ink-line" aria-hidden="true">
-          <span className="font-mono text-[10px] tracking-[0.2em] text-text-subtle">
-            Showing {pad(shown)} / {pad(COUNTS.all)}
+          <span className="meta">
+            {pad(shown)} / {pad(COUNTS.all)} shown
           </span>
         </div>
 

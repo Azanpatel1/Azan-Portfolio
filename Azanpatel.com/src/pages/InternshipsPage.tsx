@@ -5,6 +5,7 @@ import SectionHeader from '../components/ui/SectionHeader';
 import { ArrowRight } from '../components/ui/Icon';
 import useInView from '../hooks/useInView';
 import usePageTitle from '../hooks/usePageTitle';
+import { pad } from '../lib/format';
 import TeslaInternship from '../components/internships/TeslaInternship';
 import UCDavisHealthInternship from '../components/internships/UCDavisHealthInternship';
 
@@ -22,8 +23,6 @@ const PLACEMENTS: Placement[] = [
   { index: 'INT-02', year: '2024', Card: UCDavisHealthInternship },
 ];
 
-const pad = (n: number) => String(n).padStart(2, '0');
-
 const InternshipsPage = () => {
   usePageTitle('Internships');
   // The list is taller than a viewport, so a sliver in view is enough to start the spine.
@@ -40,9 +39,7 @@ const InternshipsPage = () => {
             title="Professional experiences shaping my engineering practice."
             description="Field work and observations from internships across biomedical and robotics."
             action={
-              <span className="font-mono text-[10px] tracking-[0.2em] text-text-subtle">
-                {pad(PLACEMENTS.length)} INTERNSHIPS
-              </span>
+              <span className="meta">{pad(PLACEMENTS.length)} Internships</span>
             }
           />
 
@@ -65,7 +62,7 @@ const InternshipsPage = () => {
                 <div className="hidden md:block">
                   {/* The year rides with its entry while the entry scrolls past. */}
                   <div className="sticky top-24 pt-5">
-                    <p className="flex items-center gap-3 font-mono text-[10px] tracking-[0.2em] text-text-subtle">
+                    <p className="flex items-center gap-3 meta">
                       <span
                         aria-hidden="true"
                         className={`shrink-0 w-[7px] h-[7px] border ${
@@ -74,11 +71,11 @@ const InternshipsPage = () => {
                       />
                       {index}
                     </p>
-                    <p className="mt-2 pl-[calc(7px+0.75rem)] font-mono text-sm text-text tracking-[0.1em]">
+                    <p className="mt-2 pl-[calc(7px+0.75rem)] font-mono text-sm text-text tracking-[0.2em]">
                       {year}
                     </p>
                     {status && (
-                      <p className="mt-1 pl-[calc(7px+0.75rem)] inline-flex items-center gap-1.5 font-mono text-[10px] uppercase tracking-[0.2em] text-accent">
+                      <p className="mt-1 pl-[calc(7px+0.75rem)] inline-flex items-center gap-1.5 meta text-accent">
                         <ArrowRight className="w-3 h-3" />
                         {status}
                       </p>

@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import Reveal from '../motion/Reveal';
 import Lightbox from '../ui/Lightbox';
 import type { LightboxItem } from '../ui/Lightbox';
 import { Plus } from '../ui/Icon';
+import { pad } from '../../lib/format';
 
 interface NotebookEntry {
   image: string;
@@ -43,8 +44,6 @@ const USER_NEEDS = [
   },
 ];
 
-const pad = (n: number) => String(n).padStart(2, '0');
-
 /** The same twelve pages, captioned the way the grid labels them and placed by where and when they were taken. */
 const LIGHTBOX_ITEMS: LightboxItem[] = NOTEBOOKS.map((entry, i) => ({
   src: entry.image,
@@ -54,10 +53,12 @@ const LIGHTBOX_ITEMS: LightboxItem[] = NOTEBOOKS.map((entry, i) => ({
 
 const UCDavisHealthInternship = () => {
   const [open, setOpen] = useState<number | null>(null);
+  // Stable, so the lightbox's open effect does not re-run (and re-focus Close) on every page.
+  const close = useCallback(() => setOpen(null), []);
 
   return (
     <article className="border border-ink-line">
-      <header className="px-6 py-5 border-b border-ink-line flex flex-col sm:flex-row sm:items-center gap-4">
+      <header className="px-5 py-4 border-b border-ink-line flex flex-col sm:flex-row sm:items-center gap-4">
         <img
           src="/images/uc-davis-health-logo.png"
           alt="UC Davis Health"
@@ -70,13 +71,11 @@ const UCDavisHealthInternship = () => {
         </div>
       </header>
 
-      <div className="p-6 sm:p-8">
+      <div className="p-6">
         <div className="flex items-center gap-4 mb-6">
           <span className="label">Field notes</span>
           <span className="flex-1 h-px bg-ink-line" />
-          <span className="shrink-0 font-mono text-[10px] tracking-[0.2em] text-text-subtle">
-            {pad(NOTEBOOKS.length)} ENTRIES
-          </span>
+          <span className="shrink-0 meta">{pad(NOTEBOOKS.length)} Entries</span>
         </div>
 
         <ol className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
@@ -91,9 +90,7 @@ const UCDavisHealthInternship = () => {
           <div className="flex items-center gap-4 mb-6">
             <span className="label">User needs identified</span>
             <span className="flex-1 h-px bg-ink-line" />
-            <span className="shrink-0 font-mono text-[10px] tracking-[0.2em] text-text-subtle">
-              {pad(USER_NEEDS.length)} ITEMS
-            </span>
+            <span className="shrink-0 meta">{pad(USER_NEEDS.length)} Items</span>
           </div>
 
           <ol className="border-y border-ink-line divide-y divide-ink-line">
@@ -104,8 +101,8 @@ const UCDavisHealthInternship = () => {
                 delay={i * 80}
                 className="grid grid-cols-[2.5rem_1fr] lg:grid-cols-[2.5rem_15rem_1fr] gap-x-4 lg:gap-x-6 py-4 sm:py-5"
               >
-                <span className="font-mono text-[10px] text-accent tracking-[0.2em] leading-5">{pad(i + 1)}</span>
-                <h3 className="font-mono text-xs uppercase tracking-[0.18em] text-text leading-5">{need.title}</h3>
+                <span className="meta text-accent leading-5">{pad(i + 1)}</span>
+                <h3 className="label text-text leading-5">{need.title}</h3>
                 <p className="col-start-2 lg:col-start-3 mt-1.5 lg:mt-0 text-sm text-text-muted leading-relaxed">
                   {need.description}
                 </p>
@@ -115,7 +112,7 @@ const UCDavisHealthInternship = () => {
         </div>
       </div>
 
-      <Lightbox items={LIGHTBOX_ITEMS} index={open} onClose={() => setOpen(null)} onIndexChange={setOpen} />
+      <Lightbox items={LIGHTBOX_ITEMS} index={open} onClose={close} onIndexChange={setOpen} />
     </article>
   );
 };
@@ -156,9 +153,9 @@ const NotebookThumb = ({ entry, number, onOpen }: NotebookThumbProps) => {
           }`}
         />
       </div>
-      <div className="px-3 py-2 border-t border-ink-line flex items-center justify-between font-mono text-[10px] tracking-widest text-text-subtle">
+      <div className="px-3 py-2 border-t border-ink-line flex items-center justify-between meta">
         <span>N-{number}</span>
-        <span className="inline-flex items-center gap-1 uppercase transition-colors duration-300 group-hover:text-accent group-focus-visible:text-accent">
+        <span className="inline-flex items-center gap-1 transition-colors duration-300 group-hover:text-accent group-focus-visible:text-accent">
           View
           <Plus className="w-3 h-3" />
         </span>

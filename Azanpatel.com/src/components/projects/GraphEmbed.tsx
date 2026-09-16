@@ -3,10 +3,7 @@ import type { GraphItem } from '../../data/graphs';
 import useReducedMotion from '../../hooks/useReducedMotion';
 import { ArrowUpRight } from '../ui/Icon';
 import Tick from '../ui/Tick';
-
-/** Graph paper: an 8px minor grid under a 40px major one, both drawn in the line colour. */
-const GRAPH_PAPER =
-  'graph-paper';
+import { pad } from '../../lib/format';
 
 interface GraphEmbedProps {
   item: GraphItem;
@@ -19,7 +16,7 @@ interface GraphEmbedProps {
  */
 const GraphEmbed = ({ item, index }: GraphEmbedProps) => {
   const [loaded, setLoaded] = useState(false);
-  const figure = String(index + 1).padStart(2, '0');
+  const figure = pad(index + 1);
 
   return (
     <figure className="relative flex flex-col h-full border border-ink-line bg-ink-surface">
@@ -30,7 +27,7 @@ const GraphEmbed = ({ item, index }: GraphEmbedProps) => {
 
       <div className="border-b border-ink-line px-5 py-4">
         <div className="flex items-center gap-3 mb-2">
-          <span className="font-mono text-[10px] text-accent tracking-[0.2em]">{figure}</span>
+          <span className="meta text-accent">{figure}</span>
           <span className="label">Desmos</span>
         </div>
         <h3 className="text-lg font-medium text-text leading-tight">{item.title}</h3>
@@ -39,7 +36,8 @@ const GraphEmbed = ({ item, index }: GraphEmbedProps) => {
         )}
       </div>
 
-      <div className={`flex-1 p-3 sm:p-4 bg-ink ${GRAPH_PAPER}`}>
+      {/* Graph paper: an 8px minor grid under a 40px major one, both drawn in the line colour. */}
+      <div className="flex-1 p-3 sm:p-4 bg-ink graph-paper">
         <div className="relative aspect-[16/10] w-full border border-ink-line">
           {!loaded && <LoadingState />}
           {/* Desmos draws on white, so the frame keeps its own ground in both themes. */}
@@ -57,13 +55,14 @@ const GraphEmbed = ({ item, index }: GraphEmbedProps) => {
         </div>
       </div>
 
-      <figcaption className="border-t border-ink-line px-4 py-3 flex items-center justify-between gap-4 font-mono text-[10px] uppercase tracking-[0.2em] text-text-subtle">
+      <figcaption className="border-t border-ink-line px-5 py-3 flex items-center justify-between gap-4 meta">
         <span>FIG. {figure} · Desmos</span>
+        {/* py-3 -my-3 stretches the hit area to the full caption bar without moving the text. */}
         <a
           href={item.externalUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="arrow-nudge arrow-nudge-up shrink-0 inline-flex items-center gap-1.5 text-text-muted hover:text-accent transition-colors"
+          className="arrow-nudge arrow-nudge-up shrink-0 inline-flex items-center gap-1.5 py-3 -my-3 text-text-muted hover:text-accent transition-colors"
         >
           Open in Desmos
           <ArrowUpRight className="w-3.5 h-3.5" />
@@ -84,7 +83,7 @@ const LoadingState = () => {
       role="status"
       className="absolute inset-0 flex flex-col items-center justify-center gap-4 text-text-subtle"
     >
-      <span className="font-mono text-[10px] uppercase tracking-[0.3em]">Loading graph</span>
+      <span className="meta">Loading graph</span>
       <svg width="96" height="1" viewBox="0 0 96 1" aria-hidden="true" className="overflow-visible text-accent">
         <line x1="0" y1="0.5" x2="96" y2="0.5" stroke="rgb(var(--ink-edge))" />
         <line

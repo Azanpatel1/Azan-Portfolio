@@ -38,12 +38,11 @@ const ThemePillars = ({ onOpenSection }: ThemePillarsProps) => {
       <h2 className="sr-only">Research themes</h2>
       <figcaption className="px-5 py-3 border-b border-ink-line flex items-center justify-between gap-4">
         <span className="label">Plate — the three orders</span>
-        <span className="hidden sm:inline font-mono text-[10px] text-text-subtle tracking-[0.2em]">
-          ONE THEME PER PILLAR
-        </span>
+        <span className="hidden sm:inline meta">One theme per pillar</span>
       </figcaption>
 
-      <div className="px-4 sm:px-8 pt-7 pb-3">
+      {/* Gutters ease off in the md range, where three bays share a narrow plate. */}
+      <div className="px-4 sm:px-5 lg:px-8 pt-7 pb-3">
         {/* Cornice — projecting past the frieze, hatched the way the moulding is cut */}
         <div
           className="-mx-2 sm:-mx-3 h-3.5 border border-ink-edge bg-ink-raised [background-image:repeating-linear-gradient(90deg,var(--plate-hatch)_0_1px,transparent_1px_5px)]"
@@ -122,7 +121,7 @@ const ThemePillars = ({ onOpenSection }: ThemePillarsProps) => {
               <p className="font-mono text-[10px] uppercase tracking-[0.2em]">
                 {ORDER_NAMES[theme.order]}
               </p>
-              <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.2em] opacity-60">
+              <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.2em]">
                 Theme {theme.index}
               </p>
             </div>
@@ -150,7 +149,7 @@ const ThemeCard = ({ theme, delay, isActive, onEnter, onLeave, onOpenSection }: 
     onMouseLeave={onLeave}
     onFocus={onEnter}
     onBlur={onLeave}
-    className={`p-6 sm:p-7 flex flex-col gap-4 transition-colors duration-300 ${
+    className={`p-6 md:p-5 lg:p-6 flex flex-col gap-4 transition-colors duration-300 ${
       isActive ? 'bg-ink-surface' : ''
     }`}
   >
@@ -166,7 +165,7 @@ const ThemeCard = ({ theme, delay, isActive, onEnter, onLeave, onOpenSection }: 
       <span className="flex-1 h-px bg-ink-line" />
     </div>
 
-    <h3 className="text-lg text-text leading-snug">{theme.title}</h3>
+    <h3 className="text-base lg:text-lg text-text leading-snug">{theme.title}</h3>
 
     <div>
       <span className="label block mb-1.5">The vision</span>
@@ -179,9 +178,7 @@ const ThemeCard = ({ theme, delay, isActive, onEnter, onLeave, onOpenSection }: 
     </div>
 
     <div className="flex flex-wrap items-center gap-2 pt-1">
-      <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-text-subtle">
-        From
-      </span>
+      <span className="meta">From</span>
       {theme.sections.map((index) => {
         const section = GOAL_SECTIONS.find((s) => s.index === index);
         const label = section ? `Open section ${index}: ${section.title}` : `Open section ${index}`;

@@ -18,7 +18,7 @@ const SPEC: SpecCell[] = [
 const TeslaInternship = () => {
   return (
     <article className="border border-ink-line">
-      <header className="px-6 py-5 border-b border-ink-line flex flex-col sm:flex-row sm:items-center gap-4">
+      <header className="px-5 py-4 border-b border-ink-line flex flex-col sm:flex-row sm:items-center gap-4">
         {/* The wordmark is a PNG, so it sits on a tile of the text colour in either theme. */}
         <img
           src="/images/tesla-logo.png"
@@ -34,9 +34,9 @@ const TeslaInternship = () => {
 
       <dl className="grid sm:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-ink-line">
         {SPEC.map(({ term, value, live }) => (
-          <div key={term} className="px-6 py-4">
+          <div key={term} className="px-5 py-4">
             <dt className="label">{term}</dt>
-            <dd className="mt-2 flex items-center gap-2.5 font-mono text-xs text-text tracking-[0.04em]">
+            <dd className="mt-2 flex items-center gap-2.5 font-mono text-xs text-text">
               {live && <StatusMark />}
               {value}
             </dd>
@@ -44,7 +44,7 @@ const TeslaInternship = () => {
         ))}
       </dl>
 
-      <p className="border-t border-ink-line px-6 py-4 flex flex-col sm:flex-row sm:items-baseline gap-1.5 sm:gap-4 text-sm text-text-muted">
+      <p className="border-t border-ink-line px-5 py-4 flex flex-col sm:flex-row sm:items-baseline gap-1.5 sm:gap-4 text-sm text-text-muted">
         <span className="label shrink-0">Note</span>
         Details will be added once the internship begins.
       </p>

@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react';
+import type { CSSProperties } from 'react';
 import type { ResearchItem } from '../../data/research';
 import Tag from '../ui/Tag';
 import { ArrowUpRight } from '../ui/Icon';
 import useInView from '../../hooks/useInView';
-import useReducedMotion from '../../hooks/useReducedMotion';
+import { pad } from '../../lib/format';
 
 const TYPE_LABELS: Record<ResearchItem['type'], string> = {
   proposal: 'Proposal',
@@ -18,21 +19,20 @@ const formatOf = (url: string) => {
   return 'Google Drive';
 };
 
-/** A faint diagonal hatch, so a late Drive thumbnail lands on a drawn plate rather than a blank. */
-const HATCH =
-  'plate-hatch';
-
 export interface ResearchCardProps {
   item: ResearchItem;
   index: number;
+  /** h2 on the listing page, where the card sits straight under the page h1; h3 under a section heading. */
+  headingLevel?: 2 | 3;
 }
 
-const ResearchCard = ({ item, index }: ResearchCardProps) => {
+const ResearchCard = ({ item, index, headingLevel = 3 }: ResearchCardProps) => {
   const [loaded, setLoaded] = useState(false);
   const [imageFailed, setImageFailed] = useState(false);
   const imgRef = useRef<HTMLImageElement>(null);
-  const number = String(index + 1).padStart(2, '0');
+  const number = pad(index + 1);
   const meta = [item.venue, item.year].filter(Boolean).join(' · ');
+  const Heading = headingLevel === 2 ? 'h2' : 'h3';
 
   // A cached image can finish before React attaches onLoad.
   useEffect(() => {
@@ -47,16 +47,16 @@ const ResearchCard = ({ item, index }: ResearchCardProps) => {
       rel="noopener noreferrer"
       className="group card-lift arrow-nudge arrow-nudge-up flex flex-col h-full border border-ink-line"
     >
-      <div
-        className={`relative aspect-[4/3] flex items-center justify-center overflow-hidden border-b border-ink-line bg-ink-surface p-3 sm:p-4 ${HATCH}`}
-      >
+      {/* A faint diagonal hatch, so a late Drive thumbnail lands on a drawn plate rather than a blank. */}
+      <div className="relative aspect-[4/3] flex items-center justify-center overflow-hidden border-b border-ink-line bg-ink-surface p-3 sm:p-4 plate-hatch">
         {imageFailed ? (
           <DocumentGlyph />
         ) : (
+          /* Decorative here: the heading in the same link already names the document. */
           <img
             ref={imgRef}
             src={item.image}
-            alt={`First page of ${item.title}`}
+            alt=""
             loading="lazy"
             onLoad={() => setLoaded(true)}
             onError={() => setImageFailed(true)}
@@ -65,20 +65,21 @@ const ResearchCard = ({ item, index }: ResearchCardProps) => {
             }`}
           />
         )}
-        <span className="absolute top-0 right-0 border-l border-b border-ink-line bg-ink text-text-muted font-mono text-[10px] uppercase tracking-[0.2em] px-2 py-1 transition-colors duration-300 group-hover:border-ink-edge">
+        <span className="absolute top-0 right-0 border-l border-b border-ink-line bg-ink meta text-text-muted px-2 py-1 transition-colors duration-300 group-hover:border-ink-edge">
           {TYPE_LABELS[item.type]}
         </span>
       </div>
 
       <div className="flex flex-col flex-1 p-5">
+        {/* Not .meta: the venue is mixed case and stays that way. */}
         <div className="flex items-baseline justify-between gap-4 mb-3 font-mono text-[10px] tracking-[0.2em] text-text-subtle">
           <span className="shrink-0">DOC-{number}</span>
           {meta && <span className="truncate text-right">{meta}</span>}
         </div>
 
-        <h3 className="text-xl font-medium text-text text-balance leading-snug mb-2 transition-colors duration-300 group-hover:text-accent">
+        <Heading className="text-xl font-medium text-text text-balance leading-snug mb-2 transition-colors duration-300 group-hover:text-accent">
           {item.title}
-        </h3>
+        </Heading>
 
         <p className="text-sm text-text-muted leading-relaxed line-clamp-3 mb-4">{item.description}</p>
 
@@ -113,26 +114,25 @@ const STROKES: { d: string; delay: number }[] = [
 
 /**
  * A sheet with a folded corner and three rules — the fallback when a thumbnail
- * will not load. It draws itself once scrolled into view. The dash styles are
- * inline rather than the shared [data-draw] rule: Chromium does not restyle
- * `[pathLength]` descendants when an ancestor's attribute flips.
+ * will not load. Every stroke carries pathLength=1 and class "draw", so the
+ * shared `[data-draw]` rules draw it once it scrolls into view and stand it
+ * down under reduced motion.
  */
 const DocumentGlyph = () => {
-  const reduced = useReducedMotion();
-  const [ref, inView] = useInView<HTMLDivElement>();
-  const drawn = reduced || inView;
+  const [ref, inView] = useInView<SVGSVGElement>();
 
   return (
-    <div ref={ref} className="flex flex-col items-center gap-3 text-text-subtle">
+    <div className="flex flex-col items-center gap-3 text-text-subtle">
       {/* transform-none keeps the card's arrow-nudge from moving this drawing on hover. */}
       <svg
+        ref={ref}
         viewBox="0 0 40 50"
         className="w-10 h-[50px] group-hover:transform-none"
         fill="none"
         stroke="currentColor"
         strokeWidth={1}
         strokeLinejoin="round"
-        vectorEffect="non-scaling-stroke"
+        data-draw={inView ? 'in' : 'pending'}
         aria-hidden="true"
       >
         {STROKES.map(({ d, delay }) => (
@@ -140,15 +140,12 @@ const DocumentGlyph = () => {
             key={d}
             d={d}
             pathLength={1}
-            style={{
-              strokeDasharray: 1,
-              strokeDashoffset: drawn ? 0 : 1,
-              transition: reduced ? 'none' : `stroke-dashoffset 1.6s cubic-bezier(0.4, 0, 0.2, 1) ${delay}ms`,
-            }}
+            className="draw"
+            style={{ '--draw-delay': `${delay}ms` } as CSSProperties}
           />
         ))}
       </svg>
-      <span className="font-mono text-[10px] uppercase tracking-[0.2em]">Preview unavailable</span>
+      <span className="meta">Preview unavailable</span>
     </div>
   );
 };

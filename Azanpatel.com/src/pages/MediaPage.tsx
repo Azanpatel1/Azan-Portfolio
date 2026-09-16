@@ -1,11 +1,10 @@
 import Layout from '../components/layout/Layout';
-import MediaEmbed from '../components/media/MediaEmbed';
+import MediaEmbed, { MediaDetails } from '../components/media/MediaEmbed';
 import Reveal from '../components/motion/Reveal';
 import SectionHeader from '../components/ui/SectionHeader';
 import usePageTitle from '../hooks/usePageTitle';
+import { pad } from '../lib/format';
 import { MEDIA } from '../data/media';
-
-const pad = (n: number) => String(n).padStart(2, '0');
 
 const MediaPage = () => {
   usePageTitle('Media');
@@ -21,28 +20,27 @@ const MediaPage = () => {
             title="Podcasts, talks, and conversations."
             description="Recorded appearances where I talk through the work and the thinking behind it. Play them here or open them on Spotify."
             action={
-              <span className="font-mono text-[10px] tracking-[0.2em] text-text-subtle">
-                {pad(MEDIA.length)} {MEDIA.length === 1 ? 'RECORDING' : 'RECORDINGS'}
+              <span className="meta">
+                {pad(MEDIA.length)} {MEDIA.length === 1 ? 'Recording' : 'Recordings'}
               </span>
             }
           />
 
-          {/* A plate list: on lg the number sits in the margin, the way figures are indexed. */}
-          <ol className="max-w-3xl">
+          {/* Each recording is a plate with its details alongside, the way a project page is split. */}
+          <ol className="space-y-12 lg:space-y-16">
             {MEDIA.map((item, i) => (
               <Reveal
                 as="li"
                 key={item.id}
                 delay={i * 90}
-                className="lg:grid lg:grid-cols-[4rem_1fr] mb-8 last:mb-0"
+                className="grid gap-8 lg:grid-cols-12 lg:gap-12 lg:items-start"
               >
-                <span
-                  aria-hidden="true"
-                  className="hidden lg:block pt-5 font-mono text-xs text-accent tracking-[0.2em]"
-                >
-                  {pad(i + 1)}
-                </span>
-                <MediaEmbed item={item} index={i} />
+                <div className="lg:col-span-8">
+                  <MediaEmbed item={item} index={i} />
+                </div>
+                <aside aria-label="Recording details" className="lg:col-span-4">
+                  <MediaDetails item={item} index={i} total={MEDIA.length} />
+                </aside>
               </Reveal>
             ))}
           </ol>

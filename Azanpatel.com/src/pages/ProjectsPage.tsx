@@ -6,12 +6,11 @@ import SectionHeader from '../components/ui/SectionHeader';
 import usePageTitle from '../hooks/usePageTitle';
 import { GRAPHS } from '../data/graphs';
 import { PROJECTS } from '../data/projects';
-
-const pad = (n: number) => String(n).padStart(2, '0');
+import { pad } from '../lib/format';
 
 const Count = ({ n, noun }: { n: number; noun: string }) => (
-  <span className="font-mono text-[10px] tracking-[0.2em] text-text-subtle">
-    {pad(n)} {noun.toUpperCase()}
+  <span className="meta">
+    {pad(n)} {noun}
   </span>
 );
 

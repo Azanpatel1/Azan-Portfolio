@@ -3,20 +3,20 @@ import { Link } from 'react-router-dom';
 import type { ProjectData } from '../../data/projects';
 import Tag from '../ui/Tag';
 import { ArrowRight } from '../ui/Icon';
-
-/** A faint diagonal hatch behind the plate, so the image lands on a drawn surface rather than a blank. */
-const HATCH =
-  'plate-hatch';
+import { pad } from '../../lib/format';
 
 export interface ProjectCardProps {
   project: ProjectData;
   index: number;
+  /** h2 on the listing page, where the card sits straight under the page h1; h3 under a section heading. */
+  headingLevel?: 2 | 3;
 }
 
-const ProjectCard = ({ project, index }: ProjectCardProps) => {
+const ProjectCard = ({ project, index, headingLevel = 3 }: ProjectCardProps) => {
   const [loaded, setLoaded] = useState(false);
   const imgRef = useRef<HTMLImageElement>(null);
-  const number = String(index + 1).padStart(2, '0');
+  const number = pad(index + 1);
+  const Heading = headingLevel === 2 ? 'h2' : 'h3';
 
   // A cached image can finish before React attaches onLoad.
   useEffect(() => {
@@ -29,21 +29,22 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
       to={`/projects/${project.id}`}
       className="group card-lift arrow-nudge flex flex-col h-full border border-ink-line"
     >
-      <div
-        className={`relative aspect-[4/3] flex items-center justify-center overflow-hidden border-b border-ink-line bg-ink-surface p-3 sm:p-4 ${HATCH}`}
-      >
+      {/* A faint diagonal hatch behind the plate, so the image lands on a drawn surface rather than a blank. */}
+      <div className="relative aspect-[4/3] flex items-center justify-center overflow-hidden border-b border-ink-line bg-ink-surface p-3 sm:p-4 plate-hatch">
+        {/* Decorative here: the heading in the same link already names the project. */}
         <img
           ref={imgRef}
           src={project.image}
-          alt={project.title}
+          alt=""
           loading="lazy"
           onLoad={() => setLoaded(true)}
           className={`max-h-full max-w-full object-contain grayscale group-hover:grayscale-0 transition-[opacity,filter,transform] duration-500 ease-house motion-safe:group-hover:scale-[1.02] ${
             loaded ? 'opacity-100' : 'opacity-0'
           }`}
         />
+        {/* The same corner tab the research cards carry for their type, set in the accent. */}
         {project.featured && (
-          <span className="absolute top-3 right-3 inline-flex items-center gap-1.5 border border-accent bg-ink text-accent font-mono text-[10px] uppercase tracking-[0.2em] leading-none px-2 py-1.5">
+          <span className="absolute top-0 right-0 inline-flex items-center gap-1.5 border-l border-b border-accent bg-ink meta text-accent px-2 py-1">
             <span aria-hidden="true" className="w-1 h-1 bg-accent" />
             Featured
           </span>
@@ -51,14 +52,14 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
       </div>
 
       <div className="flex flex-col flex-1 p-5">
-        <div className="flex items-baseline justify-between gap-4 mb-3 font-mono text-[10px] tracking-[0.2em] text-text-subtle">
+        <div className="flex items-baseline justify-between gap-4 mb-3 meta">
           <span>PRJ-{number}</span>
           {project.year && <span>{project.year}</span>}
         </div>
 
-        <h3 className="text-xl font-medium text-text leading-snug mb-2 transition-colors duration-300 group-hover:text-accent">
+        <Heading className="text-xl font-medium text-text leading-snug mb-2 transition-colors duration-300 group-hover:text-accent">
           {project.title}
-        </h3>
+        </Heading>
 
         <p className="text-sm text-text-muted leading-relaxed line-clamp-2 mb-4">{project.description}</p>
 

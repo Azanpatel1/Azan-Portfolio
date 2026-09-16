@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import type { ReactNode } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import Layout from '../components/layout/Layout';
@@ -12,17 +12,10 @@ import { PROJECTS, getProjectById } from '../data/projects';
 import type { ProjectData } from '../data/projects';
 import type { LightboxItem } from '../components/ui/Lightbox';
 import Tick from '../components/ui/Tick';
+import { pad } from '../lib/format';
 
 /** Entrance order for the header block: breadcrumb, index rule, title, lead, tags, plate. */
 const STEP = 70;
-
-const pad = (n: number) => String(n).padStart(2, '0');
-
-/** A faint diagonal hatch behind every plate, so an image lands on a drawn surface rather than a blank. */
-const HATCH =
-  'plate-hatch';
-
-const EASE = 'ease-house';
 
 const ProjectDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -39,6 +32,7 @@ const ProjectDetailPage = () => {
 /** Keyed on the project so prev/next navigation starts each article fresh. */
 const ProjectArticle = ({ project }: { project: ProjectData }) => {
   const [open, setOpen] = useState<number | null>(null);
+  const close = useCallback(() => setOpen(null), []);
 
   const position = PROJECTS.findIndex((p) => p.id === project.id);
   const number = pad(position + 1);
@@ -73,7 +67,7 @@ const ProjectArticle = ({ project }: { project: ProjectData }) => {
                   className="group inline-flex items-center gap-2 hover:text-text transition-colors"
                 >
                   <ArrowLeft
-                    className={`w-3.5 h-3.5 transition-transform duration-300 ${EASE} motion-safe:group-hover:-translate-x-0.5`}
+                    className={`w-3.5 h-3.5 transition-transform duration-300 ease-house motion-safe:group-hover:-translate-x-0.5`}
                   />
                   Projects
                 </Link>
@@ -122,16 +116,17 @@ const ProjectArticle = ({ project }: { project: ProjectData }) => {
             type="button"
             onClick={() => setOpen(0)}
             aria-label={`Enlarge figure 1, ${project.title}`}
-            className={`block w-full aspect-[16/10] overflow-hidden p-4 sm:p-8 ${HATCH}`}
+            className="block w-full aspect-auto sm:aspect-[16/10] overflow-hidden p-4 sm:p-8 plate-hatch"
           >
+            {/* On phones the plate takes the figure's own height (capped), so a portrait source is not shrunk into a 16:10 box. */}
             <PlateImage
               src={project.image}
               alt={project.title}
-              className="w-full h-full object-contain"
+              className="w-full h-full max-h-[70vh] sm:max-h-none object-contain"
             />
           </button>
 
-          <figcaption className="border-t border-ink-line px-4 py-3 flex items-center justify-between gap-4 font-mono text-[10px] uppercase tracking-[0.2em] text-text-subtle">
+          <figcaption className="border-t border-ink-line px-5 py-3 flex items-center justify-between gap-4 meta">
             <span className="truncate">FIG. 01 · {project.title}</span>
             <span className="shrink-0 inline-flex items-center gap-1.5 transition-colors duration-300 group-hover:text-accent">
               <span className="hidden sm:inline">Enlarge</span>
@@ -147,9 +142,7 @@ const ProjectArticle = ({ project }: { project: ProjectData }) => {
                 Gallery
               </h2>
               <span className="flex-1 h-px bg-ink-line rule-draw" />
-              <span className="font-mono text-[10px] tracking-[0.2em] text-text-subtle">
-                {pad(gallery.length)} FIGURES
-              </span>
+              <span className="meta">{pad(gallery.length)} FIGURES</span>
             </Reveal>
 
             <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
@@ -161,16 +154,16 @@ const ProjectArticle = ({ project }: { project: ProjectData }) => {
                       type="button"
                       onClick={() => setOpen(i + 1)}
                       aria-label={`Open figure ${i + 2}, ${project.title}`}
-                      className={`group card-lift relative aspect-[4/3] overflow-hidden border border-ink-line bg-ink-surface p-3 sm:p-4 ${HATCH}`}
+                      className="group card-lift relative aspect-[4/3] overflow-hidden border border-ink-line bg-ink-surface p-3 sm:p-4 plate-hatch"
                     >
                       <PlateImage
                         src={src}
                         alt=""
                         loading="lazy"
-                        className={`w-full h-full object-contain transition-transform duration-500 ${EASE} motion-safe:group-hover:scale-[1.03]`}
+                        className={`w-full h-full object-contain transition-transform duration-500 ease-house motion-safe:group-hover:scale-[1.03]`}
                       />
                       {/* Corner plates, so the label and the affordance never sit on the drawing itself. */}
-                      <span className="absolute top-0 left-0 border-r border-b border-ink-line bg-ink px-2 py-1 font-mono text-[10px] leading-none tracking-[0.2em] text-text-subtle transition-colors duration-300 group-hover:border-ink-edge group-hover:text-text-muted">
+                      <span className="absolute top-0 left-0 border-r border-b border-ink-line bg-ink px-2 py-1 meta leading-none transition-colors duration-300 group-hover:border-ink-edge group-hover:text-text-muted">
                         FIG. {figure}
                       </span>
                       <span
@@ -207,7 +200,7 @@ const ProjectArticle = ({ project }: { project: ProjectData }) => {
             <Reveal delay={100} className="lg:sticky lg:top-24 border border-ink-line">
               <div className="px-5 py-3 border-b border-ink-line flex items-center justify-between gap-4">
                 <span className="label">Details</span>
-                <span className="font-mono text-[10px] tracking-[0.2em] text-text-subtle">
+                <span className="meta">
                   {number} / {pad(total)}
                 </span>
               </div>
@@ -239,7 +232,7 @@ const ProjectArticle = ({ project }: { project: ProjectData }) => {
         )}
       </div>
 
-      <Lightbox items={figures} index={open} onClose={() => setOpen(null)} onIndexChange={setOpen} />
+      <Lightbox items={figures} index={open} onClose={close} onIndexChange={setOpen} />
     </article>
   );
 };
@@ -276,7 +269,7 @@ const PlateImage = ({ src, alt, className = '', loading }: PlateImageProps) => {
 
 const DetailRow = ({ label, children }: { label: string; children: ReactNode }) => (
   <div className="grid grid-cols-3 gap-4 px-5 py-3 text-sm">
-    <dt className="font-mono text-[11px] uppercase tracking-[0.18em] text-text-subtle self-center">{label}</dt>
+    <dt className="meta self-center">{label}</dt>
     <dd className="text-text col-span-2">{children}</dd>
   </div>
 );
@@ -296,17 +289,17 @@ const NeighbourLink = ({ project, index, direction }: NeighbourLinkProps) => {
         isNext ? 'sm:items-end sm:text-right' : ''
       }`}
     >
-      <span className="inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.2em] text-text-subtle">
+      <span className="inline-flex items-center gap-2 meta">
         {!isNext && (
-          <ArrowLeft className={`w-3.5 h-3.5 transition-transform duration-300 ${EASE} motion-safe:group-hover:-translate-x-0.5`} />
+          <ArrowLeft className={`w-3.5 h-3.5 transition-transform duration-300 ease-house motion-safe:group-hover:-translate-x-0.5`} />
         )}
         {isNext ? 'Next project' : 'Previous project'}
         {isNext && (
-          <ArrowRight className={`w-3.5 h-3.5 transition-transform duration-300 ${EASE} motion-safe:group-hover:translate-x-0.5`} />
+          <ArrowRight className={`w-3.5 h-3.5 transition-transform duration-300 ease-house motion-safe:group-hover:translate-x-0.5`} />
         )}
       </span>
       <span className={`flex items-baseline gap-3 ${isNext ? 'sm:flex-row-reverse' : ''}`}>
-        <span className="font-mono text-[10px] tracking-[0.2em] text-text-subtle">PRJ-{pad(index + 1)}</span>
+        <span className="meta">PRJ-{pad(index + 1)}</span>
         <span className="text-lg text-text leading-snug transition-colors duration-300 group-hover:text-accent">
           {project.title}
         </span>
@@ -334,7 +327,7 @@ const NotFound = ({ slug }: { slug: string }) => (
             to="/projects"
             className="group hidden md:inline-flex items-center gap-2 font-mono text-[11px] uppercase tracking-[0.2em] text-text-muted hover:text-text transition-colors"
           >
-            <ArrowLeft className={`w-3.5 h-3.5 transition-transform duration-300 ${EASE} motion-safe:group-hover:-translate-x-0.5`} />
+            <ArrowLeft className={`w-3.5 h-3.5 transition-transform duration-300 ease-house motion-safe:group-hover:-translate-x-0.5`} />
             All projects
           </Link>
         }
@@ -343,7 +336,7 @@ const NotFound = ({ slug }: { slug: string }) => (
       <Reveal delay={120} className="border border-ink-line max-w-3xl">
         <div className="px-5 py-3 border-b border-ink-line flex items-center justify-between gap-4">
           <span className="label">Catalogue</span>
-          <span className="font-mono text-[10px] tracking-[0.2em] text-text-subtle">{pad(PROJECTS.length)} ENTRIES</span>
+          <span className="meta">{pad(PROJECTS.length)} ENTRIES</span>
         </div>
         <ol>
           {PROJECTS.map((project, i) => (
@@ -357,9 +350,7 @@ const NotFound = ({ slug }: { slug: string }) => (
                   {project.title}
                 </span>
                 {project.year && (
-                  <span className="hidden sm:inline font-mono text-[10px] tracking-[0.2em] text-text-subtle">
-                    {project.year}
-                  </span>
+                  <span className="hidden sm:inline meta">{project.year}</span>
                 )}
                 <ArrowRight className="w-3.5 h-3.5 shrink-0 text-text-subtle group-hover:text-accent transition-colors" />
               </Link>
@@ -370,7 +361,7 @@ const NotFound = ({ slug }: { slug: string }) => (
 
       <div className="mt-8 md:hidden">
         <Link to="/projects" className="btn btn-ghost w-full group">
-          <ArrowLeft className={`w-3.5 h-3.5 transition-transform duration-300 ${EASE} motion-safe:group-hover:-translate-x-0.5`} />
+          <ArrowLeft className={`w-3.5 h-3.5 transition-transform duration-300 ease-house motion-safe:group-hover:-translate-x-0.5`} />
           All projects
         </Link>
       </div>
