@@ -1,4 +1,4 @@
-import { createElement } from 'react';
+import { createElement, useState } from 'react';
 import type { CSSProperties, HTMLAttributes, ReactNode } from 'react';
 import useInView from '../../hooks/useInView';
 
@@ -20,13 +20,16 @@ interface RevealProps extends HTMLAttributes<HTMLElement> {
  */
 const Reveal = ({ as = 'div', delay = 0, fadeOnly = false, className = '', style, children, ...rest }: RevealProps) => {
   const [ref, inView] = useInView<HTMLElement>();
+  // Keyboard focus can land on a child before it scrolls into view; show it rather than hide the focus ring.
+  const [focused, setFocused] = useState(false);
   const styles = { ...style, '--reveal-delay': `${delay}ms` } as CSSProperties;
   return createElement(
     as,
     {
       ref,
       style: styles,
-      className: `reveal ${fadeOnly ? 'reveal-fade' : ''} ${inView ? 'is-in' : ''} ${className}`.trim(),
+      onFocusCapture: () => setFocused(true),
+      className: `reveal ${fadeOnly ? 'reveal-fade' : ''} ${inView || focused ? 'is-in' : ''} ${className}`.trim(),
       ...rest,
     },
     children,

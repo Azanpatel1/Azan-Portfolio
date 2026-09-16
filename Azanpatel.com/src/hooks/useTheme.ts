@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useSyncExternalStore } from 'react';
 
 export type Theme = 'dark' | 'light';
 
@@ -7,6 +7,15 @@ const STORAGE_KEY = 'theme';
 /** Mirrors whatever the pre-paint script in index.html already applied. */
 const readTheme = (): Theme =>
   document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+
+// One store for the whole app, so every toggle on the page stays in step.
+let current: Theme = typeof document !== 'undefined' ? readTheme() : 'dark';
+const listeners = new Set<() => void>();
+const subscribe = (fn: () => void) => {
+  listeners.add(fn);
+  return () => listeners.delete(fn);
+};
+const getSnapshot = () => current;
 
 const apply = (theme: Theme) => {
   const root = document.documentElement;
@@ -18,16 +27,19 @@ const apply = (theme: Theme) => {
     ?.setAttribute('content', theme === 'light' ? '#fafaf9' : '#050505');
 };
 
+const setTheme = (theme: Theme) => {
+  if (theme === current) return;
+  current = theme;
+  apply(theme);
+  listeners.forEach((fn) => fn());
+};
+
 /**
  * Light/dark theme. Dark is the default; a choice persists in localStorage and
- * wins over the OS preference, which is only used until the visitor picks one.
+ * wins over the OS preference, which is only followed until the visitor picks.
  */
 const useTheme = () => {
-  const [theme, setTheme] = useState<Theme>(readTheme);
-
-  useEffect(() => {
-    apply(theme);
-  }, [theme]);
+  const theme = useSyncExternalStore(subscribe, getSnapshot, getSnapshot);
 
   // Follow the OS while the visitor has not chosen for themselves.
   useEffect(() => {
@@ -45,15 +57,13 @@ const useTheme = () => {
   }, []);
 
   const toggle = useCallback(() => {
-    setTheme((cur) => {
-      const next: Theme = cur === 'light' ? 'dark' : 'light';
-      try {
-        localStorage.setItem(STORAGE_KEY, next);
-      } catch {
-        /* private mode etc. — the choice just won't persist */
-      }
-      return next;
-    });
+    const next: Theme = current === 'light' ? 'dark' : 'light';
+    try {
+      localStorage.setItem(STORAGE_KEY, next);
+    } catch {
+      /* private mode etc. — the choice just won't persist */
+    }
+    setTheme(next);
   }, []);
 
   return { theme, toggle };
