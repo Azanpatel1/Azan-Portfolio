@@ -2,10 +2,12 @@ import { useEffect, useState } from 'react';
 import Layout from '../components/layout/Layout';
 import SectionHeader from '../components/ui/SectionHeader';
 import ThemePillars from '../components/goal/ThemePillars';
+import usePageTitle from '../hooks/usePageTitle';
 import { GOAL_META, GOAL_SECTIONS } from '../data/goal';
 import type { GoalBlock, GoalSection } from '../data/goal';
 
 const GoalPage = () => {
+  usePageTitle('Goal');
   const [open, setOpen] = useState<Set<string>>(() => new Set());
 
   // Deep links (#goal-07) open that section on load and scroll to it.

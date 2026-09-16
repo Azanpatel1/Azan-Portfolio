@@ -6,11 +6,13 @@ import ProjectsPage from './pages/ProjectsPage';
 import ProjectDetailPage from './pages/ProjectDetailPage';
 import ResearchPage from './pages/ResearchPage';
 import MediaPage from './pages/MediaPage';
+import ScrollToTop from './components/layout/ScrollToTop';
 import './index.css';
 
 function App() {
   return (
     <Router>
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/goal" element={<GoalPage />} />

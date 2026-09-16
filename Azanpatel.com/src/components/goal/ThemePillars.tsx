@@ -1,4 +1,7 @@
 import { useState } from 'react';
+import type { CSSProperties } from 'react';
+import useInView from '../../hooks/useInView';
+import Reveal from '../motion/Reveal';
 import { Link } from 'react-router-dom';
 import ClassicalColumn, { COLUMN_H, COLUMN_W } from './ClassicalColumn';
 import { GOAL_SECTIONS, GOAL_THEMES } from '../../data/goal';
@@ -28,9 +31,10 @@ interface ThemePillarsProps {
 const ThemePillars = ({ onOpenSection }: ThemePillarsProps) => {
   const [active, setActive] = useState<string | null>(null);
   const clear = (index: string) => setActive((cur) => (cur === index ? null : cur));
+  const [plateRef, plateInView] = useInView<SVGSVGElement>({ threshold: 0.3 });
 
   return (
-    <figure className="border border-ink-line bg-ink-surface/50">
+    <Reveal as="figure" className="border border-ink-line bg-ink-surface/50">
       <h2 className="sr-only">Research themes</h2>
       <figcaption className="px-5 py-3 border-b border-ink-line flex items-center justify-between gap-4">
         <span className="label">Plate — the three orders</span>
@@ -48,9 +52,10 @@ const ThemePillars = ({ onOpenSection }: ThemePillarsProps) => {
 
         {/* Frieze — the themes themselves are the load */}
         <ol className="grid md:grid-cols-3 border-x border-ink-line bg-ink divide-y md:divide-y-0 md:divide-x divide-ink-line">
-          {GOAL_THEMES.map((theme) => (
+          {GOAL_THEMES.map((theme, i) => (
             <ThemeCard
               key={theme.index}
+              delay={i * 90}
               theme={theme}
               isActive={active === theme.index}
               onEnter={() => setActive(theme.index)}
@@ -69,6 +74,8 @@ const ThemePillars = ({ onOpenSection }: ThemePillarsProps) => {
         />
 
         <svg
+          ref={plateRef}
+          data-draw={plateInView ? 'in' : 'pending'}
           viewBox={`0 0 ${PLATE_W} ${COLUMN_H}`}
           className="w-full block -mt-px"
           role="img"
@@ -79,6 +86,7 @@ const ThemePillars = ({ onOpenSection }: ThemePillarsProps) => {
           {GOAL_THEMES.map((theme, i) => (
             <g
               key={theme.index}
+              style={{ '--draw-delay': `${i * 220}ms` } as CSSProperties}
               className={`transition-colors duration-500 ${
                 active === null
                   ? 'text-[rgb(var(--plate-stroke))]'
@@ -121,20 +129,23 @@ const ThemePillars = ({ onOpenSection }: ThemePillarsProps) => {
           ))}
         </div>
       </div>
-    </figure>
+    </Reveal>
   );
 };
 
 interface ThemeCardProps {
   theme: GoalTheme;
+  delay: number;
   isActive: boolean;
   onEnter: () => void;
   onLeave: () => void;
   onOpenSection?: (index: string) => void;
 }
 
-const ThemeCard = ({ theme, isActive, onEnter, onLeave, onOpenSection }: ThemeCardProps) => (
-  <li
+const ThemeCard = ({ theme, delay, isActive, onEnter, onLeave, onOpenSection }: ThemeCardProps) => (
+  <Reveal
+    as="li"
+    delay={delay}
     onMouseEnter={onEnter}
     onMouseLeave={onLeave}
     onFocus={onEnter}
@@ -200,7 +211,7 @@ const ThemeCard = ({ theme, isActive, onEnter, onLeave, onOpenSection }: ThemeCa
         );
       })}
     </div>
-  </li>
+  </Reveal>
 );
 
 export default ThemePillars;
