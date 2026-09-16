@@ -1,31 +1,40 @@
-import { Link } from 'react-router-dom';
 import SectionHeader from '../ui/SectionHeader';
+import Reveal from '../motion/Reveal';
 import ResearchCard from '../research/ResearchCard';
 import { RESEARCH } from '../../data/research';
+import { SectionLink, SectionLinkMobile } from './SectionLink';
+
+const SHOWN = 3;
+
+const pad = (n: number) => String(n).padStart(2, '0');
 
 const ResearchPreview = () => {
+  const count = `${pad(Math.min(SHOWN, RESEARCH.length))} / ${pad(RESEARCH.length)}`;
+
   return (
-    <section id="research" className="section border-b border-ink-line">
+    <section id="research" className="section border-b border-ink-line scroll-mt-16">
       <div className="container">
         <SectionHeader
           index="02"
           label="Research"
           title="Proposals, reports, and presentations in neurotechnology and medical devices."
+          action={
+            <SectionLink to="/research" count={count}>
+              View all research
+            </SectionLink>
+          }
         />
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {RESEARCH.slice(0, 3).map((item, index) => (
-            <ResearchCard key={item.id} item={item} index={index} />
+          {RESEARCH.slice(0, SHOWN).map((item, index) => (
+            <Reveal key={item.id} delay={index * 80} className="grid">
+              <ResearchCard item={item} index={index} />
+            </Reveal>
           ))}
         </div>
 
-        <div className="mt-12 flex justify-start">
-          <Link to="/research" className="btn btn-ghost">
-            View All Research
-            <svg className="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
-            </svg>
-          </Link>
+        <div className="mt-8">
+          <SectionLinkMobile to="/research">View all research</SectionLinkMobile>
         </div>
       </div>
     </section>

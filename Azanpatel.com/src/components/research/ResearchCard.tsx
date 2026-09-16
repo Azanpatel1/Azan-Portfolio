@@ -1,5 +1,9 @@
-import { useState } from 'react';
-import { ResearchItem } from '../../data/research';
+import { useEffect, useRef, useState } from 'react';
+import type { ResearchItem } from '../../data/research';
+import Tag from '../ui/Tag';
+import { ArrowUpRight } from '../ui/Icon';
+import useInView from '../../hooks/useInView';
+import useReducedMotion from '../../hooks/useReducedMotion';
 
 const TYPE_LABELS: Record<ResearchItem['type'], string> = {
   proposal: 'Proposal',
@@ -7,86 +11,145 @@ const TYPE_LABELS: Record<ResearchItem['type'], string> = {
   presentation: 'Presentation',
 };
 
+/** What the link opens, read off the Drive URL so the footer can say so. */
+const formatOf = (url: string) => {
+  if (url.includes('/document/')) return 'Google Doc';
+  if (url.includes('/presentation/')) return 'Google Slides';
+  return 'Google Drive';
+};
+
+/** A faint diagonal hatch, so a late Drive thumbnail lands on a drawn plate rather than a blank. */
+const HATCH =
+  '[background-image:repeating-linear-gradient(-45deg,rgb(var(--ink-line))_0_1px,transparent_1px_7px)]';
+
 export interface ResearchCardProps {
   item: ResearchItem;
   index: number;
 }
 
 const ResearchCard = ({ item, index }: ResearchCardProps) => {
+  const [loaded, setLoaded] = useState(false);
   const [imageFailed, setImageFailed] = useState(false);
+  const imgRef = useRef<HTMLImageElement>(null);
   const number = String(index + 1).padStart(2, '0');
+  const meta = [item.venue, item.year].filter(Boolean).join(' · ');
+
+  // A cached image can finish before React attaches onLoad.
+  useEffect(() => {
+    const img = imgRef.current;
+    if (img?.complete && img.naturalWidth > 0) setLoaded(true);
+  }, []);
 
   return (
     <a
       href={item.driveUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className="group block border border-ink-line hover:border-ink-edge transition-colors"
+      className="group card-lift arrow-nudge arrow-nudge-up flex flex-col h-full border border-ink-line"
     >
-      <div className="relative aspect-[4/3] flex items-center justify-center overflow-hidden bg-ink-surface border-b border-ink-line p-2 sm:p-3">
+      <div
+        className={`relative aspect-[4/3] flex items-center justify-center overflow-hidden border-b border-ink-line bg-ink-surface p-3 sm:p-4 ${HATCH}`}
+      >
         {imageFailed ? (
-          <div className="flex flex-col items-center gap-3 text-text-subtle">
-            <svg className="w-10 h-10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1}>
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
-              />
-            </svg>
-            <span className="font-mono text-[10px] uppercase tracking-[0.2em]">
-              {TYPE_LABELS[item.type]}
-            </span>
-          </div>
+          <DocumentGlyph />
         ) : (
           <img
+            ref={imgRef}
             src={item.image}
             alt={`First page of ${item.title}`}
             loading="lazy"
+            onLoad={() => setLoaded(true)}
             onError={() => setImageFailed(true)}
-            className="max-h-full max-w-full object-contain grayscale group-hover:grayscale-0 transition-all duration-500"
+            className={`max-h-full max-w-full object-contain border border-ink-line grayscale group-hover:grayscale-0 transition-[opacity,filter] duration-500 ease-out ${
+              loaded ? 'opacity-100' : 'opacity-0'
+            }`}
           />
         )}
-        <span className="absolute top-3 right-3 bg-ink/80 backdrop-blur-sm text-text-muted font-mono text-[10px] uppercase tracking-[0.2em] px-2 py-1 border border-ink-line">
+        <span className="absolute top-0 right-0 border-l border-b border-ink-line bg-ink text-text-muted font-mono text-[10px] uppercase tracking-[0.2em] px-2 py-1 transition-colors duration-300 group-hover:border-ink-edge">
           {TYPE_LABELS[item.type]}
         </span>
       </div>
 
-      <div className="p-5">
-        <div className="flex items-baseline justify-between gap-4 mb-3">
-          <span className="font-mono text-[10px] tracking-[0.2em] text-text-subtle">
-            DOC-{number}
-          </span>
-          <span className="font-mono text-[10px] tracking-[0.2em] text-text-subtle">
-            {[item.venue, item.year].filter(Boolean).join(' · ')}
-          </span>
+      <div className="flex flex-col flex-1 p-5">
+        <div className="flex items-baseline justify-between gap-4 mb-3 font-mono text-[10px] tracking-[0.2em] text-text-subtle">
+          <span className="shrink-0">DOC-{number}</span>
+          {meta && <span className="truncate text-right">{meta}</span>}
         </div>
 
-        <h3 className="text-xl font-medium text-text mb-2 group-hover:text-accent transition-colors">
+        <h3 className="text-xl font-medium text-text text-balance leading-snug mb-2 transition-colors duration-300 group-hover:text-accent">
           {item.title}
         </h3>
 
-        <p className="text-sm text-text-muted leading-relaxed line-clamp-3 mb-4">
-          {item.description}
-        </p>
+        <p className="text-sm text-text-muted leading-relaxed line-clamp-3 mb-4">{item.description}</p>
 
-        <div className="flex flex-wrap items-center gap-1.5">
+        <div className="flex flex-wrap gap-1.5 mb-5">
           {item.tags.map((tag) => (
-            <span
-              key={tag}
-              className="font-mono text-[10px] uppercase tracking-[0.15em] text-text-subtle border border-ink-line px-2 py-1"
-            >
+            <Tag key={tag} className="group-hover:border-ink-edge">
               {tag}
-            </span>
+            </Tag>
           ))}
-          <span className="ml-auto inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-[0.15em] text-text-subtle group-hover:text-accent transition-colors">
+        </div>
+
+        <div className="mt-auto pt-3.5 border-t border-ink-line flex items-center justify-between gap-4 font-mono text-[10px] uppercase tracking-[0.15em] text-text-subtle">
+          <span>{formatOf(item.driveUrl)}</span>
+          <span className="inline-flex items-center gap-1 transition-colors duration-300 group-hover:text-accent">
             View
-            <svg className="w-3 h-3" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth={1.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M5.5 14.5l9-9m0 0h-6m6 0v6" />
-            </svg>
+            <ArrowUpRight className="w-3.5 h-3.5" />
           </span>
         </div>
       </div>
     </a>
+  );
+};
+
+/** The glyph's strokes, outline first and the text rules last, with their draw delays. */
+const STROKES: { d: string; delay: number }[] = [
+  { d: 'M3 1.5h23l11 11v36H3z', delay: 0 },
+  { d: 'M26 1.5v11h11', delay: 350 },
+  { d: 'M11 24h18', delay: 600 },
+  { d: 'M11 31h18', delay: 700 },
+  { d: 'M11 38h11', delay: 800 },
+];
+
+/**
+ * A sheet with a folded corner and three rules — the fallback when a thumbnail
+ * will not load. It draws itself once scrolled into view. The dash styles are
+ * inline rather than the shared [data-draw] rule: Chromium does not restyle
+ * `[pathLength]` descendants when an ancestor's attribute flips.
+ */
+const DocumentGlyph = () => {
+  const reduced = useReducedMotion();
+  const [ref, inView] = useInView<HTMLDivElement>();
+  const drawn = reduced || inView;
+
+  return (
+    <div ref={ref} className="flex flex-col items-center gap-3 text-text-subtle">
+      {/* transform-none keeps the card's arrow-nudge from moving this drawing on hover. */}
+      <svg
+        viewBox="0 0 40 50"
+        className="w-10 h-[50px] group-hover:transform-none"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth={1}
+        strokeLinejoin="round"
+        vectorEffect="non-scaling-stroke"
+        aria-hidden="true"
+      >
+        {STROKES.map(({ d, delay }) => (
+          <path
+            key={d}
+            d={d}
+            pathLength={1}
+            style={{
+              strokeDasharray: 1,
+              strokeDashoffset: drawn ? 0 : 1,
+              transition: reduced ? 'none' : `stroke-dashoffset 1.6s cubic-bezier(0.4, 0, 0.2, 1) ${delay}ms`,
+            }}
+          />
+        ))}
+      </svg>
+      <span className="font-mono text-[10px] uppercase tracking-[0.2em]">Preview unavailable</span>
+    </div>
   );
 };
 

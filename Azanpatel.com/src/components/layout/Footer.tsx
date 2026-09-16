@@ -1,63 +1,154 @@
+import type { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
+import { NAV } from './Header';
+import Reveal from '../motion/Reveal';
+import { ArrowUpRight } from '../ui/Icon';
+import useReducedMotion from '../../hooks/useReducedMotion';
 
+const EASE = 'cubic-bezier(0.2, 0.65, 0.2, 1)';
+
+const CONTACT = [
+  { label: 'Email', value: 'azpatel@ucdavis.edu', href: 'mailto:azpatel@ucdavis.edu' },
+  { label: 'LinkedIn', value: 'linkedin.com/in/azanpatel', href: 'https://www.linkedin.com/in/azanpatel' },
+  { label: 'GitHub', value: 'github.com/azanpatel', href: 'https://github.com/azanpatel' },
+];
+
+/**
+ * Three columns on wide screens, a stack on phones. One Reveal wraps the whole
+ * body — the colophon sits in the last few pixels of the page, where a Reveal
+ * of its own would never be seen — and the blocks stagger in beneath it.
+ */
 const Footer = () => {
   const year = new Date().getFullYear();
+  const reduced = useReducedMotion();
+  const toTop = () => window.scrollTo({ top: 0, behavior: reduced ? 'instant' : 'smooth' });
 
   return (
     <footer className="border-t border-ink-line">
-      <div className="container py-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-        <div className="flex items-center gap-3">
-          <span className="w-7 h-7 border border-text-muted flex items-center justify-center font-mono text-[10px] tracking-widest text-text-muted">
-            AP
-          </span>
-          <p className="font-mono text-xs uppercase tracking-[0.2em] text-text-subtle">
-            © {year} Azan Patel
-          </p>
+      <Reveal fadeOnly className="container pt-14 pb-8">
+        <div className="grid gap-12 md:grid-cols-[1.5fr_1fr_1.2fr] md:gap-10 lg:gap-16">
+          {/* Mark, one line of what this is, and the copyright. */}
+          <Block delay={0}>
+            <Link to="/" className="inline-flex items-center gap-3 group" aria-label="Azan Patel — home">
+              <span className="w-8 h-8 border border-text flex items-center justify-center font-mono text-xs tracking-widest group-hover:border-accent group-hover:text-accent transition-colors">
+                AP
+              </span>
+              <span className="font-mono text-xs uppercase tracking-[0.25em] text-text-muted group-hover:text-text transition-colors">
+                Azan Patel
+              </span>
+            </Link>
+            <p className="mt-5 text-sm text-text-muted leading-relaxed max-w-xs">
+              Translational neuroengineering — UC Davis
+            </p>
+            <p className="mt-6 font-mono text-[11px] uppercase tracking-[0.2em] text-text-subtle">
+              © {year} Azan Patel
+            </p>
+          </Block>
+
+          {/* Site map: the same routes as the header, indexed, in two short columns. */}
+          <Block delay={80}>
+            <ColumnHead>Site map</ColumnHead>
+            <ol className="grid grid-cols-2 grid-flow-col grid-rows-3 gap-x-6">
+              {NAV.map((item) => (
+                <li key={item.to}>
+                  <Link
+                    to={item.to}
+                    className="group inline-flex items-baseline gap-3 py-1.5 font-mono text-xs uppercase tracking-[0.2em] text-text-muted hover:text-text transition-colors"
+                  >
+                    <span className="text-[10px] text-text-subtle group-hover:text-accent transition-colors">
+                      {item.index}
+                    </span>
+                    {item.label}
+                  </Link>
+                </li>
+              ))}
+            </ol>
+          </Block>
+
+          {/* Contact: one hairline row per channel. */}
+          <Block delay={160}>
+            <ColumnHead>Contact</ColumnHead>
+            <ul className="border-t border-ink-line">
+              {CONTACT.map((row) => {
+                const external = row.href.startsWith('http');
+                return (
+                  <li key={row.label} className="border-b border-ink-line">
+                    <a
+                      href={row.href}
+                      target={external ? '_blank' : undefined}
+                      rel={external ? 'noreferrer noopener' : undefined}
+                      className="group flex items-center justify-between gap-4 py-3 text-text-muted hover:text-text transition-colors arrow-nudge-up"
+                    >
+                      <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-text-subtle">
+                        {row.label}
+                      </span>
+                      <span className="inline-flex items-center gap-1.5 text-sm text-right">
+                        {row.value}
+                        {external && (
+                          <ArrowUpRight className="w-3.5 h-3.5 shrink-0 text-text-subtle group-hover:text-accent transition-colors" />
+                        )}
+                      </span>
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
+          </Block>
         </div>
 
-        <nav className="flex items-center gap-6">
-          <Link to="/" className="nav-link">Home</Link>
-          <Link to="/goal" className="nav-link">Goal</Link>
-          <Link to="/research" className="nav-link">Research</Link>
-          <Link to="/projects" className="nav-link">Projects</Link>
-          <Link to="/internships" className="nav-link">Internships</Link>
-          <Link to="/media" className="nav-link">Media</Link>
-        </nav>
-
-        <div className="flex items-center gap-4">
-          <SocialLink href="https://github.com" label="GitHub">
-            <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.6.11.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z" />
-          </SocialLink>
-          <SocialLink href="https://linkedin.com" label="LinkedIn">
-            <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
-          </SocialLink>
-          <SocialLink href="mailto:hello@example.com" label="Email">
-            <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-          </SocialLink>
-        </div>
-      </div>
+        {/* Colophon */}
+        <Block delay={240} className="mt-14">
+          <span className="block h-px w-full bg-ink-line rule-draw" aria-hidden="true" />
+          <div className="pt-5 flex flex-wrap items-center justify-between gap-x-8 gap-y-3">
+            {/* Two fragments that never break mid-phrase: stacked on a phone, dotted on one line above. */}
+            <p className="font-mono text-[10px] uppercase tracking-[0.18em] leading-relaxed text-text-subtle">
+              <span className="block sm:inline">Set in Inter &amp; JetBrains Mono</span>
+              <span className="hidden sm:inline mx-2">·</span>
+              <span className="block sm:inline">Built with React</span>
+            </p>
+            <button
+              type="button"
+              onClick={toTop}
+              className="group ml-auto inline-flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.18em] text-text-subtle hover:text-text transition-colors"
+            >
+              Back to top
+              <svg
+                aria-hidden="true"
+                viewBox="0 0 20 20"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth={1.5}
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="w-3.5 h-3.5 transition-transform duration-300 motion-reduce:transition-none group-hover:-translate-y-0.5"
+                style={{ transitionTimingFunction: EASE }}
+              >
+                <path d="M10 16V4m0 0L5.5 8.5M10 4l4.5 4.5" />
+              </svg>
+            </button>
+          </div>
+        </Block>
+      </Reveal>
     </footer>
   );
 };
 
-interface SocialLinkProps {
-  href: string;
-  label: string;
-  children: React.ReactNode;
-}
-
-const SocialLink = ({ href, label, children }: SocialLinkProps) => (
-  <a
-    href={href}
-    aria-label={label}
-    className="text-text-muted hover:text-accent transition-colors"
-    target="_blank"
-    rel="noreferrer noopener"
+/** A footer block that lifts in once the surrounding Reveal is in view, after its delay. */
+const Block = ({ delay, className = '', children }: { delay: number; className?: string; children: ReactNode }) => (
+  <div
+    className={`opacity-0 translate-y-3 transition-[opacity,transform] duration-700 [.is-in_&]:opacity-100 [.is-in_&]:translate-y-0 motion-reduce:opacity-100 motion-reduce:translate-y-0 motion-reduce:transition-none ${className}`.trim()}
+    style={{ transitionDelay: `${delay}ms`, transitionTimingFunction: EASE }}
   >
-    <svg className="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-      {children}
-    </svg>
-  </a>
+    {children}
+  </div>
+);
+
+/** A column's mono label with a rule that draws in beside it. */
+const ColumnHead = ({ children }: { children: string }) => (
+  <div className="flex items-center gap-3 mb-4">
+    <span className="label">{children}</span>
+    <span className="flex-1 h-px bg-ink-line rule-draw" aria-hidden="true" />
+  </div>
 );
 
 export default Footer;

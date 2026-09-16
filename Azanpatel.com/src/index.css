@@ -203,12 +203,13 @@
   transform: scaleX(1);
 }
 
-/* Line art that draws itself: every stroked element carries pathLength="1". */
-[data-draw='pending'] :is(path, line, circle, ellipse, rect)[pathLength] {
+/* Line art that draws itself: every stroked element carries pathLength="1" and class "draw"
+   (a class, because Chrome does not re-match SVG camelCase attribute selectors when an ancestor changes). */
+[data-draw='pending'] .draw {
   stroke-dasharray: 1;
   stroke-dashoffset: 1;
 }
-[data-draw='in'] :is(path, line, circle, ellipse, rect)[pathLength] {
+[data-draw='in'] .draw {
   stroke-dasharray: 1;
   stroke-dashoffset: 0;
   transition: stroke-dashoffset 1.6s cubic-bezier(0.4, 0, 0.2, 1) var(--draw-delay, 0ms);
@@ -247,6 +248,19 @@
   animation: lightbox-in 0.35s cubic-bezier(0.2, 0.65, 0.2, 1) both;
 }
 
+/* Print and reader modes never scroll, so nothing may stay hidden behind a reveal. */
+@media print {
+  .reveal,
+  .rule-draw {
+    opacity: 1;
+    transform: none;
+  }
+  [data-draw] .draw {
+    stroke-dasharray: none;
+    stroke-dashoffset: 0;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .reveal,
   .rule-draw {
@@ -254,7 +268,7 @@
     transform: none;
     transition: none;
   }
-  [data-draw] :is(path, line, circle, ellipse, rect)[pathLength] {
+  [data-draw] .draw {
     stroke-dasharray: none;
     stroke-dashoffset: 0;
     transition: none;

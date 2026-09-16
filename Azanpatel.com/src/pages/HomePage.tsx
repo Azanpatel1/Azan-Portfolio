@@ -1,36 +1,51 @@
-import { Link } from 'react-router-dom';
 import Layout from '../components/layout/Layout';
 import Hero from '../components/home/Hero';
 import GoalPreview from '../components/home/GoalPreview';
 import ResearchPreview from '../components/home/ResearchPreview';
 import Contact from '../components/home/Contact';
-import ProjectsGrid from '../components/projects/ProjectsGrid';
+import Reveal from '../components/motion/Reveal';
+import ProjectCard from '../components/projects/ProjectCard';
 import SectionHeader from '../components/ui/SectionHeader';
+import { SectionLink, SectionLinkMobile } from '../components/home/SectionLink';
+import { PROJECTS } from '../data/projects';
+
+const PROJECTS_SHOWN = 3;
+
+const pad = (n: number) => String(n).padStart(2, '0');
 
 const HomePage = () => {
+  const shown = PROJECTS.slice(0, PROJECTS_SHOWN);
+  const count = `${pad(shown.length)} / ${pad(PROJECTS.length)}`;
+
   return (
     <Layout>
       <Hero />
       <GoalPreview />
       <ResearchPreview />
 
-      <section id="projects" className="section border-b border-ink-line">
+      <section id="projects" className="section border-b border-ink-line scroll-mt-16">
         <div className="container">
           <SectionHeader
             index="03"
             label="Selected work"
             title="Projects spanning aerospace, medical devices, and product design."
+            action={
+              <SectionLink to="/projects" count={count}>
+                View all projects
+              </SectionLink>
+            }
           />
 
-          <ProjectsGrid limit={3} />
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {shown.map((project, index) => (
+              <Reveal key={project.id} delay={index * 80} className="grid">
+                <ProjectCard project={project} index={index} />
+              </Reveal>
+            ))}
+          </div>
 
-          <div className="mt-12 flex justify-start">
-            <Link to="/projects" className="btn btn-ghost">
-              View All Projects
-              <svg className="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor">
-                <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
-              </svg>
-            </Link>
+          <div className="mt-8">
+            <SectionLinkMobile to="/projects">View all projects</SectionLinkMobile>
           </div>
         </div>
       </section>
