@@ -3,7 +3,7 @@ import type { ColumnOrder } from '../../data/goal';
 
 /**
  * Line-art elevations of the three classical orders, used as the pillar under
- * each aim on the Goal page. All three are drawn in one local space with their
+ * each theme on the Goal page. All three are drawn in one local space with their
  * abaci at y = 0, so they sit under a single entablature however tall their
  * capitals are — and Corinthian capitals really are twice the height of Doric.
  */

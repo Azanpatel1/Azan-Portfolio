@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import Layout from '../components/layout/Layout';
 import SectionHeader from '../components/ui/SectionHeader';
-import AimPillars from '../components/goal/AimPillars';
+import ThemePillars from '../components/goal/ThemePillars';
 import { GOAL_META, GOAL_SECTIONS } from '../data/goal';
 import type { GoalBlock, GoalSection } from '../data/goal';
 
@@ -36,19 +36,15 @@ const GoalPage = () => {
     <Layout>
       <section className="pt-32 pb-24 sm:pt-40 sm:pb-28">
         <div className="container">
-          <SectionHeader
-            index="—"
-            label="Goal"
-            title={GOAL_META.title}
-            description={GOAL_META.dateline}
-          />
+          <ThemePillars onOpenSection={openSection} />
 
-          <AimPillars onOpenSection={openSection} />
-
-          <div className="flex items-center gap-4 mb-8">
-            <span className="font-mono text-xs text-accent tracking-[0.2em]">00–15</span>
-            <span className="label">The journal</span>
-            <span className="flex-1 h-px bg-ink-line" />
+          <div className="mt-24 sm:mt-28">
+            <SectionHeader
+              index="—"
+              label="Goal"
+              title={GOAL_META.title}
+              description={GOAL_META.dateline}
+            />
           </div>
 
           <div className="border border-ink-line">

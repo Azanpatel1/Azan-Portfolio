@@ -1,17 +1,14 @@
-/** The three classical orders, one per aim — see AimPillars. */
+/** The three classical orders, one per theme — see ThemePillars. */
 export type ColumnOrder = 'doric' | 'ionic' | 'corinthian';
 
-export interface GoalAim {
+export interface GoalTheme {
   index: string;
   numeral: string;
   order: ColumnOrder;
-  /** Which of the three bodies of knowledge from section 02 this aim stands in. */
-  discipline: string;
   title: string;
-  statement: string;
-  /** The open question the aim exists to answer. */
-  question: string;
-  /** Journal sections this aim is drawn from — rendered as deep links. */
+  vision: string;
+  approach: string;
+  /** Journal sections the theme leans on — rendered as deep links. */
   sections: string[];
 }
 
@@ -41,51 +38,38 @@ export const GOAL_META = {
     'Where this sits: under the healthcare-system manifesto, as the "why the field" layer beneath roadmap step 1 — stroke speech rehabilitation via closed-loop stimulation.',
 };
 
-export const GOAL_AIMS_META = {
-  label: 'Three aims',
-  title: 'What the argument has to hold up',
-  /** The load every pillar carries — drawn on the entablature. */
-  entablature: 'Give a stroke survivor their speech back',
-  entablatureSub: 'Restored function — not a device that speaks for them.',
-  note:
-    'One aim per body of knowledge from section 02 — the brain, the device, the clinic. The claim of this journal is that all three carry the same roof, and that they have to do it inside one head rather than three collaborating ones.',
-};
-
-export const GOAL_AIMS: GoalAim[] = [
+export const GOAL_THEMES: GoalTheme[] = [
   {
-    index: '01',
+    index: '1',
     numeral: 'I',
     order: 'doric',
-    discipline: 'The brain',
-    title: 'Decode the intent, not the output',
-    statement:
-      'Recover speech intent from post-stroke cortex noninvasively — and model the target as it actually is, with neuromodulators, growth factors and plasticity in the model, rather than as a network of fixed weights that quietly deletes the mechanism the whole plan depends on.',
-    question: 'What is still there to read in a brain whose output channel is the broken part?',
-    sections: ['02', '03', '04'],
+    title: 'Neuromodulatory Control of Cognition',
+    vision:
+      'Mapping how targeted brain stimulations alter the neural mechanisms underlying human behavior, memory, and attention.',
+    approach:
+      'We investigate how systemic or localized neuromodulatory perturbations switch the brain between distinct cognitive states and shape latent human experiences.',
+    sections: ['04', '11'],
   },
   {
-    index: '02',
+    index: '2',
     numeral: 'II',
     order: 'ionic',
-    discipline: 'The device',
-    title: 'Find the actuator, not just the loop',
-    statement:
-      'Compare the stimulation modalities — vagus nerve stimulation, focused ultrasound, transcranial magnetic stimulation — on the one axis that decides the project: which drives the most plasticity when it is timed to decoded intent, and what mechanism makes it do so.',
-    question:
-      'If the closed loop is the contribution and the stimulator is swappable, which one goes in the socket?',
-    sections: ['04', '11', '13'],
+    title: 'Multi-Scale Computational Modeling',
+    vision: 'Developing the next generation of theoretical, cognitive neurodynamical models.',
+    approach:
+      'Our models bridge the "lowest abstraction" mechanisms — such as Spike-Timing-Dependent Plasticity (STDP) — to predict macroscale network transformations and emergent behavior.',
+    sections: ['03', '05'],
   },
   {
-    index: '03',
+    index: '3',
     numeral: 'III',
     order: 'corinthian',
-    discipline: 'The clinic',
-    title: 'Close the loop where the patients actually are',
-    statement:
-      'Take the loop to the middle of the distribution — a real deficit, never severe enough for anyone to offer surgery — and prove it out noninvasively, cheaply, and against the endpoint patients themselves name: agency, not throughput.',
-    question:
-      'Restoration already works, gated behind surgery, cost and severity. What gets it past the gate?',
-    sections: ['07', '09', '10', '12'],
+    title: 'Network-Level Translational Neuroengineering',
+    vision:
+      'Designing optimized, closed-loop stimulation protocols to rescue damaged or dysregulated neural networks.',
+    approach:
+      'We use computational frameworks to predict how specific stimulation configurations can reverse the network-level degradation seen in stroke, Alzheimer’s, and neuropsychiatric disorders.',
+    sections: ['09', '10', '12'],
   },
 ];
 
