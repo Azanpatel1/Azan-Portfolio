@@ -275,7 +275,7 @@ interface ClassicalColumnProps {
  * column up without touching any of the geometry.
  */
 const ClassicalColumn = ({ order, x = 0 }: ClassicalColumnProps) => {
-  const uid = useId().replace(/:/g, '');
+  const uid = useId().replace(/[^A-Za-z0-9_-]/g, '');
   const fillId = `shaft-${uid}`;
   const maskId = `fade-${uid}`;
   const { Capital, shaft } = ORDERS[order];

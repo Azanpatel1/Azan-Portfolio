@@ -8,11 +8,12 @@ import type { GoalBlock, GoalSection } from '../data/goal';
 const GoalPage = () => {
   const [open, setOpen] = useState<Set<string>>(() => new Set());
 
-  // Deep links (#goal-07) open that section on load.
+  // Deep links (#goal-07) open that section on load and scroll to it.
   useEffect(() => {
     const hash = window.location.hash.replace('#goal-', '');
     if (hash && GOAL_SECTIONS.some((s) => s.index === hash)) {
       setOpen(new Set([hash]));
+      scrollToSection(hash);
     }
   }, []);
 
@@ -24,12 +25,10 @@ const GoalPage = () => {
       return next;
     });
 
-  // Aims cite the journal sections they came from; the citation opens the row.
+  // Themes cite the journal sections they lean on; the citation opens the row.
   const openSection = (index: string) => {
     setOpen((prev) => new Set(prev).add(index));
-    requestAnimationFrame(() => {
-      document.getElementById(`goal-${index}`)?.scrollIntoView({ block: 'start' });
-    });
+    scrollToSection(index);
   };
 
   return (
@@ -91,6 +90,12 @@ const GoalPage = () => {
     </Layout>
   );
 };
+
+/** Runs after the row has rendered open, so the scroll lands on its expanded height. */
+const scrollToSection = (index: string) =>
+  requestAnimationFrame(() => {
+    document.getElementById(`goal-${index}`)?.scrollIntoView({ block: 'start' });
+  });
 
 interface RowProps {
   id?: string;

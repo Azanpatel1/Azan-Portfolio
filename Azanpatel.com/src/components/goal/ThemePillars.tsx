@@ -31,6 +31,7 @@ const ThemePillars = ({ onOpenSection }: ThemePillarsProps) => {
 
   return (
     <figure className="border border-ink-line bg-ink-surface/50">
+      <h2 className="sr-only">Research themes</h2>
       <figcaption className="px-5 py-3 border-b border-ink-line flex items-center justify-between gap-4">
         <span className="label">Plate — the three orders</span>
         <span className="hidden sm:inline font-mono text-[10px] text-text-subtle tracking-[0.2em]">
