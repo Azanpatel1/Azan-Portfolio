@@ -151,7 +151,7 @@ const NotebookThumb = ({ entry, number, onOpen }: NotebookThumbProps) => {
           alt={entry.alt}
           loading="lazy"
           onLoad={() => setLoaded(true)}
-          className={`w-full h-full object-cover grayscale group-hover:grayscale-0 transition-[opacity,filter] duration-500 ease-[cubic-bezier(0.2,0.65,0.2,1)] ${
+          className={`w-full h-full object-cover grayscale group-hover:grayscale-0 transition-[opacity,filter] duration-500 ease-house ${
             loaded ? 'opacity-100' : 'opacity-0'
           }`}
         />

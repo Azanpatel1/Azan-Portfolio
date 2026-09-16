@@ -11,6 +11,7 @@ import usePageTitle from '../hooks/usePageTitle';
 import { PROJECTS, getProjectById } from '../data/projects';
 import type { ProjectData } from '../data/projects';
 import type { LightboxItem } from '../components/ui/Lightbox';
+import Tick from '../components/ui/Tick';
 
 /** Entrance order for the header block: breadcrumb, index rule, title, lead, tags, plate. */
 const STEP = 70;
@@ -19,9 +20,9 @@ const pad = (n: number) => String(n).padStart(2, '0');
 
 /** A faint diagonal hatch behind every plate, so an image lands on a drawn surface rather than a blank. */
 const HATCH =
-  '[background-image:repeating-linear-gradient(-45deg,rgb(var(--ink-line)/0.7)_0_1px,transparent_1px_7px)]';
+  'plate-hatch';
 
-const EASE = 'ease-[cubic-bezier(0.2,0.65,0.2,1)]';
+const EASE = 'ease-house';
 
 const ProjectDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -313,10 +314,6 @@ const NeighbourLink = ({ project, index, direction }: NeighbourLinkProps) => {
     </Link>
   );
 };
-
-const Tick = ({ className = '' }: { className?: string }) => (
-  <span aria-hidden="true" className={`absolute w-3 h-3 border border-text-muted ${className}`} />
-);
 
 /** The 404 branch: the same header register as every page, then the catalogue so nobody is stranded. */
 const NotFound = ({ slug }: { slug: string }) => (

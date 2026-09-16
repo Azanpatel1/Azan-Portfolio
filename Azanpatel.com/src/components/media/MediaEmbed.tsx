@@ -3,6 +3,7 @@ import type { MediaItem } from '../../data/media';
 import useInView from '../../hooks/useInView';
 import useReducedMotion from '../../hooks/useReducedMotion';
 import { ArrowUpRight } from '../ui/Icon';
+import Tick from '../ui/Tick';
 
 interface MediaEmbedProps {
   item: MediaItem;
@@ -150,9 +151,5 @@ const LoadingState = ({ stalled }: { stalled: boolean }) => {
     </div>
   );
 };
-
-const Tick = ({ className = '' }: { className?: string }) => (
-  <span aria-hidden="true" className={`absolute w-3 h-3 border border-text-muted ${className}`} />
-);
 
 export default MediaEmbed;

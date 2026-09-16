@@ -150,6 +150,14 @@
     @apply inline-flex items-center font-mono text-[10px] uppercase tracking-[0.15em] leading-none text-text-subtle border border-ink-line px-2 py-1 transition-colors;
   }
 
+  /* Plate backgrounds: a diagonal hatch behind thumbnails, and graph paper behind figures. */
+  .plate-hatch {
+    background-image: repeating-linear-gradient(-45deg, rgb(var(--ink-line) / 0.7) 0 1px, transparent 1px 7px);
+  }
+  .graph-paper {
+    background-image: repeating-linear-gradient(0deg,rgb(var(--ink-line)/0.5) 0 1px,transparent 1px 8px),repeating-linear-gradient(90deg,rgb(var(--ink-line)/0.5) 0 1px,transparent 1px 8px),repeating-linear-gradient(0deg,rgb(var(--ink-line)) 0 1px,transparent 1px 40px),repeating-linear-gradient(90deg,rgb(var(--ink-line)) 0 1px,transparent 1px 40px);
+  }
+
   /* Cards lift a hair and sharpen their border; the image inside loses its grey. */
   .card-lift {
     transition:

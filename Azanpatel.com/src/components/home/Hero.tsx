@@ -5,6 +5,7 @@ import Reveal from '../motion/Reveal';
 import useInView from '../../hooks/useInView';
 import useReducedMotion from '../../hooks/useReducedMotion';
 import { ArrowRight } from '../ui/Icon';
+import Tick from '../ui/Tick';
 
 /** Entrance order: label, headline, italic line, paragraph, buttons, then the photo. */
 const STEP = 90;
@@ -67,7 +68,7 @@ const Hero = () => {
                 <img
                   src="/images/Azan.jpg"
                   alt="Azan Patel"
-                  className="w-full h-full object-cover transition-transform duration-700 ease-[cubic-bezier(0.2,0.65,0.2,1)] motion-safe:group-hover:scale-[1.02]"
+                  className="w-full h-full object-cover transition-transform duration-700 ease-house motion-safe:group-hover:scale-[1.02]"
                 />
               </div>
 
@@ -84,10 +85,6 @@ const Hero = () => {
     </section>
   );
 };
-
-const Tick = ({ className = '' }: { className?: string }) => (
-  <span aria-hidden="true" className={`absolute w-3 h-3 border border-text-muted ${className}`} />
-);
 
 /* ---- Figure: a simulated EEG trace on a blueprint grid ------------------- */
 

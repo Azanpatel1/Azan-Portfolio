@@ -2,10 +2,11 @@ import { useState } from 'react';
 import type { GraphItem } from '../../data/graphs';
 import useReducedMotion from '../../hooks/useReducedMotion';
 import { ArrowUpRight } from '../ui/Icon';
+import Tick from '../ui/Tick';
 
 /** Graph paper: an 8px minor grid under a 40px major one, both drawn in the line colour. */
 const GRAPH_PAPER =
-  '[background-image:repeating-linear-gradient(0deg,rgb(var(--ink-line)/0.5)_0_1px,transparent_1px_8px),repeating-linear-gradient(90deg,rgb(var(--ink-line)/0.5)_0_1px,transparent_1px_8px),repeating-linear-gradient(0deg,rgb(var(--ink-line))_0_1px,transparent_1px_40px),repeating-linear-gradient(90deg,rgb(var(--ink-line))_0_1px,transparent_1px_40px)]';
+  'graph-paper';
 
 interface GraphEmbedProps {
   item: GraphItem;
@@ -113,9 +114,5 @@ const LoadingState = () => {
     </div>
   );
 };
-
-const Tick = ({ className = '' }: { className?: string }) => (
-  <span aria-hidden="true" className={`absolute w-3 h-3 border border-text-muted ${className}`} />
-);
 
 export default GraphEmbed;

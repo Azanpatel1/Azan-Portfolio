@@ -50,7 +50,7 @@ const InternshipsPage = () => {
           <ol ref={spineRef} className="relative">
             <span
               aria-hidden="true"
-              className={`hidden md:block absolute left-[3px] top-7 bottom-0 w-px bg-ink-line origin-top transition-transform duration-[1400ms] ease-[cubic-bezier(0.2,0.65,0.2,1)] motion-reduce:transition-none ${
+              className={`hidden md:block absolute left-[3px] top-7 bottom-0 w-px bg-ink-line origin-top transition-transform duration-[1400ms] ease-house motion-reduce:transition-none ${
                 spineIn ? 'scale-y-100' : 'scale-y-0'
               }`}
             />

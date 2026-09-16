@@ -25,6 +25,9 @@ module.exports = {
           hover: 'rgb(var(--accent-hover) / <alpha-value>)',
         },
       },
+      transitionTimingFunction: {
+        house: 'cubic-bezier(0.2, 0.65, 0.2, 1)',
+      },
       fontFamily: {
         sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
         mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],

@@ -183,7 +183,7 @@ const TypeTabs = ({ value, shown, onChange }: TypeTabsProps) => {
         <span
           aria-hidden="true"
           className={`pointer-events-none absolute top-0 left-0 h-px w-px bg-accent origin-left ${
-            drawn ? 'transition-transform duration-500 ease-[cubic-bezier(0.2,0.65,0.2,1)] motion-reduce:transition-none' : ''
+            drawn ? 'transition-transform duration-500 ease-house motion-reduce:transition-none' : ''
           }`}
           style={{ transform: `translate(${bar.x}px, ${bar.y}px) scaleX(${drawn ? bar.w : 0})` }}
         />

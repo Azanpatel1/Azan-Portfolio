@@ -6,7 +6,7 @@ import { ArrowRight } from '../ui/Icon';
 
 /** A faint diagonal hatch behind the plate, so the image lands on a drawn surface rather than a blank. */
 const HATCH =
-  '[background-image:repeating-linear-gradient(-45deg,rgb(var(--ink-line)/0.7)_0_1px,transparent_1px_7px)]';
+  'plate-hatch';
 
 export interface ProjectCardProps {
   project: ProjectData;
@@ -38,7 +38,7 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
           alt={project.title}
           loading="lazy"
           onLoad={() => setLoaded(true)}
-          className={`max-h-full max-w-full object-contain grayscale group-hover:grayscale-0 transition-[opacity,filter,transform] duration-500 ease-[cubic-bezier(0.2,0.65,0.2,1)] motion-safe:group-hover:scale-[1.02] ${
+          className={`max-h-full max-w-full object-contain grayscale group-hover:grayscale-0 transition-[opacity,filter,transform] duration-500 ease-house motion-safe:group-hover:scale-[1.02] ${
             loaded ? 'opacity-100' : 'opacity-0'
           }`}
         />

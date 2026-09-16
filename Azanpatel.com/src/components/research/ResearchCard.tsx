@@ -20,7 +20,7 @@ const formatOf = (url: string) => {
 
 /** A faint diagonal hatch, so a late Drive thumbnail lands on a drawn plate rather than a blank. */
 const HATCH =
-  '[background-image:repeating-linear-gradient(-45deg,rgb(var(--ink-line))_0_1px,transparent_1px_7px)]';
+  'plate-hatch';
 
 export interface ResearchCardProps {
   item: ResearchItem;

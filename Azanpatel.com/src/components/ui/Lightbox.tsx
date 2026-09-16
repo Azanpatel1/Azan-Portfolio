@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { ChevronLeft, ChevronRight, Close } from './Icon';
+import Tick from './Tick';
 
 export interface LightboxItem {
   src: string;
@@ -118,10 +119,6 @@ const NavButton = ({ side, onClick }: { side: 'left' | 'right'; onClick: (e: Rea
   >
     {side === 'left' ? <ChevronLeft className="w-4 h-4" /> : <ChevronRight className="w-4 h-4" />}
   </button>
-);
-
-const Tick = ({ className }: { className: string }) => (
-  <span aria-hidden="true" className={`absolute w-3 h-3 border border-text-muted ${className}`} />
 );
 
 export default Lightbox;
