@@ -13,6 +13,6 @@ export interface ProjectData {
   gallery?: string[];
   year?: string;
   role?: string;
-  /** Shown first on home when using `limit`; optional badge on cards. */
+  /** Optional badge on cards; the home page shows the first three entries. */
   featured?: boolean;
 }
