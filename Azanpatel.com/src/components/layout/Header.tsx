@@ -79,16 +79,6 @@ const Header = () => {
     toggleRef.current?.focus();
   }, []);
 
-  // Contact lives on the home page. Client-side navigation never scrolls to a
-  // hash on its own, so land the visitor on the section from any page.
-  useEffect(() => {
-    if (location.pathname !== '/' || location.hash !== '#contact') return;
-    const raf = requestAnimationFrame(() => {
-      document.getElementById('contact')?.scrollIntoView({ block: 'start' });
-    });
-    return () => cancelAnimationFrame(raf);
-  }, [location.key, location.pathname, location.hash]);
-
   // While the drawer is open: Esc closes it, the page behind it stops
   // scrolling and goes inert (so Tab stays in the bar and the drawer, and
   // nothing behind the backdrop reads), and growing past the breakpoint
@@ -149,9 +139,9 @@ const Header = () => {
 
           <div className="hidden lg:flex items-center gap-3">
             <ThemeToggle />
-            <Link to="/#contact" className="btn btn-accent text-[11px] py-2 px-4">
+            <a href={`mailto:${CONTACT.email}`} className="btn btn-accent text-[11px] py-2 px-4">
               Contact
-            </Link>
+            </a>
           </div>
 
           <div className="lg:hidden flex items-center gap-3">
@@ -378,9 +368,13 @@ const Drawer = ({ isOpen, pathname, onClose }: DrawerProps) => (
         }`}
         style={{ transitionDelay: isOpen ? `${90 + NAV.length * 45}ms` : '0ms' }}
       >
-        <Link to="/#contact" onClick={onClose} className="btn btn-accent w-full text-[11px] py-3">
+        <a
+          href={`mailto:${CONTACT.email}`}
+          onClick={onClose}
+          className="btn btn-accent w-full text-[11px] py-3"
+        >
           Contact
-        </Link>
+        </a>
         <a
           href={`mailto:${CONTACT.email}`}
           className="font-mono text-xs text-text-subtle hover:text-text transition-colors self-start"
