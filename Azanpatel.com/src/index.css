@@ -54,6 +54,21 @@
 
   body {
     @apply bg-ink text-text min-h-screen font-sans antialiased;
+    /* Garamond runs small; a nudge up puts it at Inter's reading size. */
+    font-size: 1.0625rem;
+    font-variant-numeric: oldstyle-nums;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-display;
+  }
+
+  /* Figures and indices read better lining up than as old-style numerals. */
+  .tabular,
+  .font-mono {
+    font-variant-numeric: lining-nums tabular-nums;
   }
 
   ::selection {
@@ -243,6 +258,20 @@
 /* Print and reader modes never scroll, so nothing may stay hidden behind a reveal. */
 @media print {
   .reveal,
+  .home-link {
+    text-decoration-line: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.2em;
+    text-decoration-color: rgb(var(--ink-edge));
+    transition:
+      color 0.3s ease,
+      text-decoration-color 0.3s ease;
+  }
+  .home-link:hover {
+    color: rgb(var(--accent));
+    text-decoration-color: rgb(var(--accent));
+  }
+
   .rule-draw {
     opacity: 1;
     transform: none;

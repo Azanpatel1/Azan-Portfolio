@@ -91,7 +91,7 @@ const Footer = () => {
           <div className="pt-5 flex flex-wrap items-center justify-between gap-x-8 gap-y-3">
             {/* Two fragments that never break mid-phrase: stacked on a phone, dotted on one line above. */}
             <p className="meta leading-relaxed">
-              <span className="block sm:inline">Set in Inter &amp; JetBrains Mono</span>
+              <span className="block sm:inline">Set in Cormorant Garamond &amp; EB Garamond</span>
               <span className="hidden sm:inline mx-2">·</span>
               <span className="block sm:inline">Built with React</span>
             </p>

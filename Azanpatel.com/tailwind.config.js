@@ -29,7 +29,10 @@ module.exports = {
         house: 'cubic-bezier(0.2, 0.65, 0.2, 1)',
       },
       fontFamily: {
-        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        // The site is set in Garamond; Inter stays available for UI chrome.
+        sans: ['EB Garamond', 'Iowan Old Style', 'Georgia', 'serif'],
+        display: ['Cormorant Garamond', 'EB Garamond', 'Georgia', 'serif'],
+        ui: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
         mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
       },
     },
