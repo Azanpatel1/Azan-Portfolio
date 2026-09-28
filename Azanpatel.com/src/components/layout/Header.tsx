@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
+const BLOG_URL = 'https://azanpatel1.github.io/Yapp/';
+
 const NAV = [
+  { to: BLOG_URL, label: 'Blog', external: true },
   { to: '/', label: 'Home', exact: true },
   { to: '/goal', label: 'Goal' },
   { to: '/research', label: 'Research' },
@@ -90,10 +93,18 @@ interface NavItemProps {
   to: string;
   label: string;
   exact?: boolean;
+  external?: boolean;
 }
 
-const NavItem = ({ to, label, exact }: NavItemProps) => {
+const NavItem = ({ to, label, exact, external }: NavItemProps) => {
   const location = useLocation();
+  if (external) {
+    return (
+      <a href={to} className="nav-link" target="_blank" rel="noreferrer noopener">
+        {label}
+      </a>
+    );
+  }
   const isActive = exact ? location.pathname === to : location.pathname.startsWith(to);
   return (
     <Link to={to} className={`nav-link ${isActive ? 'active' : ''}`}>

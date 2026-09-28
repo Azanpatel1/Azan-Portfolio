@@ -16,6 +16,14 @@ const Footer = () => {
         </div>
 
         <nav className="flex items-center gap-6">
+          <a
+            href="https://azanpatel1.github.io/Yapp/"
+            className="nav-link"
+            target="_blank"
+            rel="noreferrer noopener"
+          >
+            Blog
+          </a>
           <Link to="/" className="nav-link">Home</Link>
           <Link to="/goal" className="nav-link">Goal</Link>
           <Link to="/research" className="nav-link">Research</Link>
