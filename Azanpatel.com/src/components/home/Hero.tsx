@@ -15,6 +15,10 @@ const Hero = () => {
               Neuroengineering
             </h1>
 
+            <p className="mt-3 font-mono text-xs uppercase tracking-[0.2em] text-text-subtle">
+              Interested in Computational Psychiatry and Neurosurgery
+            </p>
+
             <p className="mt-6 text-text-muted/90 text-base sm:text-lg italic max-w-xl leading-relaxed">
               I&rsquo;m obsessed with brain-machine interfaces, neuroplasticity, and enhancing human experience.
             </p>
