@@ -49,8 +49,10 @@ module.exports = {
         },
       },
       fontFamily: {
-        sans: ['"Shadows Into Light"', 'cursive'],
-        mono: ['"Shadows Into Light"', 'cursive'],
+        sans: ['"Architects Daughter"', 'cursive'],
+        mono: ['"Architects Daughter"', 'cursive'],
+        // the stroke-animated hero lines: the only face with stroke-order data
+        hand: ['"Shadows Into Light"', 'cursive'],
       },
     },
   },

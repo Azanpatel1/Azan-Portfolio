@@ -9,7 +9,7 @@ const PencilDefs = () => (
     <defs>
       <filter id="pencil-edge" x="-2%" y="-10%" width="104%" height="120%" colorInterpolationFilters="sRGB">
         <feTurbulence type="fractalNoise" baseFrequency="0.05 0.08" numOctaves="2" seed="4" result="warp" />
-        <feDisplacementMap in="SourceGraphic" in2="warp" scale="1.6" xChannelSelector="R" yChannelSelector="G" result="rough" />
+        <feDisplacementMap in="SourceGraphic" in2="warp" scale="1.0" xChannelSelector="R" yChannelSelector="G" result="rough" />
         <feTurbulence type="fractalNoise" baseFrequency="0.95" numOctaves="2" seed="9" result="grain" />
         <feColorMatrix in="grain" type="luminanceToAlpha" result="ga" />
         <feComponentTransfer in="ga" result="gmask">
@@ -19,7 +19,7 @@ const PencilDefs = () => (
       </filter>
       <filter id="pencil-edge-sm" x="-2%" y="-10%" width="104%" height="120%" colorInterpolationFilters="sRGB">
         <feTurbulence type="fractalNoise" baseFrequency="0.05 0.08" numOctaves="2" seed="4" result="warp" />
-        <feDisplacementMap in="SourceGraphic" in2="warp" scale="1.1" xChannelSelector="R" yChannelSelector="G" result="rough" />
+        <feDisplacementMap in="SourceGraphic" in2="warp" scale="0.6" xChannelSelector="R" yChannelSelector="G" result="rough" />
         <feTurbulence type="fractalNoise" baseFrequency="0.95" numOctaves="2" seed="9" result="grain" />
         <feColorMatrix in="grain" type="luminanceToAlpha" result="ga" />
         <feComponentTransfer in="ga" result="gmask">

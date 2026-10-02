@@ -198,3 +198,6 @@ stroke, onto the TTF glyf bbox; `overlay.ts` places glyphs with it and compensat
 stroke width (`/ sqrt(kx·ky)`). Measured after the fit: stroke vs webfont ink extents agree
 within ±0.33 px on the 64 px hero h1 (IoU .53 → .70; the rest is Vara's shape
 approximation). Glyphs too small to fit in an axis (`.` `-` `|`) keep scale 1 there.
+
+
+> Static text is set in Architects Daughter; a block that animates must carry `font-hand` (Shadows Into Light), the face the stroke data is traced over.
