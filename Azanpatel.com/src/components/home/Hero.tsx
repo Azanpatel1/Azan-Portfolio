@@ -61,6 +61,31 @@ const Hero = () => {
                 <Hand animate group={GROUP}>Get in touch</Hand>
               </a>
             </div>
+
+            <div className="mt-10 max-w-xl border border-ink-line bg-ink-surface" data-hw-host="">
+              <Hand as="div" group={GROUP} className="border-b border-ink-line px-4 py-3 flex items-center justify-between">
+                <span className="label">Awards &amp; Honors</span>
+                <span className="font-mono text-[11.5px] uppercase tracking-[0.2em] text-text-subtle">
+                  {AWARD_COUNT} ENTRIES
+                </span>
+              </Hand>
+              <ul className="divide-y divide-ink-line">
+                {AWARDS.map((award) => (
+                  <li key={award.title} className="px-4 py-3">
+                    <AwardRow award={award} />
+                    {award.parts && (
+                      <ul className="mt-3 ml-6 pl-4 border-l border-ink-line space-y-2.5">
+                        {award.parts.map((part) => (
+                          <li key={part.title}>
+                            <AwardRow award={part} compact />
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
 
           <div className="lg:col-span-5">
@@ -96,31 +121,6 @@ const Hero = () => {
                 <span className="shrink-0">GPA <span className="text-text">3.6 / 4.0</span></span>
                 <span className="text-right">Biomedical &amp; Mechanical <span className="text-text-muted">(Double)</span></span>
               </Hand>
-            </div>
-
-            <div className="mt-4 border border-ink-line bg-ink-surface" data-hw-host="">
-              <Hand as="div" group={GROUP} className="border-b border-ink-line px-4 py-3 flex items-center justify-between">
-                <span className="label">Awards &amp; Honors</span>
-                <span className="font-mono text-[11.5px] uppercase tracking-[0.2em] text-text-subtle">
-                  {AWARD_COUNT} ENTRIES
-                </span>
-              </Hand>
-              <ul className="divide-y divide-ink-line">
-                {AWARDS.map((award) => (
-                  <li key={award.title} className="px-4 py-3">
-                    <AwardRow award={award} />
-                    {award.parts && (
-                      <ul className="mt-3 ml-6 pl-4 border-l border-ink-line space-y-2.5">
-                        {award.parts.map((part) => (
-                          <li key={part.title}>
-                            <AwardRow award={part} compact />
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </li>
-                ))}
-              </ul>
             </div>
 
             <Hand as="div" group={GROUP} className="mt-4 border border-ink-line bg-ink-surface px-4 py-3">
