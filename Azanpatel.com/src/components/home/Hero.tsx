@@ -94,6 +94,13 @@ const Hero = () => {
                 ))}
               </ul>
             </div>
+
+            <div className="mt-4 border border-ink-line bg-ink-surface px-4 py-3">
+              <span className="label">First Generation College Student</span>
+              <p className="mt-2 text-[13px] leading-snug text-text-muted">
+                I grew up watching math videos from&hellip;
+              </p>
+            </div>
           </div>
         </div>
       </div>
