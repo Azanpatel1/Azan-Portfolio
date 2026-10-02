@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import Hand from '../../handwriting/Hand';
 
 interface NotebookEntry {
   image: string;
@@ -65,17 +66,17 @@ const UCDavisHealthInternship = () => {
           className="h-10 w-auto object-contain bg-text p-1.5"
         />
         <div className="flex-1">
-          <p className="label mb-1">Internship · 2024</p>
-          <h2 className="text-2xl font-medium text-text">UC Davis Health — Biomedical Engineering</h2>
-          <p className="text-text-muted text-sm mt-1">Operating Room Observations and User Needs Analysis</p>
+          <Hand as="p" className="label mb-1">Internship · 2024</Hand>
+          <Hand as="h2" className="text-2xl font-medium text-text">UC Davis Health — Biomedical Engineering</Hand>
+          <Hand as="p" className="text-text-muted text-sm mt-1">Operating Room Observations and User Needs Analysis</Hand>
         </div>
       </header>
 
       <div className="p-6 sm:p-8">
         <div className="flex items-center gap-4 mb-6">
-          <span className="label">Field notes</span>
+          <Hand className="label">Field notes</Hand>
           <span className="flex-1 h-px bg-ink-line" />
-          <span className="font-mono text-[10px] text-text-subtle">{NOTEBOOKS.length} entries</span>
+          <Hand className="font-mono text-[11.5px] text-text-subtle">{NOTEBOOKS.length} entries</Hand>
         </div>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
@@ -94,19 +95,19 @@ const UCDavisHealthInternship = () => {
                   loading="lazy"
                 />
               </div>
-              <div className="px-3 py-2 border-t border-ink-line flex items-center justify-between">
-                <span className="font-mono text-[10px] text-text-subtle tracking-widest">
+              <Hand as="div" className="px-3 py-2 border-t border-ink-line flex items-center justify-between">
+                <span className="font-mono text-[11.5px] text-text-subtle tracking-widest">
                   N-{String(idx + 1).padStart(2, '0')}
                 </span>
-                <span className="font-mono text-[10px] text-text-subtle">VIEW</span>
-              </div>
+                <span className="font-mono text-[11.5px] text-text-subtle">VIEW</span>
+              </Hand>
             </button>
           ))}
         </div>
 
         <div className="mt-12">
           <div className="flex items-center gap-4 mb-6">
-            <span className="label">User needs identified</span>
+            <Hand className="label">User needs identified</Hand>
             <span className="flex-1 h-px bg-ink-line" />
           </div>
 
@@ -118,13 +119,13 @@ const UCDavisHealthInternship = () => {
                   idx > 0 ? 'border-t sm:border-t-0 sm:border-l' : ''
                 } ${idx === 2 ? 'sm:border-t lg:border-t-0' : ''} ${idx === 3 ? 'sm:border-t lg:border-t-0' : ''}`}
               >
-                <div className="flex items-baseline gap-2 mb-3">
-                  <span className="font-mono text-[10px] text-accent tracking-widest">
+                <Hand as="div" className="flex items-baseline gap-2 mb-3">
+                  <span className="font-mono text-[11.5px] text-accent tracking-widest">
                     {String(idx + 1).padStart(2, '0')}
                   </span>
                   <h3 className="font-mono text-xs uppercase tracking-[0.18em] text-text">{need.title}</h3>
-                </div>
-                <p className="text-sm text-text-muted leading-relaxed">{need.description}</p>
+                </Hand>
+                <Hand as="p" className="text-sm text-text-muted leading-relaxed">{need.description}</Hand>
               </div>
             ))}
           </div>

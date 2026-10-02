@@ -1,6 +1,7 @@
 import Layout from '../components/layout/Layout';
 import ResearchCard from '../components/research/ResearchCard';
 import SectionHeader from '../components/ui/SectionHeader';
+import Hand from '../handwriting/Hand';
 import { PROPOSALS, PRESENTATIONS } from '../data/research';
 
 const ResearchPage = () => {
@@ -17,7 +18,7 @@ const ResearchPage = () => {
 
           <div className="mb-20">
             <div className="section-header">
-              <span className="label">Proposals & Reports</span>
+              <Hand className="label">Proposals & Reports</Hand>
               <span className="section-header-rule" />
             </div>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -29,7 +30,7 @@ const ResearchPage = () => {
 
           <div>
             <div className="section-header">
-              <span className="label">Presentations</span>
+              <Hand className="label">Presentations</Hand>
               <span className="section-header-rule" />
             </div>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">

@@ -1,4 +1,5 @@
 import SectionHeader from '../ui/SectionHeader';
+import Hand from '../../handwriting/Hand';
 
 const CONTACT_ROWS = [
   { label: 'Email', value: 'azpatel@ucdavis.edu', href: 'mailto:azpatel@ucdavis.edu' },
@@ -20,15 +21,15 @@ const Contact = () => {
         <div className="max-w-3xl mx-auto">
           <div className="border border-ink-line">
             <div className="px-6 py-4 border-b border-ink-line text-center">
-              <span className="label">Contact Info</span>
+              <Hand className="label">Contact Info</Hand>
             </div>
             <dl className="divide-y divide-ink-line">
               {CONTACT_ROWS.map((row) => (
                 <div key={row.label} className="px-6 py-5 text-center">
-                  <dt className="font-mono text-xs uppercase tracking-[0.22em] text-text-subtle mb-2">
+                  <Hand as="dt" className="font-mono text-xs uppercase tracking-[0.22em] text-text-subtle mb-2">
                     {row.label}
-                  </dt>
-                  <dd className="text-lg sm:text-xl text-text">
+                  </Hand>
+                  <Hand as="dd" className="text-lg sm:text-xl text-text">
                     {row.href ? (
                       <a
                         href={row.href}
@@ -41,7 +42,7 @@ const Contact = () => {
                     ) : (
                       <span>{row.value}</span>
                     )}
-                  </dd>
+                  </Hand>
                 </div>
               ))}
             </dl>

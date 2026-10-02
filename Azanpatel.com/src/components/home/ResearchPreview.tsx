@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import SectionHeader from '../ui/SectionHeader';
+import Hand from '../../handwriting/Hand';
 import ResearchCard from '../research/ResearchCard';
 import { RESEARCH } from '../../data/research';
 
@@ -21,7 +22,7 @@ const ResearchPreview = () => {
 
         <div className="mt-12 flex justify-start">
           <Link to="/research" className="btn btn-ghost">
-            View All Research
+            <Hand>View All Research</Hand>
             <svg className="w-3.5 h-3.5" viewBox="0 0 20 20" fill="currentColor">
               <path fillRule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clipRule="evenodd" />
             </svg>

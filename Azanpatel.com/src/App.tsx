@@ -5,6 +5,7 @@ import ProjectsPage from './pages/ProjectsPage';
 import ProjectDetailPage from './pages/ProjectDetailPage';
 import ResearchPage from './pages/ResearchPage';
 import MediaPage from './pages/MediaPage';
+import NotFoundPage from './pages/NotFoundPage';
 import './index.css';
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
         <Route path="/projects/:id" element={<ProjectDetailPage />} />
         <Route path="/research" element={<ResearchPage />} />
         <Route path="/media" element={<MediaPage />} />
+        <Route path="*" element={<NotFoundPage />} />
       </Routes>
     </Router>
   );

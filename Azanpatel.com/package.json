@@ -10,6 +10,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
+    "fonts:strokes": "node scripts/build-stroke-font.mjs",
     "deploy": "npm run build && wrangler deploy"
   },
   "dependencies": {

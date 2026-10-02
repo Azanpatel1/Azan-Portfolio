@@ -1,5 +1,6 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useSyncExternalStore } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import Hand from '../../handwriting/Hand';
 
 const NAV = [
   { to: '/', label: 'Home', exact: true },
@@ -13,6 +14,7 @@ const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
+  const isDesktop = useIsDesktop();
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 4);
@@ -27,29 +29,37 @@ const Header = () => {
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 bg-ink/90 backdrop-blur-sm border-b transition-colors ${
+      className={`fixed top-0 left-0 right-0 z-50 bg-ink/[0.98] border-b transition-colors ${
         isScrolled ? 'border-ink-line' : 'border-transparent'
       }`}
     >
       <div className="container flex items-center justify-between h-16">
         <Link to="/" className="flex items-center gap-3 group">
-          <span className="w-8 h-8 border border-text flex items-center justify-center font-mono text-xs tracking-widest group-hover:border-accent group-hover:text-accent transition-colors">
-            AP
+          <span
+            className="w-8 h-8 border border-text flex items-center justify-center font-mono text-xs tracking-widest group-hover:border-accent group-hover:text-accent transition-colors"
+            data-hw-host=""
+          >
+            <Hand group={GROUP} budget={NAV_BUDGET} memo="nav:logo">AP</Hand>
           </span>
-          <span className="font-mono text-xs uppercase tracking-[0.25em] text-text-muted group-hover:text-text transition-colors">
+          <Hand
+            group={GROUP}
+            budget={NAV_BUDGET}
+            memo="nav:name"
+            className="font-mono text-xs uppercase tracking-[0.25em] text-text-muted group-hover:text-text transition-colors"
+          >
             Azan Patel
-          </span>
+          </Hand>
         </Link>
 
         <nav className="hidden md:flex items-center gap-8">
           {NAV.map((item) => (
-            <NavItem key={item.to} {...item} />
+            <NavItem key={item.to} {...item} plain={!isDesktop} />
           ))}
         </nav>
 
         <div className="hidden md:block">
-          <a href="#contact" className="btn btn-accent text-[11px] py-2 px-4">
-            Contact
+          <a href="#contact" className="btn btn-accent text-[12px] py-2 px-4">
+            {isDesktop ? <Hand group={GROUP} budget={NAV_BUDGET} memo="nav:contact">Contact</Hand> : 'Contact'}
           </a>
         </div>
 
@@ -73,9 +83,9 @@ const Header = () => {
         <div className="md:hidden border-t border-ink-line bg-ink">
           <nav className="container py-6 flex flex-col gap-4">
             {NAV.map((item) => (
-              <NavItem key={item.to} {...item} />
+              <NavItem key={item.to} {...item} plain />
             ))}
-            <a href="#contact" className="btn btn-accent text-[11px] py-2 px-4 self-start mt-2">
+            <a href="#contact" className="btn btn-accent text-[12px] py-2 px-4 self-start mt-2">
               Contact
             </a>
           </nav>
@@ -89,14 +99,32 @@ interface NavItemProps {
   to: string;
   label: string;
   exact?: boolean;
+  /** toggled mobile menu, or the desktop nav while it is display:none (README rule 3) */
+  plain?: boolean;
 }
 
-const NavItem = ({ to, label, exact }: NavItemProps) => {
+/** Tailwind `md` — the desktop nav is `hidden md:flex`; its Hands render plain below it
+ *  instead of sitting pending (zero-size, never intersecting) for the whole visit */
+const DESKTOP = '(min-width: 768px)';
+const subscribeDesktop = (cb: () => void) => {
+  const mq = window.matchMedia(DESKTOP);
+  mq.addEventListener('change', cb);
+  return () => mq.removeEventListener('change', cb);
+};
+const useIsDesktop = () => useSyncExternalStore(subscribeDesktop, () => window.matchMedia(DESKTOP).matches, () => true);
+
+// the header is drawn once per page lifetime (memo); it remounts on every route.
+// Its cascade is kept short so the nav is readable within ~1 s and does not
+// compete with the hero for attention.
+const GROUP = 'nav';
+const NAV_BUDGET = 700;
+
+const NavItem = ({ to, label, exact, plain = false }: NavItemProps) => {
   const location = useLocation();
   const isActive = exact ? location.pathname === to : location.pathname.startsWith(to);
   return (
     <Link to={to} className={`nav-link ${isActive ? 'active' : ''}`}>
-      {label}
+      {plain ? label : <Hand group={GROUP} budget={NAV_BUDGET} memo={`nav:${to}`}>{label}</Hand>}
     </Link>
   );
 };

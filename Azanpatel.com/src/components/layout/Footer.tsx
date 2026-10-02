@@ -1,4 +1,14 @@
 import { Link } from 'react-router-dom';
+import Hand from '../../handwriting/Hand';
+
+const GROUP = 'footer';
+const LINKS: [string, string][] = [
+  ['/', 'Home'],
+  ['/research', 'Research'],
+  ['/projects', 'Projects'],
+  ['/internships', 'Internships'],
+  ['/media', 'Media'],
+];
 
 const Footer = () => {
   const year = new Date().getFullYear();
@@ -7,20 +17,23 @@ const Footer = () => {
     <footer className="border-t border-ink-line">
       <div className="container py-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
         <div className="flex items-center gap-3">
-          <span className="w-7 h-7 border border-text-muted flex items-center justify-center font-mono text-[10px] tracking-widest text-text-muted">
-            AP
+          <span
+            className="w-7 h-7 border border-text-muted flex items-center justify-center font-mono text-[11.5px] tracking-widest text-text-muted"
+            data-hw-host=""
+          >
+            <Hand group={GROUP}>AP</Hand>
           </span>
-          <p className="font-mono text-xs uppercase tracking-[0.2em] text-text-subtle">
+          <Hand as="p" group={GROUP} className="font-mono text-xs uppercase tracking-[0.2em] text-text-subtle">
             © {year} Azan Patel
-          </p>
+          </Hand>
         </div>
 
-        <nav className="flex items-center gap-6">
-          <Link to="/" className="nav-link">Home</Link>
-          <Link to="/research" className="nav-link">Research</Link>
-          <Link to="/projects" className="nav-link">Projects</Link>
-          <Link to="/internships" className="nav-link">Internships</Link>
-          <Link to="/media" className="nav-link">Media</Link>
+        <nav className="flex flex-wrap items-center gap-x-6 gap-y-2">
+          {LINKS.map(([to, label]) => (
+            <Link key={to} to={to} className="nav-link">
+              <Hand group={GROUP}>{label}</Hand>
+            </Link>
+          ))}
         </nav>
 
         <div className="flex items-center gap-4">
@@ -30,8 +43,8 @@ const Footer = () => {
           <SocialLink href="https://linkedin.com" label="LinkedIn">
             <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z" />
           </SocialLink>
-          <SocialLink href="mailto:hello@example.com" label="Email">
-            <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+          <SocialLink href="mailto:hello@example.com" label="Email" outline>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
           </SocialLink>
         </div>
       </div>
@@ -42,10 +55,12 @@ const Footer = () => {
 interface SocialLinkProps {
   href: string;
   label: string;
+  /** the icon is an outline path: stroke it instead of filling it */
+  outline?: boolean;
   children: React.ReactNode;
 }
 
-const SocialLink = ({ href, label, children }: SocialLinkProps) => (
+const SocialLink = ({ href, label, outline = false, children }: SocialLinkProps) => (
   <a
     href={href}
     aria-label={label}
@@ -53,7 +68,14 @@ const SocialLink = ({ href, label, children }: SocialLinkProps) => (
     target="_blank"
     rel="noreferrer noopener"
   >
-    <svg className="w-4 h-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+    <svg
+      className="w-4 h-4"
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox="0 0 24 24"
+      fill={outline ? 'none' : 'currentColor'}
+      stroke={outline ? 'currentColor' : 'none'}
+      strokeWidth={outline ? 1.5 : undefined}
+    >
       {children}
     </svg>
   </a>

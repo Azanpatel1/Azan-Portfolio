@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { ResearchItem } from '../../data/research';
+import Hand from '../../handwriting/Hand';
+import InkText from '../../handwriting/InkText';
 
 const TYPE_LABELS: Record<ResearchItem['type'], string> = {
   proposal: 'Proposal',
@@ -33,9 +35,9 @@ const ResearchCard = ({ item, index }: ResearchCardProps) => {
                 d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"
               />
             </svg>
-            <span className="font-mono text-[10px] uppercase tracking-[0.2em]">
+            <Hand className="font-mono text-[11.5px] uppercase tracking-[0.2em]">
               {TYPE_LABELS[item.type]}
-            </span>
+            </Hand>
           </div>
         ) : (
           <img
@@ -46,40 +48,40 @@ const ResearchCard = ({ item, index }: ResearchCardProps) => {
             className="max-h-full max-w-full object-contain grayscale group-hover:grayscale-0 transition-all duration-500"
           />
         )}
-        <span className="absolute top-3 right-3 bg-ink/80 backdrop-blur-sm text-text-muted font-mono text-[10px] uppercase tracking-[0.2em] px-2 py-1 border border-ink-line">
+        <Hand className="absolute top-3 right-3 bg-ink/80 backdrop-blur-sm text-text-muted font-mono text-[11.5px] uppercase tracking-[0.2em] px-2 py-1 border border-ink-line">
           {TYPE_LABELS[item.type]}
-        </span>
+        </Hand>
       </div>
 
       <div className="p-5">
-        <div className="flex items-baseline justify-between gap-4 mb-3">
-          <span className="font-mono text-[10px] tracking-[0.2em] text-text-subtle">
+        <Hand as="div" className="flex items-baseline justify-between gap-4 mb-3">
+          <span className="font-mono text-[11.5px] tracking-[0.2em] text-text-subtle">
             DOC-{number}
           </span>
-          <span className="font-mono text-[10px] tracking-[0.2em] text-text-subtle">
+          <span className="font-mono text-[11.5px] tracking-[0.2em] text-text-subtle">
             {[item.venue, item.year].filter(Boolean).join(' · ')}
           </span>
-        </div>
+        </Hand>
 
-        <h3 className="text-xl font-medium text-text mb-2 group-hover:text-accent transition-colors">
+        <Hand as="h3" className="text-xl font-medium text-text mb-2 group-hover:text-accent transition-colors">
           {item.title}
-        </h3>
+        </Hand>
 
-        <p className="text-sm text-text-muted leading-relaxed line-clamp-3 mb-4">
+        <InkText as="p" className="text-sm text-text-muted leading-relaxed line-clamp-3 mb-4">
           {item.description}
-        </p>
+        </InkText>
 
         <div className="flex flex-wrap items-center gap-1.5">
           {item.tags.map((tag) => (
-            <span
+            <Hand
               key={tag}
-              className="font-mono text-[10px] uppercase tracking-[0.15em] text-text-subtle border border-ink-line px-2 py-1"
+              className="tag font-mono text-[11.5px] uppercase tracking-[0.15em] text-text-subtle border border-ink-line px-2 py-1"
             >
               {tag}
-            </span>
+            </Hand>
           ))}
-          <span className="ml-auto inline-flex items-center gap-1 font-mono text-[10px] uppercase tracking-[0.15em] text-text-subtle group-hover:text-accent transition-colors">
-            View
+          <span className="ml-auto inline-flex items-center gap-1 font-mono text-[11.5px] uppercase tracking-[0.15em] text-text-subtle group-hover:text-accent transition-colors">
+            <Hand>View</Hand>
             <svg className="w-3 h-3" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth={1.5}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M5.5 14.5l9-9m0 0h-6m6 0v6" />
             </svg>

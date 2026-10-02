@@ -1,5 +1,7 @@
 import { Link } from 'react-router-dom';
 import { ProjectData } from '../../data/projects';
+import Hand from '../../handwriting/Hand';
+import InkText from '../../handwriting/InkText';
 
 export interface ProjectCardProps {
   project: ProjectData;
@@ -19,36 +21,36 @@ const ProjectCard = ({ project, index }: ProjectCardProps) => {
           className="max-h-full max-w-full object-contain grayscale group-hover:grayscale-0 transition-all duration-500"
         />
         {project.featured && (
-          <span className="absolute top-3 right-3 bg-accent text-ink font-mono text-[10px] uppercase tracking-[0.2em] px-2 py-1">
+          <Hand className="absolute top-3 right-3 bg-accent text-ink font-mono text-[11.5px] uppercase tracking-[0.2em] px-2 py-1">
             Featured
-          </span>
+          </Hand>
         )}
       </div>
 
       <div className="p-5">
-        <div className="flex items-baseline justify-between gap-4 mb-3">
-          <span className="font-mono text-[10px] tracking-[0.2em] text-text-subtle">PRJ-{number}</span>
+        <Hand as="div" className="flex items-baseline justify-between gap-4 mb-3">
+          <span className="font-mono text-[11.5px] tracking-[0.2em] text-text-subtle">PRJ-{number}</span>
           {project.year && (
-            <span className="font-mono text-[10px] tracking-[0.2em] text-text-subtle">{project.year}</span>
+            <span className="font-mono text-[11.5px] tracking-[0.2em] text-text-subtle">{project.year}</span>
           )}
-        </div>
+        </Hand>
 
-        <h3 className="text-xl font-medium text-text mb-2 group-hover:text-accent transition-colors">
+        <Hand as="h3" className="text-xl font-medium text-text mb-2 group-hover:text-accent transition-colors">
           {project.title}
-        </h3>
+        </Hand>
 
-        <p className="text-sm text-text-muted leading-relaxed line-clamp-2 mb-4">
+        <InkText as="p" className="text-sm text-text-muted leading-relaxed line-clamp-2 mb-4">
           {project.description}
-        </p>
+        </InkText>
 
         <div className="flex flex-wrap gap-1.5">
           {project.tags.map((tag) => (
-            <span
+            <Hand
               key={tag}
-              className="font-mono text-[10px] uppercase tracking-[0.15em] text-text-subtle border border-ink-line px-2 py-1"
+              className="tag font-mono text-[11.5px] uppercase tracking-[0.15em] text-text-subtle border border-ink-line px-2 py-1"
             >
               {tag}
-            </span>
+            </Hand>
           ))}
         </div>
       </div>

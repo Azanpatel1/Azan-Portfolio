@@ -3,6 +3,7 @@ import ProjectsGrid from '../components/projects/ProjectsGrid';
 import GraphEmbed from '../components/projects/GraphEmbed';
 import SectionHeader from '../components/ui/SectionHeader';
 import { GRAPHS } from '../data/graphs';
+import Hand from '../handwriting/Hand';
 
 const ProjectsPage = () => {
   return (
@@ -19,7 +20,7 @@ const ProjectsPage = () => {
 
           <div className="mt-24">
             <div className="section-header">
-              <span className="label">Graphs</span>
+              <Hand className="label">Graphs</Hand>
               <span className="section-header-rule" />
             </div>
             <div className="grid gap-6 max-w-4xl">

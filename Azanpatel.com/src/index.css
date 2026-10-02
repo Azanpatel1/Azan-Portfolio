@@ -2,36 +2,95 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ------------------------------------------------------------------ */
+/* Self-hosted handwriting face. The stroke overlay (src/handwriting)  */
+/* is traced over this exact face, so nothing may substitute it.       */
+/* ------------------------------------------------------------------ */
+@font-face {
+  font-family: 'Shadows Into Light';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('/fonts/shadows-into-light-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
+    U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Shadows Into Light';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: url('/fonts/shadows-into-light-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304,
+    U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0,
+    U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
 @layer base {
+  :root {
+    --paper: #f3eee3;
+    --graphite: 42 42 48;
+    /* graphite alphas for text-text / -muted / -subtle (tailwind.config.js) */
+    --ink-a: 0.86;
+    --ink-a-muted: 0.76;
+    --ink-a-subtle: 0.7;
+    /* floors for the ≤ 13px tiers: at 1x DPI the antialiased single-weight face never
+       reaches its nominal colour, so small lettering gets more ink (plus the bloom below) */
+    --ink-a-muted-sm: 0.84;
+    --ink-a-subtle-sm: 0.8;
+    --accent: 166 75 7;
+    --accent-sm: 150 66 5;
+    /* two seamless (stitchTiles) feTurbulence tiles: fine grain 11% + soft anisotropic fibres 3% */
+    --paper-grain: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='240' height='240'><filter id='g' x='0' y='0' width='100%' height='100%'><feTurbulence type='fractalNoise' baseFrequency='0.78' numOctaves='3' seed='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.16  0 0 0 0 0.14  0 0 0 0 0.10  0 0 0 0.11 0'/></filter><rect width='240' height='240' filter='url(%23g)'/></svg>");
+    --paper-fibre: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='360' height='360'><filter id='f' x='0' y='0' width='100%' height='100%'><feTurbulence type='fractalNoise' baseFrequency='0.035 0.12' numOctaves='2' seed='7' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 0.2  0 0 0 0 0.17  0 0 0 0 0.12  0 0 0 0.03 0'/></filter><rect width='360' height='360' filter='url(%23f)'/></svg>");
+  }
+
   html {
     color-scheme: light;
     scroll-behavior: smooth;
+    background: var(--paper);
+    /* the face is narrower and lighter than Inter: body 16 -> 17px, everything rem-based
+       follows. A percentage, not px, so the user's browser font-size preference still scales it. */
+    font-size: 106.25%;
   }
 
   body {
-    @apply bg-ink text-text min-h-screen font-sans antialiased;
+    @apply text-text min-h-screen font-sans antialiased;
+    /* a block that overflows the viewport sideways must not widen the page (and hide a Hand off screen) */
+    overflow-x: clip;
+    background-color: var(--paper);
+    background-image:
+      var(--paper-grain),
+      var(--paper-fibre),
+      radial-gradient(120% 90% at 50% 0%, rgba(255, 255, 255, 0.35), transparent 70%);
+    background-size: 240px 240px, 360px 360px, 100% 100%;
+    background-repeat: repeat, repeat, no-repeat;
+    font-weight: 400;
+    /* per-character Range rects must map 1:1 to glyphs for the stroke overlay */
+    font-variant-ligatures: none;
+    font-feature-settings: 'liga' 0, 'clig' 0;
   }
+
+  /* single-weight face: never let the browser synthesise bold */
+  b, strong, h1, h2, h3, h4, h5, h6 { font-weight: 400; }
+  em, i { font-style: normal; } /* the face has no italic; synthetic oblique breaks the overlay */
 
   ::selection {
-    @apply bg-accent text-ink;
+    background: rgb(var(--accent) / 0.28);
+    color: #2a2a30;
+    -webkit-text-fill-color: #2a2a30;
   }
 
-  ::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
+  a:focus-visible, button:focus-visible, [tabindex]:focus-visible {
+    outline: 2px solid rgb(var(--accent));
+    outline-offset: 3px;
   }
 
-  ::-webkit-scrollbar-track {
-    @apply bg-ink;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    @apply bg-ink-line;
-  }
-
-  ::-webkit-scrollbar-thumb:hover {
-    @apply bg-ink-edge;
-  }
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: var(--paper); }
+  ::-webkit-scrollbar-thumb { @apply bg-ink-line; }
+  ::-webkit-scrollbar-thumb:hover { @apply bg-ink-edge; }
 }
 
 @layer components {
@@ -44,7 +103,8 @@
   }
 
   .nav-link {
-    @apply font-mono text-xs uppercase tracking-[0.2em] text-text-muted hover:text-text transition-colors;
+    @apply font-mono uppercase tracking-[0.18em] text-text-muted hover:text-text transition-colors;
+    font-size: 13px;
   }
 
   .nav-link.active {
@@ -52,7 +112,8 @@
   }
 
   .btn {
-    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 font-mono text-xs uppercase tracking-[0.2em] border transition-colors;
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 font-mono uppercase tracking-[0.18em] border transition-colors;
+    font-size: 13px;
   }
 
   .btn-primary {
@@ -76,7 +137,8 @@
   }
 
   .label {
-    @apply font-mono text-xs uppercase tracking-[0.25em] text-text-subtle;
+    @apply font-mono uppercase tracking-[0.18em] text-text-muted;
+    font-size: 11.5px;
   }
 
   .rule {
@@ -89,5 +151,187 @@
 
   .section-header-rule {
     @apply flex-1 h-px bg-ink-line;
+  }
+
+  /* graphite bloom on small lettering (no displacement filter below 28px), and the
+     small-tier ink floors: every ≤ 13px caption/meta row, not only .label */
+  .label, .nav-link, .btn, .tag, .text-xs,
+  [class*='text-[10.5px]'], [class*='text-[11.5px]'], [class*='text-[12px]'], [class*='text-[13px]'] {
+    text-shadow: 0 0 0.5px rgba(43, 42, 40, 0.35);
+    --ink-a-muted: var(--ink-a-muted-sm);
+    --ink-a-subtle: var(--ink-a-subtle-sm);
+    --accent: var(--accent-sm);
+  }
+}
+
+@layer utilities {
+  /* one weight only */
+  .font-light, .font-medium, .font-semibold, .font-bold, .font-extrabold { font-weight: 400; }
+  .italic { font-style: normal; }
+
+  /* --------------------------------------------------------------- */
+  /* Pencil edge roughness: large headings only.                       */
+  /* Everywhere the settled text gets the light filter (a static       */
+  /* raster); only desktop fine-pointer devices also run it while the  */
+  /* strokes animate, and at full strength for the hero h1.            */
+  /* --------------------------------------------------------------- */
+  .hw-rough, .hw-rough-sm { --pencil: url(#pencil-edge-sm); }
+  /* settled text only: a pending heading paints nothing, so no raster filter for it yet */
+  .hw-rough:not(.hw-pending):not(.hw-drawing):not(.hw-fading),
+  .hw-rough-sm:not(.hw-pending):not(.hw-drawing):not(.hw-fading) { filter: var(--pencil); }
+  @media (pointer: fine) and (min-width: 768px) {
+    .hw-rough { --pencil: url(#pencil-edge); }
+    .hw-rough.hw-drawing, .hw-rough.hw-fading,
+    .hw-rough-sm.hw-drawing, .hw-rough-sm.hw-fading { filter: var(--pencil); }
+  }
+
+  /* --------------------------------------------------------------- */
+  /* Stroke overlay (src/handwriting/Hand.tsx)                         */
+  /* --------------------------------------------------------------- */
+  /* zero specificity: a Hand that carries `absolute` (card badges) or `transition-colors`
+     keeps them — the overlay only needs *a* positioned containing block */
+  :where(.hw) { position: relative; transition: border-color 400ms ease-out, background-color 250ms ease-out; }
+  span.hw, a.hw, em.hw, strong.hw, small.hw { display: inline-block; }
+
+  /* a box that is not itself a Hand (awards card, logo square) fades its rules in with
+     its first child's first stroke: Hand.tsx marks data-hw-host pending when an animating
+     child mounts (so reduced-motion / print never hide a border) and drawing on the first stroke.
+     The transition exists only from `drawing` on: the host is rendered as "" and marked
+     pending in a layout effect, and a transition on the "" state would make the rules
+     paint at full colour and fade OUT at first paint. */
+  :where([data-hw-host='drawing'], [data-hw-host='drawing'] *, [data-hw-host='done'], [data-hw-host='done'] *) {
+    transition: border-color 400ms ease-out;
+  }
+  /* no transition INTO pending either: a host that carries its own `transition-colors`
+     (the AP logo square) would otherwise fade its border out over the first frames */
+  [data-hw-host='pending'], [data-hw-host='pending'] * { border-color: transparent; transition-property: none; }
+
+  /* text-fill (not color) so computed colours, borders and currentColor survive while hidden */
+  .hw-pending, .hw-pending * {
+    -webkit-text-fill-color: transparent;
+    text-shadow: none;
+  }
+  /* a block's own rules and fill (and the button around one) fade in with its first stroke,
+     so an unwritten block is blank paper rather than an empty box (the Featured badge is
+     the one Hand with its own solid fill) */
+  .hw.hw-pending:not(.hw-drawing), .btn:has(> .hw-pending:not(.hw-drawing)) { border-color: transparent; }
+  .hw.hw-pending:not(.hw-drawing) { background-color: transparent; }
+  @supports not (-webkit-text-fill-color: transparent) {
+    .hw-pending, .hw-pending * { color: transparent !important; }
+  }
+  .hw-pending::selection, .hw-pending *::selection {
+    color: #2a2a30;
+    -webkit-text-fill-color: #2a2a30;
+  }
+  /* hand-off: a 160ms cross-dissolve, strokes out while the webfont comes in (normal blend;
+     the two are the same colour and coincide within a pixel). Chromium does not interpolate
+     -webkit-text-fill-color, so the fade animates `color` from transparent to each element's
+     OWN colour (no `to` frame = the underlying value); the strokes keep the colour they were
+     built with. The overlay's paths and inline icons (stroke="currentColor", never hidden)
+     are excluded. */
+  .hw-fading, .hw-fading :not(.hw-ink, .hw-ink *, svg, svg *) {
+    animation: hw-fillin 160ms linear both;
+  }
+  @keyframes hw-fillin {
+    from { color: transparent; }
+  }
+  /* the strokes' opacity follows the curve that keeps the summed ink coverage constant while
+     the text's alpha rises linearly: for two coinciding layers of alpha a (strokes) and b
+     (text) over paper, 1-(1-a)(1-b) stays at the text's alpha when a = 1-(1-α)/(1-bα)
+     (α ≈ .86 graphite): ≈ 1, .96, .88, .70, .44, 0 at 0/25/50/75/90/100 %. Without it the
+     hand-off flashes darker (both layers at once) or lighter (a linear dissolve). */
+  .hw-fading .hw-ink { animation: hw-inkout 160ms linear both; }
+  @keyframes hw-inkout {
+    0% { opacity: 1; }
+    25% { opacity: 0.96; }
+    50% { opacity: 0.88; }
+    75% { opacity: 0.7; }
+    90% { opacity: 0.44; }
+    100% { opacity: 0; }
+  }
+
+  .hw-ink {
+    position: absolute;
+    left: 0;
+    top: 0;
+    overflow: visible;
+    pointer-events: none;
+  }
+  /* no blend mode anywhere: the strokes sit over hidden text while drawing (an isolated
+     blend group per live overlay was a measurable part of the mobile frame cost), and the
+     hand-off is a plain cross-dissolve (multiply made the two graphite layers near-black) */
+  .hw-ink path {
+    fill: none;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 1 1.1;
+    stroke-dashoffset: 1.05;
+  }
+  .hw-drawing .hw-ink path {
+    animation: hw-draw var(--d) linear var(--t) forwards;
+  }
+  .hw-done .hw-ink path, .hw-fading .hw-ink path {
+    stroke-dashoffset: 0;
+  }
+  @keyframes hw-draw {
+    to { stroke-dashoffset: 0; }
+  }
+
+  /* --------------------------------------------------------------- */
+  /* InkText: word-wise pen reveal for clamped / very long text        */
+  /* --------------------------------------------------------------- */
+  .ink-w { display: inline; }
+  /* the block's own paint (the line-clamp ellipsis) stays hidden until the words have
+     been written; the words themselves paint through their spans */
+  .ink-pending, .ink-inking { -webkit-text-fill-color: transparent; }
+  .ink-pending .ink-w, .ink-inking .ink-w { -webkit-text-fill-color: currentcolor; }
+  .ink-pending .ink-w {
+    clip-path: inset(-0.3em 100% -0.3em 0);
+  }
+  .ink-inking .ink-w {
+    animation: ink-reveal var(--ink-d) linear var(--ink-t) both;
+  }
+  @keyframes ink-reveal {
+    from { clip-path: inset(-0.3em 100% -0.3em 0); }
+    to { clip-path: inset(-0.3em -0.1em -0.3em 0); }
+  }
+
+  /* --------------------------------------------------------------- */
+  /* Escapes                                                           */
+  /* --------------------------------------------------------------- */
+  @media print {
+    .hw-pending, .hw-pending * { -webkit-text-fill-color: currentcolor; }
+    .ink-pending, .ink-inking, .ink-pending .ink-w { -webkit-text-fill-color: currentcolor; clip-path: none; }
+    .hw-ink { display: none; }
+    body { background-image: none; }
+    /* !important: the screen rules above are more specific than this one */
+    .hw-rough, .hw-rough-sm { filter: none !important; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+  }
+  @media (prefers-reduced-motion: reduce), (forced-colors: active) {
+    .hw-ink { display: none; }
+    .hw-pending, .hw-pending * { -webkit-text-fill-color: currentcolor; }
+    .ink-pending, .ink-inking { -webkit-text-fill-color: currentcolor; }
+    .ink-pending .ink-w, .ink-inking .ink-w { clip-path: none; animation: none; }
+  }
+  @media (prefers-contrast: more), (forced-colors: active) {
+    :root {
+      /* solid, darker graphite: every token and slash-opacity variant follows */
+      --graphite: 29 29 34;
+      --ink-a: 1;
+      --ink-a-muted: 0.92;
+      --ink-a-subtle: 0.86;
+      --ink-a-muted-sm: 0.92;
+      --ink-a-subtle-sm: 0.86;
+      --accent: 140 60 4;
+      --accent-sm: 140 60 4;
+    }
+    body { background-image: none; }
+    .hw-rough, .hw-rough-sm { filter: none !important; }
+    .label, .nav-link, .btn, .tag, .text-xs,
+    [class*='text-[10.5px]'], [class*='text-[11.5px]'], [class*='text-[12px]'], [class*='text-[13px]'] { text-shadow: none; }
+    .bg-ink-surface, .card { background-color: transparent; }
   }
 }
