@@ -12,12 +12,8 @@ const Hero = () => {
       <div className="container">
         <div className="grid lg:grid-cols-12 gap-12 lg:gap-16 items-start">
           <div className="lg:col-span-7">
-            <div className="flex items-center gap-3 mb-8">
-              <span className="w-2 h-2 bg-accent" />
-              <span className="label">Translational Neuroengineering</span>
-            </div>
-
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-medium leading-[1.05] tracking-tight text-text">
+            <h1 className="flex items-center gap-4 text-5xl sm:text-6xl lg:text-5xl xl:text-6xl font-medium leading-[1.05] tracking-tight text-text">
+              <span className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0 bg-accent" aria-hidden="true" />
               Neuroengineering
             </h1>
 
@@ -50,6 +46,10 @@ const Hero = () => {
               <div className="border-t border-ink-line px-4 py-3 flex items-center justify-between font-mono text-[10px] uppercase tracking-[0.2em] text-text-subtle">
                 <span>AP—001</span>
                 <span>UC Davis · 2027</span>
+              </div>
+              <div className="border-t border-ink-line px-4 py-3 flex items-center justify-between gap-4 font-mono text-[10px] uppercase tracking-[0.15em] text-text-subtle">
+                <span className="shrink-0">GPA <span className="text-text">3.6 / 4.0</span></span>
+                <span className="text-right">Biomedical &amp; Mechanical <span className="text-text-muted">(Double)</span></span>
               </div>
             </div>
 
