@@ -114,7 +114,7 @@ const Hero = () => {
               <Hand
                 as="div"
                 group={GROUP}
-                className="border-t border-ink-line px-4 py-3 flex items-baseline justify-between gap-4 font-mono text-[11.5px] uppercase tracking-[0.15em] text-text-subtle"
+                className="border-t border-ink-line px-4 py-3 flex items-baseline justify-between gap-4 font-mono text-[11.5px] uppercase tracking-[0.06em] text-text-subtle"
               >
                 {/* items-baseline, not center: when the right column wraps (phones) the left text
                     must share its FIRST baseline so the pen writes left to right, top to bottom */}
