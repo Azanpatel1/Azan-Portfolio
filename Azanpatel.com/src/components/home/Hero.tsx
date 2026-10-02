@@ -3,7 +3,7 @@ const AWARDS: { amount: string; title: string; note?: string }[] = [
   { amount: '$7,500', title: 'Karim Abou Najm Memorial Award', note: 'Research, innovation, and mentorship' },
   { amount: '$1,000', title: 'Little Bank Poster Session' },
   { amount: '$1,500', title: 'NSF I-Corps Hub Regionals' },
-  { amount: '$250,000', title: 'Entrepreneurs First', note: 'Pre-idea raise, concept to IRB submission process' },
+  { amount: '$250,000', title: 'Independently Funded', note: 'Pre-idea raise, concept to IRB submission process' },
 ];
 
 const Hero = () => {
