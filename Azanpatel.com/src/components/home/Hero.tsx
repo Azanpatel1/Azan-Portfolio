@@ -26,6 +26,9 @@ const Hero = () => {
               <span className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0 bg-accent" aria-hidden="true" />
               Neuroengineering
             </h1>
+            <p className="mt-3 pl-7 sm:pl-[30px] font-mono text-sm sm:text-base uppercase tracking-[0.25em] text-text-muted">
+              Cognitive Neuroscience
+            </p>
 
             <p className="mt-6 text-text-muted/90 text-base sm:text-lg italic max-w-xl leading-relaxed">
               I&rsquo;m fascinated with brain-machine interfaces, neuroplasticity, and Mindfullness.
