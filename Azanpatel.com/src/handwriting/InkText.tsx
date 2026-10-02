@@ -3,6 +3,8 @@ import { observe, unobserve } from './observer';
 import { shouldAnimate } from './env';
 
 export interface InkTextProps extends Omit<HTMLAttributes<HTMLElement>, 'children'> {
+  /** true runs the word-wise pen reveal on scroll; the default renders plain text */
+  animate?: boolean;
   as?: ElementType;
   className?: string;
   /** plain text only (strings / numbers); markup is not supported here — use Hand for that */
@@ -33,10 +35,11 @@ export default function InkText({
   minWord = 120,
   cap = 2400,
   delay = 0,
+  animate = false,
   ...rest
 }: InkTextProps) {
   const ref = useRef<HTMLElement>(null);
-  const [state, setState] = useState<'idle' | 'pending' | 'inking' | 'done'>(() => (shouldAnimate() ? 'pending' : 'idle'));
+  const [state, setState] = useState<'idle' | 'pending' | 'inking' | 'done'>(() => (animate && shouldAnimate() ? 'pending' : 'idle'));
   const text = Array.isArray(children) ? children.join('') : String(children);
 
   const words = useMemo(() => {

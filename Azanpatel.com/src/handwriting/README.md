@@ -37,7 +37,7 @@ import Hand from '../handwriting/Hand';
 | `className` | | normal Tailwind classes (colour, size, `uppercase`, tracking, …) — all honoured, including per-child colours. |
 | `rough` | `false` | `.hw-rough`: displacement + grain filter. **Only for ≥ 44px headings** (hero h1, ProjectDetail h1). |
 | `roughSm` | `false` | `.hw-rough-sm`: lighter filter for 28–40px headings (SectionHeader h2). |
-| `animate` | `true` | `false` renders plain text (never hidden, no overlay). |
+| `animate` | `false` | `true` draws the block when it scrolls into view; the default renders plain text (never hidden, no overlay). Only the hero's headline, kicker, tagline and button animate. |
 | `once` | `true` | `false` replays each time the block re-enters the viewport. |
 | `memo` | | a key; a block whose key has already finished drawing in this page lifetime renders plain. Use it for chrome that remounts on every route (the header: `memo="nav:/projects"`). |
 | `group` | | blocks with the same group draw in document order, cascaded (next starts when the previous is ~40 % done, 120–600 ms apart). Hero uses `"hero"`, header `"nav"`, footer `"footer"`, each SectionHeader `"section:<label>"` (its paragraph follows its heading). Leave unset elsewhere. |

@@ -13,7 +13,7 @@ export interface HandProps extends Omit<HTMLAttributes<HTMLElement>, 'children'>
   rough?: boolean;
   /** 28–40px heading: lighter displacement */
   roughSm?: boolean;
-  /** false renders plain text (no overlay, never hidden) */
+  /** true draws the block stroke by stroke when it scrolls into view; the default renders plain text (no overlay, never hidden) */
   animate?: boolean;
   /** replay when scrolled out of and back into view */
   once?: boolean;
@@ -64,7 +64,7 @@ export default function Hand({
   className = '',
   rough = false,
   roughSm = false,
-  animate = true,
+  animate = false,
   once = true,
   memo,
   group,

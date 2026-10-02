@@ -34,6 +34,7 @@ const Hero = () => {
             <Hand
               as="h1"
               rough
+              animate
               group={GROUP}
               maxLine={1800}
               speed={0.95}
@@ -44,19 +45,20 @@ const Hero = () => {
             </Hand>
             <Hand
               as="p"
+              animate
               group={GROUP}
               className="mt-3 pl-7 sm:pl-[30px] font-mono text-sm sm:text-base uppercase tracking-[0.18em] text-text-muted"
             >
               Cognitive Neuroscience
             </Hand>
 
-            <Hand as="p" group={GROUP} className="mt-6 text-text-muted text-base sm:text-lg max-w-xl leading-relaxed">
+            <Hand as="p" animate group={GROUP} className="mt-6 text-text-muted text-base sm:text-lg max-w-xl leading-relaxed">
               I&rsquo;m fascinated by designing brain-computer interfaces and neuroplasticity&rsquo;s effect on memory &amp; learning, and Mindfullness.
             </Hand>
 
             <div className="mt-10 flex flex-col sm:flex-row gap-3">
               <a href="#contact" className="btn btn-ghost">
-                <Hand group={GROUP}>Get in touch</Hand>
+                <Hand animate group={GROUP}>Get in touch</Hand>
               </a>
             </div>
           </div>
