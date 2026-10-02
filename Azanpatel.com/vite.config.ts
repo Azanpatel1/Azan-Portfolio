@@ -6,7 +6,7 @@ import react from '@vitejs/plugin-react'
 
 /** Production-only HTML tweaks for static hosts (Cloudflare Pages, caching CDNs). */
 function productionHtml(): Plugin {
-  const bootSnippet = `<style>html,body{background:#050505;color:#fafafa;margin:0}</style>
+  const bootSnippet = `<style>html,body{background:#fafaf9;color:#111110;margin:0}</style>
 <script>
 (function(){
   function show(title, detail) {

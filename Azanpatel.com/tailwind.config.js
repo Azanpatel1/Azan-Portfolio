@@ -8,20 +8,20 @@ module.exports = {
     extend: {
       colors: {
         ink: {
-          DEFAULT: '#050505',
-          surface: '#0d0d0d',
-          raised: '#141414',
-          line: '#262626',
-          edge: '#3f3f3f',
+          DEFAULT: '#fafaf9',
+          surface: '#f4f4f3',
+          raised: '#ececea',
+          line: '#dcdcda',
+          edge: '#b8b8b4',
         },
         text: {
-          DEFAULT: '#fafafa',
-          muted: '#a1a1aa',
-          subtle: '#71717a',
+          DEFAULT: '#111110',
+          muted: '#4b4b53',
+          subtle: '#6b6b74',
         },
         accent: {
-          DEFAULT: '#f59e0b',
-          hover: '#fbbf24',
+          DEFAULT: '#b45309',
+          hover: '#d97706',
         },
       },
       fontFamily: {
