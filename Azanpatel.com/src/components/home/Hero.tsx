@@ -1,10 +1,20 @@
-const AWARDS: { amount: string; title: string; note?: string }[] = [
-  { amount: '$10K', title: 'Nextfuge', note: 'Concept to Bench' },
-  { amount: '$7,500', title: 'Karim Abou Najm Memorial Award', note: 'Research, innovation, and mentorship' },
-  { amount: '$1,000', title: 'Little Bank Poster Session' },
-  { amount: '$1,500', title: 'NSF I-Corps Hub Regionals' },
+type Award = { amount: string; title: string; note?: string; parts?: Award[] };
+
+const AWARDS: Award[] = [
+  {
+    amount: '$10K',
+    title: 'Nextfuge',
+    note: 'Concept to Bench',
+    parts: [
+      { amount: '$7,500', title: 'Karim Abou Najm Memorial Award', note: 'Research, innovation, and mentorship' },
+      { amount: '$1,500', title: 'NSF I-Corps Hub Regionals' },
+      { amount: '$1,000', title: 'Little Bank Poster Session' },
+    ],
+  },
   { amount: '$250,000', title: 'Independently Funded', note: 'Pre-idea raise, concept to IRB submission process' },
 ];
+
+const AWARD_COUNT = AWARDS.reduce((n, a) => n + 1 + (a.parts?.length ?? 0), 0);
 
 const Hero = () => {
   return (
@@ -57,23 +67,22 @@ const Hero = () => {
               <div className="border-b border-ink-line px-4 py-3 flex items-center justify-between">
                 <span className="label">Awards &amp; Honors</span>
                 <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-text-subtle">
-                  {AWARDS.length} ENTRIES
+                  {AWARD_COUNT} ENTRIES
                 </span>
               </div>
               <ul className="divide-y divide-ink-line">
                 {AWARDS.map((award) => (
-                  <li key={award.title} className="px-4 py-3 flex items-baseline gap-4">
-                    <span className="w-[72px] shrink-0 font-mono text-[13px] text-accent">
-                      {award.amount}
-                    </span>
-                    <span className="flex-1 text-[13px] leading-snug text-text">
-                      {award.title}
-                      {award.note && (
-                        <span className="block mt-1 font-mono text-[9px] uppercase tracking-[0.15em] text-text-subtle">
-                          {award.note}
-                        </span>
-                      )}
-                    </span>
+                  <li key={award.title} className="px-4 py-3">
+                    <AwardRow award={award} />
+                    {award.parts && (
+                      <ul className="mt-3 ml-6 pl-4 border-l border-ink-line space-y-2.5">
+                        {award.parts.map((part) => (
+                          <li key={part.title}>
+                            <AwardRow award={part} compact />
+                          </li>
+                        ))}
+                      </ul>
+                    )}
                   </li>
                 ))}
               </ul>
@@ -84,6 +93,24 @@ const Hero = () => {
     </section>
   );
 };
+
+const AwardRow = ({ award, compact = false }: { award: Award; compact?: boolean }) => (
+  <div className="flex items-baseline gap-4">
+    <span
+      className={`shrink-0 font-mono ${compact ? 'w-[60px] text-[11px] text-accent/80' : 'w-[72px] text-[13px] text-accent'}`}
+    >
+      {award.amount}
+    </span>
+    <span className={`flex-1 leading-snug ${compact ? 'text-[12px] text-text-muted' : 'text-[13px] text-text'}`}>
+      {award.title}
+      {award.note && (
+        <span className="block mt-1 font-mono text-[9px] uppercase tracking-[0.15em] text-text-subtle">
+          {award.note}
+        </span>
+      )}
+    </span>
+  </div>
+);
 
 const Tick = ({ className = '' }: { className?: string }) => (
   <span className={`absolute w-3 h-3 border border-text-muted ${className}`} />
