@@ -2,8 +2,13 @@ type Award = { amount: string; title: string; note?: string; parts?: Award[] };
 
 const AWARDS: Award[] = [
   {
+    amount: '$250,000',
+    title: 'Independently Funded',
+    note: 'Pre-idea raise, concept to IRB submission process for non-invasive closed-loop neuromodulation',
+  },
+  {
     amount: '$10K',
-    title: 'Nextfuge',
+    title: 'NEXTfuge',
     note: 'Concept to Bench',
     parts: [
       { amount: '$7,500', title: 'Karim Abou Najm Memorial Award', note: 'Research, innovation, and mentorship' },
@@ -11,7 +16,6 @@ const AWARDS: Award[] = [
       { amount: '$1,000', title: 'Little Bank Poster Session' },
     ],
   },
-  { amount: '$250,000', title: 'Independently Funded', note: 'Pre-idea raise, concept to IRB submission process' },
 ];
 
 const AWARD_COUNT = AWARDS.reduce((n, a) => n + 1 + (a.parts?.length ?? 0), 0);
@@ -31,7 +35,7 @@ const Hero = () => {
             </p>
 
             <p className="mt-6 text-text-muted/90 text-base sm:text-lg italic max-w-xl leading-relaxed">
-              I&rsquo;m fascinated with brain-machine interfaces, neuroplasticity, and Mindfullness.
+              I&rsquo;m fascinated by designing brain-computer interfaces and neuroplasticity&rsquo;s effect on memory &amp; learning, and Mindfullness.
             </p>
 
             <div className="mt-10 flex flex-col sm:flex-row gap-3">
