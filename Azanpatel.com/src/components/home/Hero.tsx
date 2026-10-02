@@ -19,13 +19,6 @@ const Hero = () => {
               I&rsquo;m fascinated with brain-machine interfaces, neuroplasticity, and Mindfullness.
             </p>
 
-            <p className="mt-6 text-text-muted text-lg max-w-xl leading-relaxed">
-              I'm Azan Patel &mdash; solving real clinical problems focused on the brain,
-              leveraging closed-loop neuromodulatory techniques, computational modeling, and
-              hardware engineering to better understand and treat stroke, Alzheimer's, and
-              neuropsychiatric disorders.
-            </p>
-
             <div className="mt-10 flex flex-col sm:flex-row gap-3">
               <Link to="/goal" className="btn btn-primary">
                 The Goal
