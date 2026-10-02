@@ -1,3 +1,11 @@
+const AWARDS: { amount: string; title: string; note?: string }[] = [
+  { amount: '$10K', title: 'Nextfuge', note: 'Concept to Bench' },
+  { amount: '$7,500', title: 'Karim Abou Najm Memorial Award', note: 'Research, innovation, and mentorship' },
+  { amount: '$1,000', title: 'Little Bank Poster Session' },
+  { amount: '$1,500', title: 'NSF I-Corps Hub Regionals' },
+  { amount: '$250,000', title: 'Entrepreneurs First', note: 'Pre-idea raise, concept to IRB submission process' },
+];
+
 const Hero = () => {
   return (
     <section className="relative pt-32 pb-24 sm:pt-40 sm:pb-28 border-b border-ink-line">
@@ -43,6 +51,32 @@ const Hero = () => {
                 <span>AP—001</span>
                 <span>UC Davis · 2027</span>
               </div>
+            </div>
+
+            <div className="mt-4 border border-ink-line bg-ink-surface">
+              <div className="border-b border-ink-line px-4 py-3 flex items-center justify-between">
+                <span className="label">Awards &amp; Honors</span>
+                <span className="font-mono text-[10px] uppercase tracking-[0.2em] text-text-subtle">
+                  {AWARDS.length} ENTRIES
+                </span>
+              </div>
+              <ul className="divide-y divide-ink-line">
+                {AWARDS.map((award) => (
+                  <li key={award.title} className="px-4 py-3 flex items-baseline gap-4">
+                    <span className="w-[72px] shrink-0 font-mono text-[13px] text-accent">
+                      {award.amount}
+                    </span>
+                    <span className="flex-1 text-[13px] leading-snug text-text">
+                      {award.title}
+                      {award.note && (
+                        <span className="block mt-1 font-mono text-[9px] uppercase tracking-[0.15em] text-text-subtle">
+                          {award.note}
+                        </span>
+                      )}
+                    </span>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </div>
