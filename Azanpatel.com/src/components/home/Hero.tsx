@@ -16,7 +16,7 @@ const Hero = () => {
             </h1>
 
             <p className="mt-6 text-text-muted/90 text-base sm:text-lg italic max-w-xl leading-relaxed">
-              I&rsquo;m obsessed with brain-machine interfaces, neuroplasticity, and enhancing human experience.
+              I&rsquo;m fascinated by designing brain-computer interfaces, neuroplasticity&rsquo;s effect on learning, and modeling human experience.
             </p>
 
             <p className="mt-6 text-text-muted text-lg max-w-xl leading-relaxed">
