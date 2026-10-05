@@ -3,7 +3,7 @@ export const PROFILE = {
   name: 'Azan Patel',
   tagline: 'Translational Neuroengineering',
   statement:
-    'I’m obsessed with brain-machine interfaces, neuroplasticity, and enhancing human experience.',
+    'I’m fascinated by designing brain-computer interfaces, neuroplasticity’s effect on learning, and modeling human experience.',
   bio:
     'Solving real clinical problems focused on the brain, leveraging closed-loop neuromodulatory techniques, computational modeling, and hardware engineering to better understand and treat stroke, Alzheimer’s, and neuropsychiatric disorders.',
   portrait: { src: '/images/Azan.jpg', alt: 'Azan Patel' },
