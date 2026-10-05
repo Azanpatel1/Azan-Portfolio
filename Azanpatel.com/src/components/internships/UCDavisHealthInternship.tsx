@@ -1,4 +1,9 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import Reveal from '../motion/Reveal';
+import Lightbox from '../ui/Lightbox';
+import type { LightboxItem } from '../ui/Lightbox';
+import { Plus } from '../ui/Icon';
+import { pad } from '../../lib/format';
 
 interface NotebookEntry {
   image: string;
@@ -39,30 +44,25 @@ const USER_NEEDS = [
   },
 ];
 
-const UCDavisHealthInternship = () => {
-  const [selected, setSelected] = useState<NotebookEntry | null>(null);
+/** The same twelve pages, captioned the way the grid labels them and placed by where and when they were taken. */
+const LIGHTBOX_ITEMS: LightboxItem[] = NOTEBOOKS.map((entry, i) => ({
+  src: entry.image,
+  alt: entry.alt,
+  caption: `N-${pad(i + 1)} · Field notes · UC Davis Health, 2024`,
+}));
 
-  useEffect(() => {
-    const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setSelected(null);
-    };
-    if (selected) {
-      document.addEventListener('keydown', handleEscape);
-      document.body.style.overflow = 'hidden';
-    }
-    return () => {
-      document.removeEventListener('keydown', handleEscape);
-      document.body.style.overflow = 'unset';
-    };
-  }, [selected]);
+const UCDavisHealthInternship = () => {
+  const [open, setOpen] = useState<number | null>(null);
+  // Stable, so the lightbox's open effect does not re-run (and re-focus Close) on every page.
+  const close = useCallback(() => setOpen(null), []);
 
   return (
     <article className="border border-ink-line">
-      <header className="px-6 py-5 border-b border-ink-line flex flex-col sm:flex-row sm:items-center gap-4">
+      <header className="px-5 py-4 border-b border-ink-line flex flex-col sm:flex-row sm:items-center gap-4">
         <img
           src="/images/uc-davis-health-logo.png"
           alt="UC Davis Health"
-          className="h-10 w-auto object-contain bg-text p-1.5"
+          className="h-10 w-auto object-contain bg-text p-1.5 self-start sm:self-auto"
         />
         <div className="flex-1">
           <p className="label mb-1">Internship · 2024</p>
@@ -71,95 +71,96 @@ const UCDavisHealthInternship = () => {
         </div>
       </header>
 
-      <div className="p-6 sm:p-8">
+      <div className="p-6">
         <div className="flex items-center gap-4 mb-6">
           <span className="label">Field notes</span>
           <span className="flex-1 h-px bg-ink-line" />
-          <span className="font-mono text-[10px] text-text-subtle">{NOTEBOOKS.length} entries</span>
+          <span className="shrink-0 meta">{pad(NOTEBOOKS.length)} Entries</span>
         </div>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-          {NOTEBOOKS.map((entry, idx) => (
-            <button
-              key={entry.image}
-              type="button"
-              onClick={() => setSelected(entry)}
-              className="group relative border border-ink-line hover:border-accent transition-colors bg-ink-surface text-left"
-            >
-              <div className="aspect-square overflow-hidden">
-                <img
-                  src={entry.image}
-                  alt={entry.alt}
-                  className="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
-                  loading="lazy"
-                />
-              </div>
-              <div className="px-3 py-2 border-t border-ink-line flex items-center justify-between">
-                <span className="font-mono text-[10px] text-text-subtle tracking-widest">
-                  N-{String(idx + 1).padStart(2, '0')}
-                </span>
-                <span className="font-mono text-[10px] text-text-subtle">VIEW</span>
-              </div>
-            </button>
+        <ol className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+          {NOTEBOOKS.map((entry, i) => (
+            <Reveal as="li" key={entry.image} delay={(i % 4) * 60}>
+              <NotebookThumb entry={entry} number={pad(i + 1)} onOpen={() => setOpen(i)} />
+            </Reveal>
           ))}
-        </div>
+        </ol>
 
         <div className="mt-12">
           <div className="flex items-center gap-4 mb-6">
             <span className="label">User needs identified</span>
             <span className="flex-1 h-px bg-ink-line" />
+            <span className="shrink-0 meta">{pad(USER_NEEDS.length)} Items</span>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 border border-ink-line">
-            {USER_NEEDS.map((need, idx) => (
-              <div
+          <ol className="border-y border-ink-line divide-y divide-ink-line">
+            {USER_NEEDS.map((need, i) => (
+              <Reveal
+                as="li"
                 key={need.title}
-                className={`p-5 border-ink-line ${
-                  idx > 0 ? 'border-t sm:border-t-0 sm:border-l' : ''
-                } ${idx === 2 ? 'sm:border-t lg:border-t-0' : ''} ${idx === 3 ? 'sm:border-t lg:border-t-0' : ''}`}
+                delay={i * 80}
+                className="grid grid-cols-[2.5rem_1fr] lg:grid-cols-[2.5rem_15rem_1fr] gap-x-4 lg:gap-x-6 py-4 sm:py-5"
               >
-                <div className="flex items-baseline gap-2 mb-3">
-                  <span className="font-mono text-[10px] text-accent tracking-widest">
-                    {String(idx + 1).padStart(2, '0')}
-                  </span>
-                  <h3 className="font-mono text-xs uppercase tracking-[0.18em] text-text">{need.title}</h3>
-                </div>
-                <p className="text-sm text-text-muted leading-relaxed">{need.description}</p>
-              </div>
+                <span className="meta text-accent leading-5">{pad(i + 1)}</span>
+                <h3 className="label text-text leading-5">{need.title}</h3>
+                <p className="col-start-2 lg:col-start-3 mt-1.5 lg:mt-0 text-sm text-text-muted leading-relaxed">
+                  {need.description}
+                </p>
+              </Reveal>
             ))}
-          </div>
+          </ol>
         </div>
       </div>
 
-      {selected && (
-        <div
-          className="fixed inset-0 z-50 bg-ink/95 flex items-center justify-center p-6"
-          onClick={() => setSelected(null)}
-        >
-          <button
-            type="button"
-            onClick={() => setSelected(null)}
-            className="absolute top-6 right-6 text-text-muted hover:text-text transition-colors"
-            aria-label="Close"
-          >
-            <svg className="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5}>
-              <path strokeLinecap="round" strokeLinejoin="round" d="M6 6l12 12M18 6L6 18" />
-            </svg>
-          </button>
-          <figure
-            className="border border-ink-line bg-ink-surface max-w-5xl w-full max-h-[85vh] overflow-hidden"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="bg-ink overflow-auto max-h-[75vh]">
-              <img src={selected.image} alt={selected.alt} className="w-full h-auto object-contain" />
-            </div>
-            <figcaption className="px-5 py-3 border-t border-ink-line text-text-muted text-sm">
-              {selected.alt}
-            </figcaption>
-          </figure>
-        </div>
-      )}
+      <Lightbox items={LIGHTBOX_ITEMS} index={open} onClose={close} onIndexChange={setOpen} />
     </article>
+  );
+};
+
+interface NotebookThumbProps {
+  entry: NotebookEntry;
+  number: string;
+  onOpen: () => void;
+}
+
+/** One page of the notebook: grey until hovered, and it fades in once the scan arrives. */
+const NotebookThumb = ({ entry, number, onOpen }: NotebookThumbProps) => {
+  const [loaded, setLoaded] = useState(false);
+  const imgRef = useRef<HTMLImageElement>(null);
+
+  // A cached image can finish before React attaches onLoad.
+  useEffect(() => {
+    const img = imgRef.current;
+    if (img?.complete && img.naturalWidth > 0) setLoaded(true);
+  }, []);
+
+  return (
+    <button
+      type="button"
+      onClick={onOpen}
+      aria-label={`View field note N-${number}: ${entry.alt}`}
+      className="group card-lift w-full text-left border border-ink-line hover:border-accent bg-ink-surface"
+    >
+      <div className="aspect-square overflow-hidden">
+        <img
+          ref={imgRef}
+          src={entry.image}
+          alt={entry.alt}
+          loading="lazy"
+          onLoad={() => setLoaded(true)}
+          className={`w-full h-full object-cover grayscale group-hover:grayscale-0 transition-[opacity,filter] duration-500 ease-house ${
+            loaded ? 'opacity-100' : 'opacity-0'
+          }`}
+        />
+      </div>
+      <div className="px-3 py-2 border-t border-ink-line flex items-center justify-between meta">
+        <span>N-{number}</span>
+        <span className="inline-flex items-center gap-1 transition-colors duration-300 group-hover:text-accent group-focus-visible:text-accent">
+          View
+          <Plus className="w-3 h-3" />
+        </span>
+      </div>
+    </button>
   );
 };
 
