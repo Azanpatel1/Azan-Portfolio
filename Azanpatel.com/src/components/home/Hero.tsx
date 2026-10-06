@@ -41,7 +41,7 @@ const Hero = () => {
               className="font-hand flex items-center gap-4 text-[clamp(2.4rem,12.5vw,3rem)] sm:text-6xl lg:text-5xl xl:text-6xl leading-[1.15] tracking-tight text-text"
             >
               <span className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0 bg-accent" aria-hidden="true" />
-              Neuroengineering
+              Cognitive Neuroengineering
             </Hand>
             <Hand
               as="p"
@@ -49,7 +49,7 @@ const Hero = () => {
               group={GROUP}
               className="mt-3 pl-7 sm:pl-[30px] font-mono font-hand text-sm sm:text-base uppercase tracking-[0.18em] text-text-muted"
             >
-              Cognitive Neuroscience
+              Theoretical Neuroscience
             </Hand>
 
             <Hand as="p" animate group={GROUP} className="font-hand mt-6 text-text-muted text-base sm:text-lg max-w-xl leading-relaxed">
