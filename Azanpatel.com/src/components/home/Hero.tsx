@@ -53,7 +53,9 @@ const Hero = () => {
             </Hand>
 
             <Hand as="p" animate group={GROUP} className="font-hand mt-6 text-text-muted text-base sm:text-lg max-w-xl leading-relaxed">
-              I&rsquo;m fascinated by designing brain-computer interfaces and neuroplasticity&rsquo;s effect on memory &amp; learning, and Mindfullness.
+              Exploring neuromodulations for cognition through Attention &amp; Memory.
+              <br />
+              Building models and devices for translational medicine, automation, and education.
             </Hand>
 
             <div className="mt-10 flex flex-col sm:flex-row gap-3">
