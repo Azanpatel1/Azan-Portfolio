@@ -3,63 +3,19 @@
 @tailwind utilities;
 
 /* ------------------------------------------------------------------ */
-/* Self-hosted handwriting face. The stroke overlay (src/handwriting)  */
-/* is traced over this exact face, so nothing may substitute it.       */
-/* ------------------------------------------------------------------ */
-@font-face {
-  font-family: 'Shadows Into Light';
-  font-style: normal;
-  font-weight: 400;
-  font-display: block;
-  src: url('/fonts/shadows-into-light-latin.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
-    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
-    U+FEFF, U+FFFD;
-}
-@font-face {
-  font-family: 'Shadows Into Light';
-  font-style: normal;
-  font-weight: 400;
-  font-display: block;
-  src: url('/fonts/shadows-into-light-latin-ext.woff2') format('woff2');
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304,
-    U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0,
-    U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-
-/* Neat print hand for all static text (OFL). */
-@font-face {
-  font-family: 'Architects Daughter';
-  font-style: normal;
-  font-weight: 400;
-  font-display: block;
-  src: url('/fonts/architects-daughter-latin.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
-    U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215,
-    U+FEFF, U+FFFD;
-}
-@font-face {
-  font-family: 'Architects Daughter';
-  font-style: normal;
-  font-weight: 400;
-  font-display: block;
-  src: url('/fonts/architects-daughter-latin-ext.woff2') format('woff2');
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304,
-    U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0,
-    U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
+/* Inter Variable and JetBrains Mono are self-hosted through the @fontsource packages
+   imported in src/main.tsx (OFL; licences ship inside each package). */
 
 @layer base {
   :root {
     --paper: #f3eee3;
     --graphite: 42 42 48;
     /* graphite alphas for text-text / -muted / -subtle (tailwind.config.js) */
-    --ink-a: 0.86;
-    --ink-a-muted: 0.76;
-    --ink-a-subtle: 0.7;
-    /* floors for the ≤ 13px tiers: at 1x DPI the antialiased single-weight face never
-       reaches its nominal colour, so small lettering gets more ink (plus the bloom below) */
-    --ink-a-muted-sm: 0.84;
+    --ink-a: 0.94;
+    --ink-a-muted: 0.82;
+    --ink-a-subtle: 0.74;
+    /* floors for the ≤ 13px tiers: small lettering gets a little more ink */
+    --ink-a-muted-sm: 0.86;
     --ink-a-subtle-sm: 0.8;
     --accent: 166 75 7;
     --accent-sm: 150 66 5;
@@ -72,9 +28,6 @@
     color-scheme: light;
     scroll-behavior: smooth;
     background: var(--paper);
-    /* the face is narrower and lighter than Inter: body 16 -> 17px, everything rem-based
-       follows. A percentage, not px, so the user's browser font-size preference still scales it. */
-    font-size: 100%;
   }
 
   body {
@@ -89,14 +42,9 @@
     background-size: 240px 240px, 360px 360px, 100% 100%;
     background-repeat: repeat, repeat, no-repeat;
     font-weight: 400;
-    /* per-character Range rects must map 1:1 to glyphs for the stroke overlay */
-    font-variant-ligatures: none;
-    font-feature-settings: 'liga' 0, 'clig' 0;
   }
 
-  /* single-weight face: never let the browser synthesise bold */
-  b, strong, h1, h2, h3, h4, h5, h6 { font-weight: 400; }
-  em, i { font-style: normal; } /* the face has no italic; synthetic oblique breaks the overlay */
+  h1, h2, h3, h4, h5, h6 { font-weight: 600; }
 
   ::selection {
     background: rgb(var(--accent) / 0.28);
@@ -175,8 +123,7 @@
     @apply flex-1 h-px bg-ink-line;
   }
 
-  /* graphite bloom on small lettering (no displacement filter below 28px), and the
-     small-tier ink floors: every ≤ 13px caption/meta row, not only .label */
+  /* small-tier ink floors: every ≤ 13px caption/meta row, not only .label */
   .label, .nav-link, .btn, .tag, .text-xs,
   [class*='text-[10.5px]'], [class*='text-[11.5px]'], [class*='text-[12px]'], [class*='text-[13px]'] {
     text-shadow: none;
@@ -187,26 +134,6 @@
 }
 
 @layer utilities {
-  /* one weight only */
-  .font-light, .font-medium, .font-semibold, .font-bold, .font-extrabold { font-weight: 400; }
-  .italic { font-style: normal; }
-
-  /* --------------------------------------------------------------- */
-  /* Pencil edge roughness: large headings only.                       */
-  /* Everywhere the settled text gets the light filter (a static       */
-  /* raster); only desktop fine-pointer devices also run it while the  */
-  /* strokes animate, and at full strength for the hero h1.            */
-  /* --------------------------------------------------------------- */
-  .hw-rough, .hw-rough-sm { --pencil: url(#pencil-edge-sm); }
-  /* settled text only: a pending heading paints nothing, so no raster filter for it yet */
-  .hw-rough:not(.hw-pending):not(.hw-drawing):not(.hw-fading),
-  .hw-rough-sm:not(.hw-pending):not(.hw-drawing):not(.hw-fading) { filter: var(--pencil); }
-  @media (pointer: fine) and (min-width: 768px) {
-    .hw-rough { --pencil: url(#pencil-edge); }
-    .hw-rough.hw-drawing, .hw-rough.hw-fading,
-    .hw-rough-sm.hw-drawing, .hw-rough-sm.hw-fading { filter: var(--pencil); }
-  }
-
   /* --------------------------------------------------------------- */
   /* Stroke overlay (src/handwriting/Hand.tsx)                         */
   /* --------------------------------------------------------------- */
@@ -326,8 +253,6 @@
     .ink-pending, .ink-inking, .ink-pending .ink-w { -webkit-text-fill-color: currentcolor; clip-path: none; }
     .hw-ink { display: none; }
     body { background-image: none; }
-    /* !important: the screen rules above are more specific than this one */
-    .hw-rough, .hw-rough-sm { filter: none !important; }
   }
   @media (prefers-reduced-motion: reduce) {
     html { scroll-behavior: auto; }
@@ -351,7 +276,6 @@
       --accent-sm: 140 60 4;
     }
     body { background-image: none; }
-    .hw-rough, .hw-rough-sm { filter: none !important; }
     .label, .nav-link, .btn, .tag, .text-xs,
     [class*='text-[10.5px]'], [class*='text-[11.5px]'], [class*='text-[12px]'], [class*='text-[13px]'] { text-shadow: none; }
     .bg-ink-surface, .card { background-color: transparent; }

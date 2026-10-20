@@ -38,7 +38,7 @@ const Hero = () => {
               group={GROUP}
               maxLine={1800}
               speed={0.95}
-              className="font-hand flex items-center gap-4 text-[clamp(2.4rem,12.5vw,3rem)] sm:text-6xl lg:text-5xl xl:text-6xl leading-[1.15] tracking-tight text-text"
+              className="flex items-center gap-4 text-[clamp(2.25rem,10vw,2.75rem)] sm:text-5xl lg:text-[2.75rem] leading-[1.1] tracking-tight text-text"
             >
               <span className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0 bg-accent" aria-hidden="true" />
               Cognitive Neuroengineering
@@ -47,12 +47,12 @@ const Hero = () => {
               as="p"
               animate
               group={GROUP}
-              className="mt-3 pl-7 sm:pl-[30px] font-mono font-hand text-sm sm:text-base uppercase tracking-[0.18em] text-text-muted"
+              className="mt-3 pl-7 sm:pl-[30px] font-mono text-[13px] sm:text-sm uppercase tracking-[0.18em] text-text-muted"
             >
               Theoretical Neuroscience
             </Hand>
 
-            <Hand as="p" animate group={GROUP} className="font-hand mt-6 text-text-muted text-base sm:text-lg max-w-xl leading-relaxed">
+            <Hand as="p" animate group={GROUP} className="mt-6 text-text-muted text-base xl:text-[17px] max-w-xl leading-relaxed [text-wrap:pretty]">
               Exploring neuromodulations for cognition through Attention &amp; Memory.
               <br />
               Building models and devices for translational medicine, automation, and education.
@@ -60,7 +60,7 @@ const Hero = () => {
 
             <div className="mt-10 flex flex-col sm:flex-row gap-3">
               <a href="#contact" className="btn btn-ghost">
-                <Hand animate group={GROUP} className="font-hand">Get in touch</Hand>
+                <Hand animate group={GROUP}>Get in touch</Hand>
               </a>
             </div>
 

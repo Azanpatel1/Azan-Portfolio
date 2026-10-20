@@ -1,7 +1,12 @@
 # Handwriting: pencil-on-paper text
 
-The site is set in one self-hosted face, **Shadows Into Light** (`public/fonts/*.woff2`,
-OFL). Stroke-ordered glyph data for that exact face (Vara, MIT — `vendor/`, next to the OFL TTF the build script reads) lets us
+> **Disabled.** The site is set in Inter and JetBrains Mono (`@fontsource` packages imported in
+> `src/main.tsx`). The stroke data here is for Shadows Into Light, so `env.ts` keeps
+> `shouldAnimate()` false and every block renders its plain text. The rest of this file
+> describes the overlay as built.
+
+The overlay was built for one self-hosted face, **Shadows Into Light** (formerly served from
+`public/fonts/*.woff2`, OFL). Stroke-ordered glyph data for that exact face (Vara, MIT — `vendor/`, next to the OFL TTF the build script reads) lets us
 draw text stroke by stroke *on top of the real text*, then crossfade to the webfont.
 The browser does all layout; the overlay never shifts anything.
 

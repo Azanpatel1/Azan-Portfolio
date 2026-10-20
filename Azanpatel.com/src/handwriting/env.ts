@@ -3,7 +3,15 @@ let cached: boolean | null = null;
 
 type NetInfo = { saveData?: boolean };
 
+/**
+ * The stroke overlay traces "Shadows Into Light" glyph data (sil-strokes.json) onto text
+ * set in that same face. The site is now set in Inter, so nothing is drawn: every <Hand>
+ * and <InkText> renders its plain text at once.
+ */
+const HANDWRITING_ENABLED = false;
+
 export function shouldAnimate(): boolean {
+  if (!HANDWRITING_ENABLED) return false;
   if (cached !== null) return cached;
   if (typeof window === 'undefined' || typeof document === 'undefined') return false;
   const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches ?? false;

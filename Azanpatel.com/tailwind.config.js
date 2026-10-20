@@ -1,8 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 
-// Graphite text is drawn at partial alpha so the paper grain shows through every
-// stroke (that is what makes it read as pencil rather than ink). The base colour
-// and each token's alpha live in CSS custom properties (src/index.css :root) so
+// Graphite text is drawn at partial alpha so a little of the paper grain shows
+// through. The base colour and each token's alpha live in CSS custom properties (src/index.css :root) so
 // `prefers-contrast: more` can raise them in one place, and every slash-opacity
 // variant (text-text-muted/90) composes with the token multiplicatively.
 const graphite = (alphaVar) => ({ opacityValue }) =>
@@ -36,7 +35,7 @@ module.exports = {
           surface: '#ece6d8',
           raised: '#e4ddcd',
         },
-        // alphas: .86 / .76 / .70 -> ≥ 7.7 / 5.7 / 4.8 : 1 on the card wash (WCAG AA)
+        // alphas: .94 / .82 / .74 -> ≈ 9.8 / 6.9 / 5.5 : 1 on the card wash (WCAG AA)
         text: {
           DEFAULT: graphite('--ink-a'),
           muted: graphite('--ink-a-muted'),
@@ -49,10 +48,9 @@ module.exports = {
         },
       },
       fontFamily: {
-        sans: ['"Architects Daughter"', 'cursive'],
-        mono: ['"Architects Daughter"', 'cursive'],
-        // the stroke-animated hero lines: the only face with stroke-order data
-        hand: ['"Shadows Into Light"', 'cursive'],
+        // self-hosted via @fontsource, imported in src/main.tsx
+        sans: ['"Inter Variable"', 'Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        mono: ['"JetBrains Mono"', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
       },
     },
   },

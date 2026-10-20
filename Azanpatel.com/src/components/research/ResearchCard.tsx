@@ -55,7 +55,7 @@ const ResearchCard = ({ item, index }: ResearchCardProps) => {
 
       <div className="p-5">
         <Hand as="div" className="flex items-baseline justify-between gap-4 mb-3">
-          <span className="font-mono text-[11.5px] tracking-[0.2em] text-text-subtle">
+          <span className="shrink-0 whitespace-nowrap font-mono text-[11.5px] tracking-[0.2em] text-text-subtle">
             DOC-{number}
           </span>
           <span className="font-mono text-[11.5px] tracking-[0.2em] text-text-subtle">
